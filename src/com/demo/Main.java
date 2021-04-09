@@ -8,5 +8,6 @@ public class Main {
         PaintGUI gui = new PaintGUI();
         gui.setVisible(true);
 
+        //alo
     }
 }
