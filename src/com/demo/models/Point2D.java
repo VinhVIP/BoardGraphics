@@ -93,4 +93,16 @@ public class Point2D {
                 (int) Math.round(Math.sin(angleRad) * x + Math.cos(angleRad) * y),
                 color);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point2D point2D = (Point2D) o;
+        return x == point2D.x &&
+                y == point2D.y &&
+                color == point2D.color;
+    }
+
+
 }
