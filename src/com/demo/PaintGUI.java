@@ -25,6 +25,7 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
     private JCheckBox cbShowAxis;
     private JComboBox cbChooseLine;
     private JCheckBox cbShowPointCoord;
+    private JButton btnEllipse;
 
     private DrawCanvas canvas;
 
@@ -62,6 +63,13 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
             canvas.setDrawMode(DrawMode.CIRCLE);
             labelDrawMode.setText("MODE: CIRCLE");
         });
+
+        btnEllipse.addActionListener(e -> {
+            canvas.setDrawMode(DrawMode.ELLIPSE);
+            labelDrawMode.setText("MODE: ELLIPSE");
+        });
+
+
         btnPoint.addActionListener(e ->
         {
             canvas.setDrawMode(DrawMode.POINT);

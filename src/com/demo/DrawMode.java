@@ -6,5 +6,5 @@ package com.demo;
  */
 
 public enum DrawMode {
-    POINT, PEN, LINE, RECTANGLE, CIRCLE;
+    POINT, PEN, LINE, RECTANGLE, CIRCLE, ELLIPSE;
 }
