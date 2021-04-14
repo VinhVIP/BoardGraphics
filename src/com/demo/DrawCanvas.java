@@ -100,11 +100,8 @@ public class DrawCanvas extends Canvas {
             for (int i = 0; i < rowSize; i++) {
                 for (int j = 0; j < colSize; j++) {
                     p = Point2D.fromComputerCoordinate(i, j);
-                    if ((i == rowSize / 2 || j == colSize / 2) && isShowAxis) {
-                        p.setColor(0x3FBDCE);
-                    } else {
+
                         p.setColor(board[i][j]);
-                    }
                     putPixel(p);
                 }
             }
@@ -172,11 +169,8 @@ public class DrawCanvas extends Canvas {
                 p.setColor(board[p.getComputerX()][p.getComputerY()]);
                 tempBoard[p.getComputerX()][p.getComputerY()] = board[p.getComputerX()][p.getComputerY()];
 
-                if ((p.getX() == 0 || p.getY() == 0) && p.getColor() == 0xffffff) {
-                    if (isShowAxis) p.setColor(0x3FBDCE);
-                }
-
                 putPixel(p);
+                if(isShowAxis) drawAxis();
             }
         }
     }
@@ -192,6 +186,8 @@ public class DrawCanvas extends Canvas {
             if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
                 tempBoard[p.getComputerX()][p.getComputerY()] = p.getColor();
                 putPixel(p);
+
+                if(isShowAxis) drawAxis();
             }
         }
 
@@ -217,28 +213,14 @@ public class DrawCanvas extends Canvas {
      * Vẽ trục tọa độ
      */
     private void drawAxis() {
-        Point2D p;
+        Graphics g = getGraphics();
+        g.setColor(Color.BLACK);
+        g.drawLine(canvasWidth/2, 0, canvasWidth/2, canvasHeight);
+        g.drawLine(canvasWidth/2+1, 0, canvasWidth/2+1, canvasHeight);
+        g.drawLine(0, canvasHeight/2, canvasWidth, canvasHeight/2);
+        g.drawLine(0, canvasHeight/2+1, canvasWidth, canvasHeight/2+1);
 
-        int j = colSize / 2;
-        int i = 0;
-        for (; i < rowSize; i++) {
-            if (board[i][j] == 0xffffff) {
-                p = Point2D.fromComputerCoordinate(i, j);
-                p.setColor(0x3FBDCE);
-                putPixel(p);
-            }
-        }
-
-        i = rowSize / 2;
-        j = 0;
-        for (; j < colSize; j++) {
-            if (board[i][j] == 0xffffff) {
-                p = Point2D.fromComputerCoordinate(i, j);
-                p.setColor(0x3FBDCE);
-                putPixel(p);
-            }
-        }
-
+//        if(isShowGrid) drawGrid();
     }
 
     /*
@@ -262,6 +244,17 @@ public class DrawCanvas extends Canvas {
             p.setColor(board[i][j]);
             putPixel(p);
         }
+
+        Graphics g = getGraphics();
+        g.setColor(new Color(0xFFD9C7C7));
+
+        for (i = 0; i <= rowSize; i++) {
+            g.drawLine(i * pixelSize, 0, i * pixelSize, canvasHeight);
+        }
+        for (i = 0; i <= colSize; i++) {
+            g.drawLine(0, i * pixelSize, canvasWidth, i * pixelSize);
+        }
+        g.dispose();
     }
 
     /*
@@ -278,7 +271,8 @@ public class DrawCanvas extends Canvas {
         for (int i = 0; i <= colSize; i++) {
             g.drawLine(0, i * pixelSize, canvasWidth, i * pixelSize);
         }
-//        g.dispose();
+        g.dispose();
+        if(isShowAxis) drawAxis();
     }
 
     /*
@@ -291,16 +285,11 @@ public class DrawCanvas extends Canvas {
             for (int j = 0; j < colSize; j++) {
                 p = Point2D.fromComputerCoordinate(i, j);
                 p.setColor(board[i][j]);
-                if (isShowAxis) {
-                    if (i == rowSize / 2 || j == colSize / 2) {
-                        if (board[i][j] == 0xffffff) p.setColor(0x3FBDCE);
-                    }
-                }
                 putPixel(p);
             }
         }
 
-//        if (isShowAxis) drawAxis();
+        if (isShowAxis) drawAxis();
     }
 
     /*
