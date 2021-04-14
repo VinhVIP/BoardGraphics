@@ -101,7 +101,7 @@ public class DrawCanvas extends Canvas {
                 for (int j = 0; j < colSize; j++) {
                     p = Point2D.fromComputerCoordinate(i, j);
 
-                        p.setColor(board[i][j]);
+                    p.setColor(board[i][j]);
                     putPixel(p);
                 }
             }
@@ -170,7 +170,7 @@ public class DrawCanvas extends Canvas {
                 tempBoard[p.getComputerX()][p.getComputerY()] = board[p.getComputerX()][p.getComputerY()];
 
                 putPixel(p);
-                if(isShowAxis) drawAxis();
+                if (isShowAxis) drawAxis();
             }
         }
     }
@@ -187,7 +187,7 @@ public class DrawCanvas extends Canvas {
                 tempBoard[p.getComputerX()][p.getComputerY()] = p.getColor();
                 putPixel(p);
 
-                if(isShowAxis) drawAxis();
+                if (isShowAxis) drawAxis();
             }
         }
 
@@ -215,10 +215,10 @@ public class DrawCanvas extends Canvas {
     private void drawAxis() {
         Graphics g = getGraphics();
         g.setColor(Color.BLACK);
-        g.drawLine(canvasWidth/2, 0, canvasWidth/2, canvasHeight);
-        g.drawLine(canvasWidth/2+1, 0, canvasWidth/2+1, canvasHeight);
-        g.drawLine(0, canvasHeight/2, canvasWidth, canvasHeight/2);
-        g.drawLine(0, canvasHeight/2+1, canvasWidth, canvasHeight/2+1);
+        g.drawLine(canvasWidth / 2, 0, canvasWidth / 2, canvasHeight);
+        g.drawLine(canvasWidth / 2 + 1, 0, canvasWidth / 2 + 1, canvasHeight);
+        g.drawLine(0, canvasHeight / 2, canvasWidth, canvasHeight / 2);
+        g.drawLine(0, canvasHeight / 2 + 1, canvasWidth, canvasHeight / 2 + 1);
 
 //        if(isShowGrid) drawGrid();
     }
@@ -244,17 +244,19 @@ public class DrawCanvas extends Canvas {
             p.setColor(board[i][j]);
             putPixel(p);
         }
+        if (isShowGrid) {
+            Graphics g = getGraphics();
+            g.setColor(new Color(0xFFD9C7C7));
 
-        Graphics g = getGraphics();
-        g.setColor(new Color(0xFFD9C7C7));
+            for (i = 0; i <= rowSize; i++) {
+                g.drawLine(i * pixelSize, 0, i * pixelSize, canvasHeight);
+            }
+            for (i = 0; i <= colSize; i++) {
+                g.drawLine(0, i * pixelSize, canvasWidth, i * pixelSize);
+            }
+            g.dispose();
+        }
 
-        for (i = 0; i <= rowSize; i++) {
-            g.drawLine(i * pixelSize, 0, i * pixelSize, canvasHeight);
-        }
-        for (i = 0; i <= colSize; i++) {
-            g.drawLine(0, i * pixelSize, canvasWidth, i * pixelSize);
-        }
-        g.dispose();
     }
 
     /*
@@ -272,7 +274,7 @@ public class DrawCanvas extends Canvas {
             g.drawLine(0, i * pixelSize, canvasWidth, i * pixelSize);
         }
         g.dispose();
-        if(isShowAxis) drawAxis();
+        if (isShowAxis) drawAxis();
     }
 
     /*
