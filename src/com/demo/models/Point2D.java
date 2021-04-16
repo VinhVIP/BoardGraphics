@@ -94,6 +94,22 @@ public class Point2D {
                 color);
     }
 
+    /*
+     * Xoay điểm point xung quanh điểm root 1 góc angleRad
+     */
+    public Point2D rotate(Point2D root, Point2D point, double angleRad) {
+        // Di chuyển root và point về gốc tọa độ
+        point.set(point.x - root.x, point.y - root.y);
+
+        // Xoay point
+        point = point.rotate(angleRad);
+
+        // Di chuyển point về hệ tọa độ cũ
+        point.set(point.x + root.x, point.y + root.y);
+
+        return point;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,5 +120,17 @@ public class Point2D {
                 color == point2D.color;
     }
 
+    public void set(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
+    @Override
+    public String toString() {
+        return "Point2D{" +
+                "x=" + x +
+                ", y=" + y +
+                ", color=" + color +
+                '}';
+    }
 }

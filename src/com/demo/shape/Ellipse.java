@@ -3,6 +3,9 @@ package com.demo.shape;
 import com.demo.DrawCanvas;
 import com.demo.models.Point2D;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Create by VinhIT
  * On 11/04/2021
@@ -25,6 +28,8 @@ public class Ellipse extends Geometry {
 
             midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), DrawCanvas.currentColor);
 
+            choosePoints();
+
             clearOldPoints();
             drawNewPoints();
         }
@@ -35,11 +40,41 @@ public class Ellipse extends Geometry {
 
     }
 
+    void choosePoints() {
+        int n = listDraw.size();
+        List<Point2D> listTmp = new ArrayList<>();
+        Point2D point;
+
+        for (int k = 2; k <= 4; k++) {
+            for (int i = 0; i < n; i++) {
+                point = listDraw.get(i);
+                point.set(point.getX() - startPoint.getX(), point.getY() - startPoint.getY());
+
+                switch (k) {
+                    case 2 -> {
+                        point.set(startPoint.getX() + point.getX(), startPoint.getY() - point.getY());
+                        listTmp.add(0, point);
+                    }
+                    case 3 -> {
+                        point.set(startPoint.getX() - point.getX(), startPoint.getY() - point.getY());
+                        listTmp.add(point);
+                    }
+                    case 4 -> {
+                        point.set(startPoint.getX() - point.getX(), startPoint.getY() + point.getY());
+                        listTmp.add(0, point);
+                    }
+                }
+            }
+            listDraw.addAll(listTmp);
+            listTmp.clear();
+        }
+    }
+
     void plot(int xc, int yc, int x, int y, int color) {
         listDraw.add(new Point2D(xc + x, yc + y, DrawCanvas.currentColor));
-        listDraw.add(new Point2D(xc - x, yc + y, DrawCanvas.currentColor));
-        listDraw.add(new Point2D(xc + x, yc - y, DrawCanvas.currentColor));
-        listDraw.add(new Point2D(xc - x, yc - y, DrawCanvas.currentColor));
+//        listDraw.add(new Point2D(xc - x, yc + y, DrawCanvas.currentColor));
+//        listDraw.add(new Point2D(xc + x, yc - y, DrawCanvas.currentColor));
+//        listDraw.add(new Point2D(xc - x, yc - y, DrawCanvas.currentColor));
     }
 
     void midEllipse(int xc, int yc, int a, int b, int color) {
