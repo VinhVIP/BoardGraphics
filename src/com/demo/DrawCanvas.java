@@ -8,9 +8,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Create by VinhIT
@@ -28,12 +27,13 @@ public class DrawCanvas extends Canvas {
 
     public void setDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
-        if(geometry != null){
+        if (geometry != null) {
             geometry.setDrawMode(drawMode);
         }
     }
 
     private ShapeMode shapeMode; // Chế độ hình vẽ
+
     /*
      * Cài đặt hình muốn vẽ
      */
@@ -83,6 +83,12 @@ public class DrawCanvas extends Canvas {
 
     private Set<Point2D> coordinatePoints = new HashSet<>();
 
+    private List<Geometry> listShapes = new ArrayList<>();
+
+    private List<int[][]> boardStates = new ArrayList<>();
+
+    private int curState = 0;
+
     //------------------------------------------------------------------------//
 
 
@@ -102,6 +108,9 @@ public class DrawCanvas extends Canvas {
                 tempBoard[i][j] = board[i][j] = 0xffffff;
             }
         }
+
+
+        boardStates.add(getCurrentBoard());
 
         // Mode mặc định là vẽ PEN
         drawMode = DrawMode.DEFAULT;
@@ -147,7 +156,6 @@ public class DrawCanvas extends Canvas {
             if (isShowGrid) drawGrid();
         }
     }
-
 
 
     public void addPointsToDrawCoord(Point2D p) {
@@ -211,6 +219,8 @@ public class DrawCanvas extends Canvas {
      * Hợp nhất nét vẽ preview của hình lên canvas
      */
     public void merge() {
+        // Thêm hình vừa vẽ vào danh sách undo
+
         for (int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
                 if (board[i][j] != tempBoard[i][j]) {
@@ -219,7 +229,63 @@ public class DrawCanvas extends Canvas {
             }
         }
 
+        addToListStates();
+
+        listShapes.add(geometry);
+
         if (isShowPointCoord) drawAllPoints();
+    }
+
+    int[][] getCurrentBoard(){
+        int[][] a = new int[rowSize][colSize];
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < colSize; j++) a[i][j] = board[i][j];
+        }
+        return a;
+    }
+
+    private  void addToListStates(){
+        int[][] a = getCurrentBoard();
+
+        if(curState == boardStates.size()-1){
+            boardStates.add(a);
+            curState++;
+        }else{
+            int len = boardStates.size()-curState-1;
+            while (len-- > 0) boardStates.remove(boardStates.size()-1);
+            boardStates.add(a);
+            curState = boardStates.size()-1;
+        }
+    }
+
+
+
+    private void applyState(int state){
+        int[][] stateBoard = boardStates.get(state);
+        Point2D p;
+
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < colSize; j++) {
+                if (stateBoard[i][j] != board[i][j]) {
+                    board[i][j] = tempBoard[i][j] = stateBoard[i][j];
+
+                    p = Point2D.fromComputerCoordinate(i, j);
+                    p.setColor(board[i][j]);
+                    putPixel(p);
+                }
+            }
+        }
+
+        System.out.println("apply state "+ state + " done");
+    }
+
+
+    public void undo() {
+        if(curState > 0) applyState(--curState);
+    }
+
+    public void redo() {
+        if(curState < boardStates.size()-1) applyState(++curState);
     }
 
     /*
@@ -368,6 +434,13 @@ public class DrawCanvas extends Canvas {
 
         if (isShowGrid) drawGrid(); // Xóa xong thì vẽ lại lưới tọa độ
 
+        resetStates();
+    }
+
+    private void resetStates(){
+        boardStates.clear();
+        boardStates.add(getCurrentBoard());
+        curState = 0;
     }
 
     // Lớp cài đặt sự kiện nhấn chuột
