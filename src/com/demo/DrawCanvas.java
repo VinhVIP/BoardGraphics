@@ -24,14 +24,52 @@ public class DrawCanvas extends Canvas {
 
     public static final int pixelSize = 5;  // Kích thước 1 đơn vị
 
-    public static LineMode lineMode;
+    private DrawMode drawMode;
+
+    public void setDrawMode(DrawMode drawMode) {
+        this.drawMode = drawMode;
+        if(geometry != null){
+            geometry.setDrawMode(drawMode);
+        }
+    }
+
+    private ShapeMode shapeMode; // Chế độ hình vẽ
+    /*
+     * Cài đặt hình muốn vẽ
+     */
+    public void setShapeMode(ShapeMode shapeMode) {
+        this.shapeMode = shapeMode;
+
+        switch (shapeMode) {
+            case POINT -> {
+                geometry = new SinglePoint(this);
+            }
+            case PEN -> {
+                geometry = new Pen(this);
+            }
+            case LINE -> {
+                geometry = new Line(this, drawMode);
+            }
+            case RECTANGLE -> {
+                geometry = new Rectangle(this, drawMode);
+            }
+            case CIRCLE -> {
+                geometry = new Circle(this, drawMode);
+            }
+            case ELLIPSE -> {
+                geometry = new Ellipse(this, drawMode);
+            }
+            case ELLIPSE_DASH -> {
+                geometry = new EllipseDash(this);
+            }
+        }
+    }
 
     public static int currentColor = 0xff0000;  // Màu vẽ đang chọn hiện tại
 
     private int[][] board = new int[rowSize][colSize];      // Bảng màu canvas chính
     private int[][] tempBoard = new int[rowSize][colSize];  // Bảng màu phụ cho việc preview hình, sau khi `merge()` thì board và tempBoard sẽ hợp lại thành 1
 
-    private DrawMode drawMode; // Chế độ hình vẽ
 
     private MouseCoordinateChangeListener mouseListener; // Sự kiện cập nhập tọa độ con chuột
 
@@ -66,9 +104,9 @@ public class DrawCanvas extends Canvas {
         }
 
         // Mode mặc định là vẽ PEN
-        setDrawMode(DrawMode.LINE);
+        drawMode = DrawMode.DEFAULT;
+        setShapeMode(ShapeMode.LINE);
 //        setShowPointCoord(false);
-        lineMode = LineMode.DEFAULT;
         Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(c);
 
@@ -110,35 +148,7 @@ public class DrawCanvas extends Canvas {
         }
     }
 
-    /*
-     * Cài đặt hình muốn vẽ
-     */
-    public void setDrawMode(DrawMode drawMode) {
-        this.drawMode = drawMode;
-        switch (drawMode) {
-            case POINT -> {
-                geometry = new SinglePoint(this);
-            }
-            case PEN -> {
-                geometry = new Pen(this);
-            }
-            case LINE -> {
-                geometry = new Line(this);
-            }
-            case RECTANGLE -> {
-                geometry = new Rectangle(this);
-            }
-            case CIRCLE -> {
-                geometry = new Circle(this);
-            }
-            case ELLIPSE -> {
-                geometry = new Ellipse(this);
-            }
-            case ELLIPSE_DASH -> {
-                geometry = new EllipseDash(this);
-            }
-        }
-    }
+
 
     public void addPointsToDrawCoord(Point2D p) {
         coordinatePoints.add(p);

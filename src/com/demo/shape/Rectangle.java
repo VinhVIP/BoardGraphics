@@ -1,6 +1,7 @@
 package com.demo.shape;
 
 import com.demo.DrawCanvas;
+import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
 /**
@@ -23,12 +24,19 @@ public class Rectangle extends Geometry {
         init4Lines(canvas);
     }
 
+    public Rectangle(DrawCanvas canvas, DrawMode drawMode) {
+        super(canvas, drawMode);
+        init4Lines(canvas);
+    }
+
     /*
      * Khởi tạo 1 đường thẳng
      */
     private void init4Lines(DrawCanvas canvas) {
-        for (int i = 0; i < lines.length; i++)
+        for (int i = 0; i < lines.length; i++) {
             lines[i] = new Line(canvas);
+            lines[i].setDrawMode(drawMode);
+        }
     }
 
     @Override
@@ -73,6 +81,13 @@ public class Rectangle extends Geometry {
     @Override
     public void showPointsCoordinate() {
 
+    }
+
+    @Override
+    public void setDrawMode(DrawMode drawMode) {
+        for (Line line : lines) {
+            line.setDrawMode(drawMode);
+        }
     }
 
     private void drawRectangle(int x1, int y1, int x2, int y2) {

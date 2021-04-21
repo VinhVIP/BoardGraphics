@@ -1,7 +1,7 @@
 package com.demo.shape;
 
 import com.demo.DrawCanvas;
-import com.demo.LineMode;
+import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
 
@@ -21,6 +21,9 @@ public class Line extends Geometry {
         super(canvas);
     }
 
+    public Line(DrawCanvas canvas, DrawMode drawMode) {
+        super(canvas, drawMode);
+    }
 
     @Override
     public void setupDraw() {
@@ -63,7 +66,7 @@ public class Line extends Geometry {
     public void drawLine() {
         lineBresenham(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
 
-        if (DrawCanvas.lineMode == LineMode.ARROW) {
+        if (drawMode == DrawMode.ARROW) {
             Point2D pA = startPoint.translate(-startPoint.getX(), -startPoint.getY());
             Point2D pB = endPoint.translate(-startPoint.getX(), -startPoint.getY());
 
@@ -84,27 +87,6 @@ public class Line extends Geometry {
             lineBresenham(endPoint.getX(), endPoint.getY(), pU.getX(), pU.getY());
             lineBresenham(endPoint.getX(), endPoint.getY(), pV.getX(), pV.getY());
         }
-    }
-
-    private boolean isShowPoint(int index) {
-        switch (DrawCanvas.lineMode) {  // DrawCanvas.lineMode là chế độ vẽ
-            case DEFAULT -> {           // Nét liền
-                return true;
-            }
-            case DOT -> {               // Nét chấm
-                return (index % 2) == 0;
-            }
-            case DASH -> {              // Nét gạch
-                return (index % 4) < 3;
-            }
-            case DASH_DOT -> {          // Nét gạch chấm
-                return (index % 6) < 3 || (index % 6) == 4;
-            }
-            case DASH_DOT_DOT -> {      // Nét gạch 2 chấm
-                return (index % 12 < 4) || (index % 12) == 6 || (index % 12) == 9;
-            }
-        }
-        return true;
     }
 
     private void lineBresenham(int x1, int y1, int x2, int y2) {

@@ -23,7 +23,7 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
     private JLabel labelCoordinate;
     private JCheckBox cbShowGrid;
     private JCheckBox cbShowAxis;
-    private JComboBox cbChooseLine;
+    private JComboBox cbChooseDrawMode;
     private JCheckBox cbShowPointCoord;
     private JButton btnEllipse;
     private JButton btnEllipseDash;
@@ -45,39 +45,39 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
         btnClear.addActionListener(e -> canvas.clearScreen());
 
         btnLine.addActionListener(e -> {
-            canvas.setDrawMode(DrawMode.LINE);
+            canvas.setShapeMode(ShapeMode.LINE);
             labelDrawMode.setText("MODE: LINE");
         });
         btnRect.addActionListener(e ->
         {
-            canvas.setDrawMode(DrawMode.RECTANGLE);
+            canvas.setShapeMode(ShapeMode.RECTANGLE);
             labelDrawMode.setText("MODE: RECT");
         });
         btnPen.addActionListener(e ->
         {
-            canvas.setDrawMode(DrawMode.PEN);
+            canvas.setShapeMode(ShapeMode.PEN);
             labelDrawMode.setText("MODE: PEN");
         });
 
         btnCircle.addActionListener(e ->
         {
-            canvas.setDrawMode(DrawMode.CIRCLE);
+            canvas.setShapeMode(ShapeMode.CIRCLE);
             labelDrawMode.setText("MODE: CIRCLE");
         });
 
         btnEllipse.addActionListener(e -> {
-            canvas.setDrawMode(DrawMode.ELLIPSE);
+            canvas.setShapeMode(ShapeMode.ELLIPSE);
             labelDrawMode.setText("MODE: ELLIPSE");
         });
 
         btnEllipseDash.addActionListener(e -> {
-            canvas.setDrawMode(DrawMode.ELLIPSE_DASH);
+            canvas.setShapeMode(ShapeMode.ELLIPSE_DASH);
             labelDrawMode.setText("MODE: ELLIPSE DASH");
         });
 
         btnPoint.addActionListener(e ->
         {
-            canvas.setDrawMode(DrawMode.POINT);
+            canvas.setShapeMode(ShapeMode.POINT);
             labelDrawMode.setText("MODE: POINT");
         });
 
@@ -107,16 +107,16 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
             canvas.setShowPointCoord(cbShowPointCoord.isSelected());
         });
 
-        cbChooseLine.addActionListener(e ->
+        cbChooseDrawMode.addActionListener(e ->
 
         {
-            String s = (String) cbChooseLine.getSelectedItem();
-            if (s.equals("DEFAULT")) DrawCanvas.lineMode = LineMode.DEFAULT;
-            else if (s.equals("DOT")) DrawCanvas.lineMode = LineMode.DOT;
-            else if (s.equals("DASH")) DrawCanvas.lineMode = LineMode.DASH;
-            else if (s.equals("DASHDOT")) DrawCanvas.lineMode = LineMode.DASH_DOT;
-            else if (s.equals("DASHDOTDOT")) DrawCanvas.lineMode = LineMode.DASH_DOT_DOT;
-            else if (s.equals("ARROW")) DrawCanvas.lineMode = LineMode.ARROW;
+            String s = (String) cbChooseDrawMode.getSelectedItem();
+            if (s.equals("DEFAULT")) canvas.setDrawMode(DrawMode.DEFAULT);
+            else if (s.equals("DOT")) canvas.setDrawMode(DrawMode.DOT);
+            else if (s.equals("DASH")) canvas.setDrawMode(DrawMode.DASH);
+            else if (s.equals("DASHDOT")) canvas.setDrawMode(DrawMode.DASH_DOT);
+            else if (s.equals("DASHDOTDOT")) canvas.setDrawMode(DrawMode.DASH_DOT_DOT);
+            else if (s.equals("ARROW")) canvas.setDrawMode(DrawMode.ARROW);
         });
 
 

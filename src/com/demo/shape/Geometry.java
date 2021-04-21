@@ -1,6 +1,7 @@
 package com.demo.shape;
 
 import com.demo.DrawCanvas;
+import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
 import java.util.ArrayList;
@@ -17,14 +18,27 @@ public abstract class Geometry {
     protected List<Point2D> listDraw = new ArrayList<>(), listClear = new ArrayList<>();
     protected Point2D startPoint, endPoint;
 
-    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
+
+    protected DrawMode drawMode;
+
+    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode) {
         this.canvas = canvas;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.drawMode = drawMode;
     }
 
+    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
+        this(canvas, startPoint, endPoint, DrawMode.DEFAULT);
+    }
+
+
     public Geometry(DrawCanvas canvas) {
-        this(canvas, null, null);
+        this(canvas, DrawMode.DEFAULT);
+    }
+
+    public Geometry(DrawCanvas canvas, DrawMode drawMode) {
+        this(canvas, null, null, drawMode);
     }
 
     public abstract void setupDraw();
@@ -90,5 +104,43 @@ public abstract class Geometry {
         listDraw.clear();
         listClear.clear();
         startPoint = endPoint = null;
+    }
+
+    public final boolean isListDrawContain(Point2D point) {
+        for (Point2D p : listDraw) {
+            if (p.equals(point)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+     protected boolean isShowPoint(int index) {
+        switch (drawMode) {  //  chế độ vẽ
+            case DEFAULT -> {           // Nét liền
+                return true;
+            }
+            case DOT -> {               // Nét chấm
+                return (index % 2) == 0;
+            }
+            case DASH -> {              // Nét gạch
+                return (index % 5) < 3;
+            }
+            case DASH_DOT -> {          // Nét gạch chấm
+                return (index % 6) < 3 || (index % 6) == 4;
+            }
+            case DASH_DOT_DOT -> {      // Nét gạch 2 chấm
+                return (index % 12 < 4) || (index % 12) == 6 || (index % 12) == 9;
+            }
+        }
+        return true;
+    }
+
+    public DrawMode getDrawMode() {
+        return drawMode;
+    }
+
+    public void setDrawMode(DrawMode drawMode) {
+        this.drawMode = drawMode;
     }
 }

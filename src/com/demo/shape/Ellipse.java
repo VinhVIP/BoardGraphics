@@ -1,9 +1,9 @@
 package com.demo.shape;
 
 import com.demo.DrawCanvas;
+import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +20,10 @@ public class Ellipse extends Geometry {
 
     public Ellipse(DrawCanvas canvas) {
         super(canvas);
+    }
+
+    public Ellipse(DrawCanvas canvas, DrawMode drawMode) {
+        super(canvas, drawMode);
     }
 
     @Override
@@ -39,15 +43,6 @@ public class Ellipse extends Geometry {
     @Override
     public void showPointsCoordinate() {
 
-    }
-
-    boolean isListDrawContain(Point2D point) {
-        for (Point2D p : listDraw) {
-            if (p.equals(point)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     void choosePoints() {
@@ -87,38 +82,6 @@ public class Ellipse extends Geometry {
         listDraw.clear();
         listDraw.addAll(listTmp);
         listTmp.clear();
-
-//        int s = 3*n;
-//        while(s++ < 5*n){
-//            if(s%5 >= 2){
-//                listTmp.add(listDraw.get(s%(4*n)));
-//            }
-//        }
-//        listTmp.addAll(listDraw.subList(n+1, 3*n));
-//        listDraw.clear();
-//        listDraw.addAll(listTmp);
-//        listTmp.clear();
-    }
-
-    private boolean isShowPoint(int index) {
-        switch (DrawCanvas.lineMode) {  // DrawCanvas.lineMode là chế độ vẽ
-            case DEFAULT -> {           // Nét liền
-                return true;
-            }
-            case DOT -> {               // Nét chấm
-                return (index % 2) == 0;
-            }
-            case DASH -> {              // Nét gạch
-                return (index % 6) < 4;
-            }
-            case DASH_DOT -> {          // Nét gạch chấm
-                return (index % 6) < 3 || (index % 6) == 4;
-            }
-            case DASH_DOT_DOT -> {      // Nét gạch 2 chấm
-                return (index % 12 < 4) || (index % 12) == 6 || (index % 12) == 9;
-            }
-        }
-        return true;
     }
 
     void plot(int xc, int yc, int x, int y, int color) {
