@@ -3,22 +3,21 @@ package com.demo.shape;
 import com.demo.DrawCanvas;
 import com.demo.models.Point2D;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Create by VinhIT
- * On 11/04/2021
+ * On 21/04/2021
  */
 
-public class Ellipse extends Geometry {
+public class EllipseDash extends Geometry {
 
-    public Ellipse(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
+    public EllipseDash(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
         super(canvas, startPoint, endPoint);
     }
 
-    public Ellipse(DrawCanvas canvas) {
+    public EllipseDash(DrawCanvas canvas) {
         super(canvas);
     }
 
@@ -41,15 +40,6 @@ public class Ellipse extends Geometry {
 
     }
 
-    boolean isListDrawContain(Point2D point) {
-        for (Point2D p : listDraw) {
-            if (p.equals(point)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     void choosePoints() {
         int n = listDraw.size();
         List<Point2D> listTmp = new ArrayList<>();
@@ -64,15 +54,15 @@ public class Ellipse extends Geometry {
                 switch (k) {
                     case 2 -> {
                         Point2D p = new Point2D(startPoint.getX() + x, startPoint.getY() - y, point.getColor());
-                        if(!isListDrawContain(p)) listTmp.add(0, p);
+                        listTmp.add(0, p);
                     }
                     case 3 -> {
                         Point2D p = new Point2D(startPoint.getX() - x, startPoint.getY() - y, point.getColor());
-                        if(!isListDrawContain(p)) listTmp.add(p);
+                        listTmp.add(p);
                     }
                     case 4 -> {
-                        Point2D p =new Point2D(startPoint.getX() - x, startPoint.getY() + y, point.getColor());
-                        if(!isListDrawContain(p)) listTmp.add(0, p);
+                        Point2D p = new Point2D(startPoint.getX() - x, startPoint.getY() + y, point.getColor());
+                        listTmp.add(0, p);
                     }
                 }
             }
@@ -80,50 +70,23 @@ public class Ellipse extends Geometry {
             listTmp.clear();
         }
 
-        for (int i = 0; i < listDraw.size(); i++) {
-            if (isShowPoint(i)) listTmp.add(listDraw.get(i));
-        }
 
+        int s = 3 * n;
+        while (s++ < 5 * n) {
+            if (s % 5 >= 2) {
+                listTmp.add(listDraw.get(s % (4 * n)));
+            }
+        }
+        listTmp.addAll(listDraw.subList(n + 1, 3 * n));
         listDraw.clear();
         listDraw.addAll(listTmp);
         listTmp.clear();
-
-//        int s = 3*n;
-//        while(s++ < 5*n){
-//            if(s%5 >= 2){
-//                listTmp.add(listDraw.get(s%(4*n)));
-//            }
-//        }
-//        listTmp.addAll(listDraw.subList(n+1, 3*n));
-//        listDraw.clear();
-//        listDraw.addAll(listTmp);
-//        listTmp.clear();
     }
 
-    private boolean isShowPoint(int index) {
-        switch (DrawCanvas.lineMode) {  // DrawCanvas.lineMode là chế độ vẽ
-            case DEFAULT -> {           // Nét liền
-                return true;
-            }
-            case DOT -> {               // Nét chấm
-                return (index % 2) == 0;
-            }
-            case DASH -> {              // Nét gạch
-                return (index % 6) < 4;
-            }
-            case DASH_DOT -> {          // Nét gạch chấm
-                return (index % 6) < 3 || (index % 6) == 4;
-            }
-            case DASH_DOT_DOT -> {      // Nét gạch 2 chấm
-                return (index % 12 < 4) || (index % 12) == 6 || (index % 12) == 9;
-            }
-        }
-        return true;
-    }
 
     void plot(int xc, int yc, int x, int y, int color) {
         Point2D p = new Point2D(xc + x, yc + y, DrawCanvas.currentColor);
-        if(!isListDrawContain(p)) listDraw.add(p);
+        listDraw.add(p);
     }
 
     void midEllipse(int xc, int yc, int a, int b, int color) {
@@ -163,5 +126,4 @@ public class Ellipse extends Geometry {
         }
 
     }
-
 }

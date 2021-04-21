@@ -134,6 +134,9 @@ public class DrawCanvas extends Canvas {
             case ELLIPSE -> {
                 geometry = new Ellipse(this);
             }
+            case ELLIPSE_DASH -> {
+                geometry = new EllipseDash(this);
+            }
         }
     }
 
