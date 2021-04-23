@@ -8,8 +8,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.*;
+import java.util.Set;
 
 /**
  * Create by VinhIT
@@ -79,7 +81,6 @@ public class DrawCanvas extends Canvas {
     private boolean isShowGrid = true;
     private boolean isShowPointCoord = false;
 
-    private boolean finishDraw = false;
 
     private Set<Point2D> coordinatePoints = new HashSet<>();
 
@@ -88,6 +89,8 @@ public class DrawCanvas extends Canvas {
     private List<int[][]> boardStates = new ArrayList<>();
 
     private int curState = 0;
+
+    private boolean isMove = false;
 
     //------------------------------------------------------------------------//
 
@@ -111,6 +114,7 @@ public class DrawCanvas extends Canvas {
 
 
         boardStates.add(getCurrentBoard());
+        listShapes.add(null);
 
         // Mode mặc định là vẽ PEN
         drawMode = DrawMode.DEFAULT;
@@ -231,12 +235,10 @@ public class DrawCanvas extends Canvas {
 
         addToListStates();
 
-        listShapes.add(geometry);
-
         if (isShowPointCoord) drawAllPoints();
     }
 
-    int[][] getCurrentBoard(){
+    int[][] getCurrentBoard() {
         int[][] a = new int[rowSize][colSize];
         for (int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) a[i][j] = board[i][j];
@@ -244,23 +246,32 @@ public class DrawCanvas extends Canvas {
         return a;
     }
 
-    private  void addToListStates(){
+    private void addToListStates() {
         int[][] a = getCurrentBoard();
 
-        if(curState == boardStates.size()-1){
+        if (curState == boardStates.size() - 1) {
             boardStates.add(a);
+
+            Geometry g = geometry.copy();
+            listShapes.add(g);
+            if(g.getStartPoint() == null) System.out.println("null");
+            else System.out.println("non null");
+
             curState++;
-        }else{
-            int len = boardStates.size()-curState-1;
-            while (len-- > 0) boardStates.remove(boardStates.size()-1);
+        } else {
+            int len = boardStates.size() - curState - 1;
+            while (len-- > 0) {
+                boardStates.remove(boardStates.size() - 1);
+                listShapes.remove(listShapes.size() - 1);
+            }
             boardStates.add(a);
-            curState = boardStates.size()-1;
+            listShapes.add(geometry);
+            curState = boardStates.size() - 1;
         }
     }
 
 
-
-    private void applyState(int state){
+    private void applyState(int state) {
         int[][] stateBoard = boardStates.get(state);
         Point2D p;
 
@@ -276,16 +287,16 @@ public class DrawCanvas extends Canvas {
             }
         }
 
-        System.out.println("apply state "+ state + " done");
+        System.out.println("apply state " + state + " done");
     }
 
 
     public void undo() {
-        if(curState > 0) applyState(--curState);
+        if (curState > 0) applyState(--curState);
     }
 
     public void redo() {
-        if(curState < boardStates.size()-1) applyState(++curState);
+        if (curState < boardStates.size() - 1) applyState(++curState);
     }
 
     /*
@@ -437,10 +448,15 @@ public class DrawCanvas extends Canvas {
         resetStates();
     }
 
-    private void resetStates(){
+    private void resetStates() {
         boardStates.clear();
         boardStates.add(getCurrentBoard());
         curState = 0;
+    }
+
+    public void move() {
+        isMove = !isMove;
+        setCursor(new Cursor(isMove ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
     }
 
     // Lớp cài đặt sự kiện nhấn chuột
@@ -472,6 +488,8 @@ public class DrawCanvas extends Canvas {
         public void mouseReleased(MouseEvent e) {
             super.mouseReleased(e);
             merge();
+
+            System.out.println("clear");
             geometry.clearAll();
         }
     }
@@ -487,19 +505,26 @@ public class DrawCanvas extends Canvas {
             if (e.getX() >= canvasWidth || e.getY() >= canvasHeight || e.getX() <= 0 || e.getY() <= 0) return;
             if (geometry instanceof SinglePoint) return;
 
-            // Lấy tọa độ con trỏ chuột trên màn hình, chuyển sang tọa độ Descartes
-            Point2D point = Point2D.fromComputerCoordinate(e.getX() / DrawCanvas.pixelSize, e.getY() / DrawCanvas.pixelSize);
-            mouseListener.mouseCoordinate(point.getX(), point.getY());
-
-            // Set màu cho điểm vẽ là màu đang chọn
-            point.setColor(DrawCanvas.currentColor);
-
-            if (geometry.getStartPoint() == null) {
-                geometry.setStartPoint(point);
+            if (isMove) {
+                Geometry g = listShapes.get(listShapes.size() - 1);
+                g.translate(10, 10);
+                g.setupDraw();
             } else {
-                geometry.setEndPoint(point);
-                geometry.setupDraw(); // Xem trước nét vẽ
+                // Lấy tọa độ con trỏ chuột trên màn hình, chuyển sang tọa độ Descartes
+                Point2D point = Point2D.fromComputerCoordinate(e.getX() / DrawCanvas.pixelSize, e.getY() / DrawCanvas.pixelSize);
+                mouseListener.mouseCoordinate(point.getX(), point.getY());
+
+                // Set màu cho điểm vẽ là màu đang chọn
+                point.setColor(DrawCanvas.currentColor);
+
+                if (geometry.getStartPoint() == null) {
+                    geometry.setStartPoint(point);
+                } else {
+                    geometry.setEndPoint(point);
+                    geometry.setupDraw(); // Xem trước nét vẽ
+                }
             }
+
 
         }
 

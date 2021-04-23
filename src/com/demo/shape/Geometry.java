@@ -32,6 +32,27 @@ public abstract class Geometry {
         this(canvas, startPoint, endPoint, DrawMode.DEFAULT);
     }
 
+    public Geometry copy(){
+        Geometry g =  new Geometry(canvas, startPoint, endPoint, drawMode) {
+
+            @Override
+            public void setupDraw() {
+
+            }
+
+            @Override
+            public void showPointsCoordinate() {
+
+            }
+        };
+        g.startPoint = startPoint;
+        g.endPoint  = endPoint;
+        g.listDraw = listDraw;
+        g.listClear = listClear;
+
+        return g;
+    }
+
 
     public Geometry(DrawCanvas canvas) {
         this(canvas, DrawMode.DEFAULT);
@@ -115,7 +136,7 @@ public abstract class Geometry {
         return false;
     }
 
-     protected boolean isShowPoint(int index) {
+    protected boolean isShowPoint(int index) {
         switch (drawMode) {  //  chế độ vẽ
             case DEFAULT -> {           // Nét liền
                 return true;
@@ -142,5 +163,10 @@ public abstract class Geometry {
 
     public void setDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
+    }
+
+    public void translate(int translateX, int translateY) {
+        startPoint.set(startPoint.getX() + translateX, startPoint.getY() + translateY);
+        endPoint.set(endPoint.getX() + translateX, endPoint.getY() + translateY);
     }
 }

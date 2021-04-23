@@ -29,6 +29,7 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
     private JButton btnEllipseDash;
     private JButton btnUndo;
     private JButton btnRedo;
+    private JButton btnMove;
 
     private DrawCanvas canvas;
 
@@ -124,6 +125,8 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
         btnUndo.addActionListener(e->canvas.undo());
 
         btnRedo.addActionListener(e->canvas.redo());
+
+        btnMove.addActionListener(e->canvas.move());
 
         // Important
         add(rootPanel);

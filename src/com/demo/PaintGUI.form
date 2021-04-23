@@ -237,6 +237,14 @@
           <text value="Redo"/>
         </properties>
       </component>
+      <component id="769dc" class="javax.swing.JButton" binding="btnMove">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Move"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
