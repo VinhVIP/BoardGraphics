@@ -29,8 +29,7 @@ public class Circle extends Geometry {
     @Override
     public void setupDraw() {
         if (startPoint != null && endPoint != null) {
-            int r = (int) Math.sqrt((startPoint.getX() - endPoint.getX()) * (startPoint.getX() - endPoint.getX()) +
-                    (startPoint.getY() - endPoint.getY()) * (startPoint.getY() - endPoint.getY()));
+            int r = getCircleRadius();
 
             swapList();
 
@@ -46,6 +45,12 @@ public class Circle extends Geometry {
     @Override
     public void showPointsCoordinate() {
 
+    }
+
+    public int getCircleRadius(){
+        if(startPoint == null || endPoint == null) return 0;
+        return (int) Math.sqrt((startPoint.getX() - endPoint.getX()) * (startPoint.getX() - endPoint.getX()) +
+                (startPoint.getY() - endPoint.getY()) * (startPoint.getY() - endPoint.getY()));
     }
 
     Point2D getPoint(Point2D p, int k) {
@@ -129,5 +134,8 @@ public class Circle extends Geometry {
 
     }
 
-
+    @Override
+    public String toString() {
+        return String.format("Circle: (%d, %d) ; R = %d", startPoint.getX(), startPoint.getY(), getCircleRadius());
+    }
 }

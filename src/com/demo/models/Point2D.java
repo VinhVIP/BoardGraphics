@@ -27,6 +27,10 @@ public class Point2D {
         this.color = color;
     }
 
+    public Point2D(Point2D p){
+        this(p.x, p.y, p.color);
+    }
+
     public int getX() {
         return x;
     }

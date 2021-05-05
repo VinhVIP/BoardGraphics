@@ -32,28 +32,6 @@ public abstract class Geometry {
         this(canvas, startPoint, endPoint, DrawMode.DEFAULT);
     }
 
-    public Geometry copy(){
-        Geometry g =  new Geometry(canvas, startPoint, endPoint, drawMode) {
-
-            @Override
-            public void setupDraw() {
-
-            }
-
-            @Override
-            public void showPointsCoordinate() {
-
-            }
-        };
-        g.startPoint = startPoint;
-        g.endPoint  = endPoint;
-        g.listDraw = listDraw;
-        g.listClear = listClear;
-
-        return g;
-    }
-
-
     public Geometry(DrawCanvas canvas) {
         this(canvas, DrawMode.DEFAULT);
     }
@@ -159,6 +137,14 @@ public abstract class Geometry {
 
     public DrawMode getDrawMode() {
         return drawMode;
+    }
+
+    public List<Point2D> getListDraw() {
+        return listDraw;
+    }
+
+    public void clearListDraw(){
+        listDraw.clear();
     }
 
     public void setDrawMode(DrawMode drawMode) {

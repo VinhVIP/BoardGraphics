@@ -59,15 +59,15 @@ public class Ellipse extends Geometry {
                 switch (k) {
                     case 2 -> {
                         Point2D p = new Point2D(startPoint.getX() + x, startPoint.getY() - y, point.getColor());
-                        if(!isListDrawContain(p)) listTmp.add(0, p);
+                        if (!isListDrawContain(p)) listTmp.add(0, p);
                     }
                     case 3 -> {
                         Point2D p = new Point2D(startPoint.getX() - x, startPoint.getY() - y, point.getColor());
-                        if(!isListDrawContain(p)) listTmp.add(p);
+                        if (!isListDrawContain(p)) listTmp.add(p);
                     }
                     case 4 -> {
-                        Point2D p =new Point2D(startPoint.getX() - x, startPoint.getY() + y, point.getColor());
-                        if(!isListDrawContain(p)) listTmp.add(0, p);
+                        Point2D p = new Point2D(startPoint.getX() - x, startPoint.getY() + y, point.getColor());
+                        if (!isListDrawContain(p)) listTmp.add(0, p);
                     }
                 }
             }
@@ -86,7 +86,7 @@ public class Ellipse extends Geometry {
 
     void plot(int xc, int yc, int x, int y, int color) {
         Point2D p = new Point2D(xc + x, yc + y, DrawCanvas.currentColor);
-        if(!isListDrawContain(p)) listDraw.add(p);
+        if (!isListDrawContain(p)) listDraw.add(p);
     }
 
     void midEllipse(int xc, int yc, int a, int b, int color) {
@@ -127,4 +127,11 @@ public class Ellipse extends Geometry {
 
     }
 
+    @Override
+    public String toString() {
+        return String.format("Ellipse: (%d, %d) a=%d, b=%d",
+                startPoint.getX(), startPoint.getY(),
+                Math.abs(endPoint.getX() - startPoint.getX()),
+                Math.abs(endPoint.getY() - startPoint.getY()));
+    }
 }

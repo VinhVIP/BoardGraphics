@@ -157,4 +157,8 @@ public class Line extends Geometry {
     }
 
 
+    @Override
+    public String toString() {
+        return String.format("Line: (%d, %d) -> (%d, %d)", startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+    }
 }

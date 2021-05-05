@@ -1,14 +1,18 @@
 package com.demo;
 
+import com.demo.shape.Geometry;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Create by VinhIT
  * On 19/03/2021
  */
 
-public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
+public class PaintGUI extends JFrame implements CanvasListener {
 
     private JPanel rootPanel;
     private JButton btnPen;
@@ -30,13 +34,16 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
     private JButton btnUndo;
     private JButton btnRedo;
     private JButton btnMove;
+    private JList listShape;
 
     private DrawCanvas canvas;
+
+    DefaultListModel listModel = new DefaultListModel();
 
 
     public PaintGUI() {
         setTitle("Paint");
-        setSize(1200, 900);
+        setSize(1400, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -45,7 +52,21 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
         mainPanel.add(canvas);
 
 
-        btnClear.addActionListener(e -> canvas.clearScreen());
+        btnClear.addActionListener(e -> {
+            int[] indexes = listShape.getSelectedIndices();
+            if (indexes.length > 0) {
+                canvas.clearShapes(indexes);
+                Arrays.sort(indexes);
+                for (int i = indexes.length - 1; i >= 0; i--) {
+                    System.out.print(indexes[i] + " ");
+                    listModel.remove(indexes[i]);
+                }
+                System.out.println();
+
+            } else {
+                canvas.clearScreen();
+            }
+        });
 
         btnLine.addActionListener(e -> {
             canvas.setShapeMode(ShapeMode.LINE);
@@ -122,11 +143,23 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
             else if (s.equals("ARROW")) canvas.setDrawMode(DrawMode.ARROW);
         });
 
-        btnUndo.addActionListener(e->canvas.undo());
+        btnUndo.addActionListener(e -> canvas.undo());
 
-        btnRedo.addActionListener(e->canvas.redo());
+        btnRedo.addActionListener(e -> canvas.redo());
 
-        btnMove.addActionListener(e->canvas.move());
+        btnMove.addActionListener(e -> {
+            int[] indexMove = listShape.getSelectedIndices();
+            Arrays.sort(indexMove);
+            for(int i:indexMove){
+                System.out.print(i+" ");
+            }
+            System.out.println();
+            canvas.move(indexMove);
+        });
+
+
+        listShape.setModel(listModel);
+
 
         // Important
         add(rootPanel);
@@ -138,6 +171,30 @@ public class PaintGUI extends JFrame implements MouseCoordinateChangeListener {
     @Override
     public void mouseCoordinate(int x, int y) {
         labelCoordinate.setText(String.format("X:%d , Y:%d", x, y));
+    }
+
+    @Override
+    public void notifyShapeInserted(String shapeTitle) {
+        listModel.addElement(shapeTitle);
+    }
+
+    @Override
+    public void notifyDataSetChanged(List listShape) {
+        listModel.clear();
+        for (int i = 0; i < listShape.size(); i++) {
+            Geometry g = (Geometry) listShape.get(i);
+            listModel.addElement(g.toString());
+        }
+    }
+
+    @Override
+    public void notifyShapeChanged(int position, String newTitle) {
+        listModel.set(position, newTitle);
+    }
+
+    @Override
+    public void clear() {
+        listModel.clear();
     }
 
 

@@ -126,4 +126,13 @@ public class EllipseDash extends Geometry {
         }
 
     }
+
+
+    @Override
+    public String toString() {
+        return String.format("Dash Ellipse: (%d, %d) a=%d, b=%d",
+                startPoint.getX(), startPoint.getY(),
+                Math.abs(endPoint.getX() - startPoint.getX()),
+                Math.abs(endPoint.getY() - startPoint.getY()));
+    }
 }

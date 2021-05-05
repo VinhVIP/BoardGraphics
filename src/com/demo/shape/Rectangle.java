@@ -4,6 +4,8 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
+import java.util.List;
+
 /**
  * Create by VinhIT
  * On 28/03/2021
@@ -67,13 +69,14 @@ public class Rectangle extends Geometry {
             lines[3].setStartPoint(pointD);
             lines[3].setEndPoint(startPoint);
 
-            for(int i=0; i<4; i++){
+            for (int i = 0; i < 4; i++) {
                 lines[i].swapList();
                 lines[i].drawLine();
                 lines[i].clearOldPoints();
             }
 
-            for (int i=0; i<4; i++) lines[i].drawNewPoints();
+            for (int i = 0; i < 4; i++) lines[i].drawNewPoints();
+
 
         }
     }
@@ -88,6 +91,15 @@ public class Rectangle extends Geometry {
         for (Line line : lines) {
             line.setDrawMode(drawMode);
         }
+    }
+
+    @Override
+    public List<Point2D> getListDraw() {
+        listDraw.clear();
+        for (int i = 0; i < lines.length; i++) {
+            listDraw.addAll(lines[i].getListDraw());
+        }
+        return listDraw;
     }
 
     private void drawRectangle(int x1, int y1, int x2, int y2) {
@@ -117,4 +129,8 @@ public class Rectangle extends Geometry {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("Rectangle:");
+    }
 }
