@@ -18,14 +18,18 @@ public abstract class Geometry {
     protected List<Point2D> listDraw = new ArrayList<>(), listClear = new ArrayList<>();
     protected Point2D startPoint, endPoint;
 
+    protected int color;
 
     protected DrawMode drawMode;
+
 
     public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode) {
         this.canvas = canvas;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.drawMode = drawMode;
+
+        this.color = DrawCanvas.currentColor;
     }
 
     public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
@@ -149,6 +153,14 @@ public abstract class Geometry {
 
     public void setDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public void translate(int translateX, int translateY) {

@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="rootPanel" layout-manager="GridLayoutManager" row-count="11" column-count="15" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1090" height="643"/>
+      <xy x="20" y="20" width="1116" height="643"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -13,7 +13,9 @@
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Line"/>
+          <background color="-1"/>
+          <icon value="com/demo/icons/line.png"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="d2aa7" class="javax.swing.JButton" binding="btnRect">
@@ -21,7 +23,9 @@
           <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Rectangle"/>
+          <background color="-1"/>
+          <icon value="com/demo/icons/rectangle.png"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="6d899" class="javax.swing.JButton" binding="btnCircle">
@@ -29,14 +33,19 @@
           <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Circle"/>
+          <background color="-1"/>
+          <enabled value="true"/>
+          <icon value="com/demo/icons/circle.png"/>
+          <text value=""/>
         </properties>
       </component>
       <grid id="f727b" binding="mainPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
         <constraints>
           <grid row="3" column="1" row-span="7" col-span="8" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <foreground color="-1"/>
+        </properties>
         <border type="none"/>
         <children/>
       </grid>
@@ -151,7 +160,9 @@
           <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Clear"/>
+          <background color="-1"/>
+          <icon value="com/demo/icons/clear.png"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="451fa" class="javax.swing.JButton" binding="btnPoint">
@@ -210,7 +221,9 @@
           <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Ellipse"/>
+          <background color="-1"/>
+          <icon value="com/demo/icons/ellipse.png"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="bbe94" class="javax.swing.JButton" binding="btnEllipseDash">
@@ -226,7 +239,9 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Undo"/>
+          <background color="-1"/>
+          <icon value="com/demo/icons/undo.png"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="5f23a" class="javax.swing.JButton" binding="btnRedo">
@@ -234,7 +249,9 @@
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Redo"/>
+          <background color="-1"/>
+          <icon value="com/demo/icons/redo.png"/>
+          <text value=""/>
         </properties>
       </component>
       <component id="769dc" class="javax.swing.JButton" binding="btnMove">
@@ -242,7 +259,9 @@
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Move"/>
+          <background color="-1"/>
+          <icon value="com/demo/icons/move.png"/>
+          <text value=""/>
         </properties>
       </component>
       <hspacer id="acd97">

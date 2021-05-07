@@ -254,7 +254,8 @@ public class DrawCanvas extends Canvas {
             boardStates.add(a);
 
             listShapes.add(geometry);
-            listener.notifyShapeInserted(geometry.toString());
+            if (geometry.toString().length() > 0)
+                listener.notifyShapeInserted(geometry.toString());
             System.out.println("add 1: " + geometry.getListDraw().size());
 
             curState++;
@@ -267,7 +268,8 @@ public class DrawCanvas extends Canvas {
 
             boardStates.add(a);
             listShapes.add(geometry);
-            listener.notifyShapeInserted(geometry.toString());
+            if (geometry.toString().length() > 0)
+                listener.notifyShapeInserted(geometry.toString());
             System.out.println("add 2");
 
             curState = boardStates.size() - 1;
@@ -451,6 +453,8 @@ public class DrawCanvas extends Canvas {
 
         resetStates();
         listShapes.clear();
+        isMove = false;
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
         listener.clear();
     }
@@ -499,17 +503,18 @@ public class DrawCanvas extends Canvas {
         listIndexMove.clear();
         for (int i : indexMove) listIndexMove.add(i);
 
-        isMove = true;
-        setCursor(new Cursor(isMove ? Cursor.MOVE_CURSOR : Cursor.DEFAULT_CURSOR));
-//        if (!isMove) {
-//            startMove = null;
-//            endMove = null;
-//            listStartPoints = listEndPoints = new ArrayList<>();
-//            isMove = false;
-//        }
+        if (indexMove.length > 0) {
+            isMove = true;
+            setCursor(new Cursor(Cursor.MOVE_CURSOR));
+        } else {
+            isMove = false;
+            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+
     }
 
-    // Lớp cài đặt sự kiện nhấn chuột
+
+    // -------------- Lớp cài đặt sự kiện nhấn chuột ----------------
     public class MyMouseAdapter extends MouseAdapter {
 
         @Override
@@ -554,6 +559,7 @@ public class DrawCanvas extends Canvas {
 
                 for (int i = 0; i < listStartPoints.size(); i++) {
                     Geometry g = (Geometry) listShapes.get(listIndexMove.get(i));
+                    System.out.println(i + ":" + listNewStartPoints.get(i).getX());
                     g.setStartPoint(listNewStartPoints.get(i));
                     g.setEndPoint(listNewEndPoints.get(i));
                     listShapes.set(listIndexMove.get(i), g);
@@ -562,7 +568,16 @@ public class DrawCanvas extends Canvas {
                 listStartPoints.clear();
                 listEndPoints.clear();
 
+                for (int i = 0; i < rowSize; i++) {
+                    for (int j = 0; j < colSize; j++) {
+                        if (board[i][j] != tempBoard[i][j]) {
+                            board[i][j] = tempBoard[i][j];
+                        }
+                    }
+                }
+
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                listener.notifyDeselectedAllItems();
             }
 
         }
@@ -572,7 +587,7 @@ public class DrawCanvas extends Canvas {
     Point2D startMove = null, endMove = null;
     List<Integer> listIndexMove = new ArrayList<>();
     List<Point2D> listStartPoints = new ArrayList<>(), listEndPoints = new ArrayList<>();
-    List<Point2D> listNewStartPoints= new ArrayList<>(), listNewEndPoints = new ArrayList<>();
+    List<Point2D> listNewStartPoints = new ArrayList<>(), listNewEndPoints = new ArrayList<>();
 
     public class MyMouseMotionAdapter extends MouseMotionAdapter {
 
@@ -582,11 +597,17 @@ public class DrawCanvas extends Canvas {
 
             super.mouseDragged(e);
             if (e.getX() >= canvasWidth || e.getY() >= canvasHeight || e.getX() <= 0 || e.getY() <= 0) return;
+
+            Point2D point = Point2D.fromComputerCoordinate(e.getX() / DrawCanvas.pixelSize, e.getY() / DrawCanvas.pixelSize);
+            geometry.setColor(DrawCanvas.currentColor);
+            listener.mouseCoordinate(point.getX(), point.getY());
+
             if (geometry instanceof SinglePoint) return;
 
 
             // --------- Move ---------
             if (isMove && listIndexMove.size() > 0) {
+                System.out.println("listindexmove size: " + listIndexMove.size() + " - list shape: "+listShapes.size());
 
                 if (listStartPoints.size() == 0) {
                     for (int i : listIndexMove) {
@@ -627,9 +648,9 @@ public class DrawCanvas extends Canvas {
 
                 if (startMove == null) {
                     System.out.println("new start move");
-                    startMove = Point2D.fromComputerCoordinate(e.getX() / 5, e.getY() / 5);
+                    startMove = point;
                 } else
-                    endMove = Point2D.fromComputerCoordinate(e.getX() / 5, e.getY() / 5);
+                    endMove = point;
 
                 if (endMove != null) {
                     int xMove = endMove.getX() - startMove.getX();
@@ -655,12 +676,7 @@ public class DrawCanvas extends Canvas {
                 }
 
             } else {
-                // Lấy tọa độ con trỏ chuột trên màn hình, chuyển sang tọa độ Descartes
-                Point2D point = Point2D.fromComputerCoordinate(e.getX() / DrawCanvas.pixelSize, e.getY() / DrawCanvas.pixelSize);
-                listener.mouseCoordinate(point.getX(), point.getY());
 
-                // Set màu cho điểm vẽ là màu đang chọn
-                point.setColor(DrawCanvas.currentColor);
 
                 if (geometry.getStartPoint() == null) {
                     geometry.setStartPoint(point);

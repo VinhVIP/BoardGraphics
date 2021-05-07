@@ -5,9 +5,13 @@ import javax.swing.*;
 public class Main {
 
     public static void main(String[] args) {
-        PaintGUI gui = new PaintGUI();
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        }
+
+        Paint gui = new Paint();
         gui.setVisible(true);
 
-        //alo dang
     }
 }

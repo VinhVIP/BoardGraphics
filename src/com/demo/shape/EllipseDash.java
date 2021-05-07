@@ -26,7 +26,7 @@ public class EllipseDash extends Geometry {
         if (startPoint != null && endPoint != null) {
             swapList();
 
-            midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), DrawCanvas.currentColor);
+            midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), color);
 
             choosePoints();
 
@@ -85,7 +85,7 @@ public class EllipseDash extends Geometry {
 
 
     void plot(int xc, int yc, int x, int y, int color) {
-        Point2D p = new Point2D(xc + x, yc + y, DrawCanvas.currentColor);
+        Point2D p = new Point2D(xc + x, yc + y, color);
         listDraw.add(p);
     }
 
@@ -130,9 +130,14 @@ public class EllipseDash extends Geometry {
 
     @Override
     public String toString() {
-        return String.format("Dash Ellipse: (%d, %d) a=%d, b=%d",
-                startPoint.getX(), startPoint.getY(),
-                Math.abs(endPoint.getX() - startPoint.getX()),
-                Math.abs(endPoint.getY() - startPoint.getY()));
+        try{
+            return String.format("Dash Ellipse: (%d, %d) a=%d, b=%d",
+                    startPoint.getX(), startPoint.getY(),
+                    Math.abs(endPoint.getX() - startPoint.getX()),
+                    Math.abs(endPoint.getY() - startPoint.getY()));
+        }catch (Exception e){
+            return "";
+        }
+
     }
 }

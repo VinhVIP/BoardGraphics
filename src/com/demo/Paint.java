@@ -9,39 +9,39 @@ import java.util.List;
 
 /**
  * Create by VinhIT
- * On 19/03/2021
+ * On 05/05/2021
  */
 
-public class PaintGUI extends JFrame implements CanvasListener {
+public class Paint extends JFrame implements CanvasListener {
 
-    private JPanel rootPanel;
-    private JButton btnPen;
+    private JButton btnRotate;
+    private JButton btnMove;
+    private JButton btnScale;
+    private JButton btnSymmetry;
+    private JButton btnRedo;
+    private JButton btnClear;
+    private JButton btnUndo;
     private JButton btnChooseColor;
     private JButton btnLine;
-    private JButton btnClear;
     private JButton btnRect;
     private JButton btnCircle;
-    private JButton btnPoint;
+    private JButton btnEllipse;
+    private JList listShape;
+    private JCheckBox cbShowAxis;
+    private JCheckBox cbShowGrid;
+    private JCheckBox cbShowPointCoord;
+    private JComboBox cbChooseDrawMode;
     private JPanel mainPanel;
     private JLabel labelDrawMode;
     private JLabel labelCoordinate;
-    private JCheckBox cbShowGrid;
-    private JCheckBox cbShowAxis;
-    private JComboBox cbChooseDrawMode;
-    private JCheckBox cbShowPointCoord;
-    private JButton btnEllipse;
-    private JButton btnEllipseDash;
-    private JButton btnUndo;
-    private JButton btnRedo;
-    private JButton btnMove;
-    private JList listShape;
+    private JPanel rootPanel;
+    private JButton btnDeseleted;
+
 
     private DrawCanvas canvas;
-
     DefaultListModel listModel = new DefaultListModel();
 
-
-    public PaintGUI() {
+    public Paint() {
         setTitle("Paint");
         setSize(1400, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -77,11 +77,12 @@ public class PaintGUI extends JFrame implements CanvasListener {
             canvas.setShapeMode(ShapeMode.RECTANGLE);
             labelDrawMode.setText("MODE: RECT");
         });
-        btnPen.addActionListener(e ->
-        {
-            canvas.setShapeMode(ShapeMode.PEN);
-            labelDrawMode.setText("MODE: PEN");
-        });
+
+//        btnPen.addActionListener(e ->
+//        {
+//            canvas.setShapeMode(ShapeMode.PEN);
+//            labelDrawMode.setText("MODE: PEN");
+//        });
 
         btnCircle.addActionListener(e ->
         {
@@ -94,16 +95,16 @@ public class PaintGUI extends JFrame implements CanvasListener {
             labelDrawMode.setText("MODE: ELLIPSE");
         });
 
-        btnEllipseDash.addActionListener(e -> {
-            canvas.setShapeMode(ShapeMode.ELLIPSE_DASH);
-            labelDrawMode.setText("MODE: ELLIPSE DASH");
-        });
+//        btnEllipseDash.addActionListener(e -> {
+//            canvas.setShapeMode(ShapeMode.ELLIPSE_DASH);
+//            labelDrawMode.setText("MODE: ELLIPSE DASH");
+//        });
 
-        btnPoint.addActionListener(e ->
-        {
-            canvas.setShapeMode(ShapeMode.POINT);
-            labelDrawMode.setText("MODE: POINT");
-        });
+//        btnPoint.addActionListener(e ->
+//        {
+//            canvas.setShapeMode(ShapeMode.POINT);
+//            labelDrawMode.setText("MODE: POINT");
+//        });
 
         // Chọn màu vẽ
         btnChooseColor.addActionListener(e ->
@@ -150,12 +151,14 @@ public class PaintGUI extends JFrame implements CanvasListener {
         btnMove.addActionListener(e -> {
             int[] indexMove = listShape.getSelectedIndices();
             Arrays.sort(indexMove);
-            for(int i:indexMove){
-                System.out.print(i+" ");
+            for (int i : indexMove) {
+                System.out.print(i + " ");
             }
             System.out.println();
             canvas.move(indexMove);
         });
+
+        btnDeseleted.addActionListener(e -> listShape.clearSelection());
 
 
         listShape.setModel(listModel);
@@ -166,7 +169,6 @@ public class PaintGUI extends JFrame implements CanvasListener {
 
 
     }
-
 
     @Override
     public void mouseCoordinate(int x, int y) {
@@ -194,13 +196,12 @@ public class PaintGUI extends JFrame implements CanvasListener {
 
     @Override
     public void notifyDeselectedAllItems() {
-
+        listShape.clearSelection();
     }
 
     @Override
     public void clear() {
         listModel.clear();
     }
-
 
 }

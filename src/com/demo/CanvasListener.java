@@ -12,5 +12,6 @@ public interface CanvasListener {
     void notifyShapeInserted(String shapeTitle);
     void notifyDataSetChanged(List listShape);
     void notifyShapeChanged(int position, String newTitle);
+    void notifyDeselectedAllItems();
     void clear();
 }

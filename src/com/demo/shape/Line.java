@@ -103,7 +103,7 @@ public class Line extends Geometry {
         if (y2 - y1 < 0)
             yUnit = -yUnit;
 
-        Point2D pt = new Point2D(x, y, DrawCanvas.currentColor);
+        Point2D pt = new Point2D(x, y, color);
         // listDraw là List chứa danh sách những điểm sẽ vẽ lên màn hình
         listDraw.add(pt);
 
@@ -125,7 +125,7 @@ public class Line extends Geometry {
 
                 // Kiểm tra xem điểm đó được hiển thị hay không, nếu được thì thêm vào list
                 if (isShowPoint(cnt)) {
-                    pt = new Point2D(x, y, DrawCanvas.currentColor);
+                    pt = new Point2D(x, y, color);
                     listDraw.add(pt);
                 }
                 // Tăng giá trị biến đếm lên
@@ -146,7 +146,7 @@ public class Line extends Geometry {
                 y += yUnit;
 
                 if (isShowPoint(cnt)) {
-                    pt = new Point2D(x, y, DrawCanvas.currentColor);
+                    pt = new Point2D(x, y, color);
                     listDraw.add(pt);
                 }
                 cnt++;
@@ -159,6 +159,10 @@ public class Line extends Geometry {
 
     @Override
     public String toString() {
-        return String.format("Line: (%d, %d) -> (%d, %d)", startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        try {
+            return String.format("Line: (%d, %d) -> (%d, %d)", startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

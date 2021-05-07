@@ -120,7 +120,7 @@ public class Circle extends Geometry {
         x = 0;
         y = R;
 
-        putPixel(x, y, DrawCanvas.currentColor);
+        putPixel(x, y, color);
         double p = 1.25 - R; // 5/4-R
         while (x < y) {
             if (p < 0) p += 2 * x + 3;
@@ -129,13 +129,17 @@ public class Circle extends Geometry {
                 y--;
             }
             x++;
-            putPixel(x, y, DrawCanvas.currentColor);
+            putPixel(x, y, color);
         }
 
     }
 
     @Override
     public String toString() {
-        return String.format("Circle: (%d, %d) ; R = %d", startPoint.getX(), startPoint.getY(), getCircleRadius());
+        try{
+            return String.format("Circle: (%d, %d) ; R = %d", startPoint.getX(), startPoint.getY(), getCircleRadius());
+        }catch (Exception e){
+            return "";
+        }
     }
 }
