@@ -48,6 +48,16 @@ public abstract class Geometry {
 
     public abstract void showPointsCoordinate();
 
+    public void previewRotate(List<Point2D> newPoints){
+        swapList();
+
+        listDraw.addAll(newPoints);
+
+        clearOldPoints();
+
+        drawNewPoints();
+    }
+
     /*
      * Lọc ra những điểm cần xóa và xóa nó
      */

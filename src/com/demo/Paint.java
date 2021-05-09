@@ -1,5 +1,8 @@
 package com.demo;
 
+import com.demo.listeners.CanvasListener;
+import com.demo.listeners.DialogListener;
+import com.demo.models.Point2D;
 import com.demo.shape.Geometry;
 
 import javax.swing.*;
@@ -12,7 +15,7 @@ import java.util.List;
  * On 05/05/2021
  */
 
-public class Paint extends JFrame implements CanvasListener {
+public class Paint extends JFrame implements CanvasListener, DialogListener {
 
     private JButton btnRotate;
     private JButton btnMove;
@@ -69,12 +72,12 @@ public class Paint extends JFrame implements CanvasListener {
         });
 
         btnLine.addActionListener(e -> {
-            canvas.setShapeMode(ShapeMode.LINE);
+            canvas.setMode(Mode.LINE);
             labelDrawMode.setText("MODE: LINE");
         });
         btnRect.addActionListener(e ->
         {
-            canvas.setShapeMode(ShapeMode.RECTANGLE);
+            canvas.setMode(Mode.RECTANGLE);
             labelDrawMode.setText("MODE: RECT");
         });
 
@@ -86,12 +89,12 @@ public class Paint extends JFrame implements CanvasListener {
 
         btnCircle.addActionListener(e ->
         {
-            canvas.setShapeMode(ShapeMode.CIRCLE);
+            canvas.setMode(Mode.CIRCLE);
             labelDrawMode.setText("MODE: CIRCLE");
         });
 
         btnEllipse.addActionListener(e -> {
-            canvas.setShapeMode(ShapeMode.ELLIPSE);
+            canvas.setMode(Mode.ELLIPSE);
             labelDrawMode.setText("MODE: ELLIPSE");
         });
 
@@ -156,9 +159,16 @@ public class Paint extends JFrame implements CanvasListener {
             }
             System.out.println();
             canvas.move(indexMove);
+
+            canvas.setMode(Mode.MOVE);
         });
 
         btnDeseleted.addActionListener(e -> listShape.clearSelection());
+
+        btnRotate.addActionListener(e -> {
+            PointInputDialog dialog = new PointInputDialog(this);
+            canvas.setMode(Mode.ROTATE);
+        });
 
 
         listShape.setModel(listModel);
@@ -200,8 +210,19 @@ public class Paint extends JFrame implements CanvasListener {
     }
 
     @Override
+    public void notifyShapeModeChanged(Mode MODE) {
+        labelDrawMode.setText("MODE: "+ MODE);
+    }
+
+    @Override
     public void clear() {
         listModel.clear();
     }
 
+    @Override
+    public void onPoint(int x, int y) {
+        int[] indexMove = listShape.getSelectedIndices();
+        Arrays.sort(indexMove);
+        canvas.rotate(indexMove, new Point2D(x,y));
+    }
 }

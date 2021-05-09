@@ -102,16 +102,18 @@ public class Point2D {
      * Xoay điểm point xung quanh điểm root 1 góc angleRad
      */
     public Point2D rotate(Point2D root, Point2D point, double angleRad) {
+        Point2D p = new Point2D(point);
+
         // Di chuyển root và point về gốc tọa độ
-        point.set(point.x - root.x, point.y - root.y);
+        p.set(point.x - root.x, point.y - root.y);
 
         // Xoay point
-        point = point.rotate(angleRad);
+        p = p.rotate(angleRad);
 
         // Di chuyển point về hệ tọa độ cũ
-        point.set(point.x + root.x, point.y + root.y);
+        p.set(p.x + root.x, p.y + root.y);
 
-        return point;
+        return p;
     }
 
     @Override

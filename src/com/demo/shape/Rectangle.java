@@ -16,6 +16,9 @@ public class Rectangle extends Geometry {
     // Khai báo 4 đoạn thẳng của hình chữ nhật
     private Line[] lines = new Line[4];
 
+
+    private Point2D[] points = new Point2D[4];
+
     public Rectangle(DrawCanvas canvas, Point2D startPoint2D, Point2D endPoint2D) {
         super(canvas, startPoint2D, endPoint2D);
         init4Lines(canvas);
@@ -44,30 +47,11 @@ public class Rectangle extends Geometry {
     @Override
     public void setupDraw() {
         if (startPoint != null && endPoint != null) {
-//            swapList();
-//
-//            drawRectangle(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
-//
-//            clearOldPoints();
-//            drawNewPoints();
 
-
-            // Sử dụng 4 đoạn thẳng thì chạy lâu hơn
-
-            Point2D pointB = new Point2D(endPoint.getX(), startPoint.getY());
-            Point2D pointD = new Point2D(startPoint.getX(), endPoint.getY());
-
-            lines[0].setStartPoint(startPoint);
-            lines[0].setEndPoint(pointB);
-
-            lines[1].setStartPoint(pointB);
-            lines[1].setEndPoint(endPoint);
-
-            lines[2].setStartPoint(endPoint);
-            lines[2].setEndPoint(pointD);
-
-            lines[3].setStartPoint(pointD);
-            lines[3].setEndPoint(startPoint);
+            for (int i = 0; i < 4; i++) {
+                lines[i].setStartPoint(points[i % 4]);
+                lines[i].setEndPoint(points[(i + 1) % 4]);
+            }
 
             for (int i = 0; i < 4; i++) {
                 lines[i].swapList();
@@ -77,13 +61,16 @@ public class Rectangle extends Geometry {
 
             for (int i = 0; i < 4; i++) lines[i].drawNewPoints();
 
-
         }
     }
 
     @Override
     public void showPointsCoordinate() {
 
+    }
+
+    public Point2D[] getPoints() {
+        return points;
     }
 
     @Override
@@ -129,6 +116,16 @@ public class Rectangle extends Geometry {
         }
     }
 
+    public void rotate(Point2D root, double angle) {
+        for (int i = 0; i < 4; i++) {
+            points[i] = points[i].rotate(root, points[i], angle);
+        }
+    }
+
+    public void setPoints(Point2D[] points) {
+        this.points = points;
+    }
+
     @Override
     public String toString() {
         try {
@@ -138,5 +135,18 @@ public class Rectangle extends Geometry {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    @Override
+    public void setEndPoint(Point2D endPoint) {
+        super.setEndPoint(endPoint);
+
+        Point2D pointB = new Point2D(endPoint.getX(), startPoint.getY());
+        Point2D pointD = new Point2D(startPoint.getX(), endPoint.getY());
+
+        points[0] = startPoint;
+        points[1] = pointB;
+        points[2] = endPoint;
+        points[3] = pointD;
     }
 }

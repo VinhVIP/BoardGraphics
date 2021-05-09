@@ -1,6 +1,8 @@
 package com.demo;
 
+import com.demo.listeners.CanvasListener;
 import com.demo.models.Point2D;
+import com.demo.models.Vector2D;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
 
@@ -24,7 +26,7 @@ public class DrawCanvas extends Canvas {
     public static int currentColor = 0xff0000;  // Màu vẽ đang chọn hiện tại
 
     private DrawMode drawMode;
-    private ShapeMode shapeMode; // Chế độ hình vẽ
+    private Mode mode; // Chế độ hình vẽ
 
     private int[][] board = new int[rowSize][colSize];      // Bảng màu canvas chính
     private int[][] tempBoard = new int[rowSize][colSize];  // Bảng màu phụ cho việc preview hình, sau khi `merge()` thì board và tempBoard sẽ hợp lại thành 1
@@ -37,7 +39,8 @@ public class DrawCanvas extends Canvas {
     private List<int[][]> boardStates = new ArrayList<>();
 
     private int curState = 0;
-    private boolean isMove = false;
+    //    private boolean isMove = false;
+//    private boolean isRotate = false;
     private boolean isShowAxis = true;
     private boolean isShowGrid = true;
     private boolean isShowPointCoord = false;
@@ -67,7 +70,7 @@ public class DrawCanvas extends Canvas {
 
         // Mode mặc định là vẽ PEN
         drawMode = DrawMode.DEFAULT;
-        setShapeMode(ShapeMode.LINE);
+        setMode(mode.LINE);
 //        setShowPointCoord(false);
         Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(c);
@@ -84,10 +87,12 @@ public class DrawCanvas extends Canvas {
     /*
      * Cài đặt hình muốn vẽ
      */
-    public void setShapeMode(ShapeMode shapeMode) {
-        this.shapeMode = shapeMode;
+    public void setMode(Mode MODE) {
+        this.mode = MODE;
+        listener.notifyShapeModeChanged(MODE);
+        if (MODE == MODE.NONE) return;
 
-        switch (shapeMode) {
+        switch (MODE) {
             case POINT -> {
                 geometry = new SinglePoint(this);
             }
@@ -453,7 +458,7 @@ public class DrawCanvas extends Canvas {
 
         resetStates();
         listShapes.clear();
-        isMove = false;
+        setMode(mode.NONE);
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
         listener.clear();
@@ -504,10 +509,25 @@ public class DrawCanvas extends Canvas {
         for (int i : indexMove) listIndexMove.add(i);
 
         if (indexMove.length > 0) {
-            isMove = true;
+            setMode(Mode.MOVE);
             setCursor(new Cursor(Cursor.MOVE_CURSOR));
         } else {
-            isMove = false;
+            setMode(Mode.NONE);
+            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+
+    }
+
+    public void rotate(int[] indexMove, Point2D root) {
+        this.rootPoint = root;
+        listIndexMove.clear();
+        for (int i : indexMove) listIndexMove.add(i);
+
+        if (indexMove.length > 0) {
+            setMode(Mode.ROTATE);
+            setCursor(new Cursor(Cursor.MOVE_CURSOR));
+        } else {
+            setMode(Mode.MOVE);
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
 
@@ -545,28 +565,30 @@ public class DrawCanvas extends Canvas {
 
             startMove = endMove = null;
 
-            if (!isMove) {
-                if (geometry.getEndPoint() != null)
-                    merge();
-
-                System.out.println("clear");
-                setShapeMode(shapeMode);
-            } else {
-                // Hoàn thành moving
-                isMove = false;
+            if (mode == Mode.MOVE || mode == Mode.ROTATE) {
+                // Hoàn thành moving | rotating
+                setMode(Mode.NONE);
                 startMove = null;
                 endMove = null;
 
-                for (int i = 0; i < listStartPoints.size(); i++) {
-                    Geometry g = (Geometry) listShapes.get(listIndexMove.get(i));
-                    System.out.println(i + ":" + listNewStartPoints.get(i).getX());
-                    g.setStartPoint(listNewStartPoints.get(i));
-                    g.setEndPoint(listNewEndPoints.get(i));
-                    listShapes.set(listIndexMove.get(i), g);
+                for (int index : mapNewPoints.keySet()) {
+                    Geometry g = (Geometry) listShapes.get(index);
+                    if (g instanceof Rectangle) {
+                        Point2D[] pointsRect = new Point2D[4];
+                        for (int i = 0; i < pointsRect.length; i++) {
+                            pointsRect[i] = mapNewPoints.get(index).get(i);
+                        }
+                        ((Rectangle) g).setPoints(pointsRect);
+                    } else {
+                        g.setStartPoint(mapNewPoints.get(index).get(0));
+                        g.setEndPoint(mapNewPoints.get(index).get(1));
+                    }
+
+                    listShapes.set(index, g);
                 }
 
-                listStartPoints.clear();
-                listEndPoints.clear();
+                mapPoints.clear();
+                mapNewPoints.clear();
 
                 for (int i = 0; i < rowSize; i++) {
                     for (int j = 0; j < colSize; j++) {
@@ -578,16 +600,23 @@ public class DrawCanvas extends Canvas {
 
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 listener.notifyDeselectedAllItems();
-            }
 
+            } else {
+                if (geometry.getEndPoint() != null)
+                    merge();
+
+                System.out.println("clear");
+                setMode(mode);
+            }
         }
     }
 
 
     Point2D startMove = null, endMove = null;
     List<Integer> listIndexMove = new ArrayList<>();
-    List<Point2D> listStartPoints = new ArrayList<>(), listEndPoints = new ArrayList<>();
-    List<Point2D> listNewStartPoints = new ArrayList<>(), listNewEndPoints = new ArrayList<>();
+
+    HashMap<Integer, ArrayList<Point2D>> mapPoints = new HashMap<>();
+    HashMap<Integer, ArrayList<Point2D>> mapNewPoints = new HashMap<>();
 
     public class MyMouseMotionAdapter extends MouseMotionAdapter {
 
@@ -602,81 +631,18 @@ public class DrawCanvas extends Canvas {
             geometry.setColor(DrawCanvas.currentColor);
             listener.mouseCoordinate(point.getX(), point.getY());
 
+            if (mode == mode.NONE) return;
             if (geometry instanceof SinglePoint) return;
 
 
             // --------- Move ---------
-            if (isMove && listIndexMove.size() > 0) {
-                System.out.println("listindexmove size: " + listIndexMove.size() + " - list shape: "+listShapes.size());
+            if (mode == Mode.MOVE && listIndexMove.size() > 0) {
 
-                if (listStartPoints.size() == 0) {
-                    for (int i : listIndexMove) {
-                        Geometry g = (Geometry) listShapes.get(i);
-                        listStartPoints.add(new Point2D(g.getStartPoint()));
-                        listEndPoints.add(new Point2D(g.getEndPoint()));
-                        g.clearListDraw();
-                    }
+                moveShapes(point);
 
-                    listNewStartPoints.clear();
-                    listNewEndPoints.clear();
-
-                    listNewStartPoints.addAll(listStartPoints);
-                    listNewEndPoints.addAll(listEndPoints);
-
-                    int[][] temp = newDefaultBoard();
-
-                    for (int i = 0; i < listShapes.size(); i++) {
-                        boolean skip = false;
-                        for (int j : listIndexMove) {
-                            if (i == j) {
-                                skip = true;
-                                break;
-                            }
-                        }
-                        if (!skip) {
-                            Geometry geo = (Geometry) listShapes.get(i);
-                            for (Point2D p : geo.getListDraw()) {
-                                if (p.getComputerX() < 0 || p.getComputerX() >= rowSize || p.getComputerY() < 0 || p.getComputerY() >= colSize)
-                                    continue;
-                                temp[p.getComputerX()][p.getComputerY()] = p.getColor();
-                            }
-                        }
-                    }
-
-                    applyBoard(temp);
-                }
-
-                if (startMove == null) {
-                    System.out.println("new start move");
-                    startMove = point;
-                } else
-                    endMove = point;
-
-                if (endMove != null) {
-                    int xMove = endMove.getX() - startMove.getX();
-                    int yMove = endMove.getY() - startMove.getY();
-
-                    for (int i = 0; i < listStartPoints.size(); i++) {
-                        int indexShapeMove = listIndexMove.get(i);
-                        Geometry g = (Geometry) listShapes.get(indexShapeMove);
-
-                        Point2D sp = g.getStartPoint();
-                        Point2D ep = g.getEndPoint();
-                        sp.set(listStartPoints.get(i).getX() + xMove, listStartPoints.get(i).getY() + yMove);
-                        ep.set(listEndPoints.get(i).getX() + xMove, listEndPoints.get(i).getY() + yMove);
-
-                        listNewStartPoints.set(i, sp);
-                        listNewEndPoints.set(i, ep);
-
-                        g.setupDraw();
-
-                        listener.notifyShapeChanged(indexShapeMove, g.toString());
-                    }
-
-                }
-
+            } else if (mode == Mode.ROTATE && listIndexMove.size() > 0) {
+                rotateShapes(point);
             } else {
-
 
                 if (geometry.getStartPoint() == null) {
                     geometry.setStartPoint(point);
@@ -703,5 +669,164 @@ public class DrawCanvas extends Canvas {
 
     }
 
+    public void convertShapeToPreview() {
+        if (mapPoints.size() == 0) {
+            mapNewPoints.clear();
+
+            for (int index : listIndexMove) {
+                Geometry g = (Geometry) listShapes.get(index);
+
+                mapPoints.put(index, new ArrayList<>());
+                mapNewPoints.put(index, new ArrayList<>());
+
+                if (g instanceof Rectangle) {
+                    Point2D[] pointsRect = ((Rectangle) g).getPoints();
+                    for (int j = 0; j < pointsRect.length; j++) {
+                        mapPoints.get(index).add(new Point2D(pointsRect[j]));
+                        mapNewPoints.get(index).add(new Point2D(pointsRect[j]));
+                    }
+                } else {
+                    mapPoints.get(index).add(new Point2D(g.getStartPoint()));
+                    mapPoints.get(index).add(new Point2D(g.getEndPoint()));
+
+                    mapNewPoints.get(index).add(new Point2D(g.getStartPoint()));
+                    mapNewPoints.get(index).add(new Point2D(g.getEndPoint()));
+                }
+
+                g.clearListDraw();
+            }
+
+            int[][] temp = newDefaultBoard();
+
+            for (int i = 0; i < listShapes.size(); i++) {
+                boolean skip = false;
+                for (int j : listIndexMove) {
+                    if (i == j) {
+                        skip = true;
+                        break;
+                    }
+                }
+                if (!skip) {
+                    Geometry geo = (Geometry) listShapes.get(i);
+                    for (Point2D p : geo.getListDraw()) {
+                        if (p.getComputerX() < 0 || p.getComputerX() >= rowSize || p.getComputerY() < 0 || p.getComputerY() >= colSize)
+                            continue;
+                        temp[p.getComputerX()][p.getComputerY()] = p.getColor();
+                    }
+                }
+            }
+
+            applyBoard(temp);
+        }
+
+    }
+
+    public void moveShapes(Point2D point) {
+
+        convertShapeToPreview();
+
+        if (startMove == null) {
+            System.out.println("new start move");
+            startMove = point;
+            return;
+        } else
+            endMove = point;
+
+        int xMove = endMove.getX() - startMove.getX();
+        int yMove = endMove.getY() - startMove.getY();
+
+        for (int index : mapPoints.keySet()) {
+            Geometry g = (Geometry) listShapes.get(index);
+
+            if (g instanceof Rectangle) {
+                Point2D[] pointsRect = ((Rectangle) g).getPoints();
+                for (int i = 0; i < pointsRect.length; i++) {
+                    pointsRect[i].set(mapPoints.get(index).get(i).getX() + xMove, mapPoints.get(index).get(i).getY() + yMove);
+                    System.out.println(pointsRect[i].getX());
+                }
+                ((Rectangle) g).setPoints(pointsRect);
+                for (int i = 0; i < pointsRect.length; i++) {
+                    mapNewPoints.get(index).set(i, pointsRect[i]);
+                }
+            } else {
+                Point2D sp = g.getStartPoint();
+                Point2D ep = g.getEndPoint();
+
+                sp.set(mapPoints.get(index).get(0).getX() + xMove, mapPoints.get(index).get(0).getY() + yMove);
+                ep.set(mapPoints.get(index).get(1).getX() + xMove, mapPoints.get(index).get(1).getY() + yMove);
+
+                mapNewPoints.get(index).set(0, sp);
+                mapNewPoints.get(index).set(1, ep);
+            }
+
+            g.setupDraw();
+            listener.notifyShapeChanged(index, g.toString());
+        }
+
+    }
+
+    Point2D rootPoint = null;
+
+    public void rotateShapes(Point2D point) {
+
+        if (rootPoint == null) {
+            System.out.println("root point null");
+            return;
+        }
+
+        convertShapeToPreview();
+
+        if (startMove == null) {
+            System.out.println("new start rotate");
+            startMove = point;
+            return;
+        } else
+            endMove = point;
+
+
+        Vector2D v = new Vector2D(startMove, rootPoint);
+        Vector2D v2 = new Vector2D(endMove, rootPoint);
+        double angle = v.angleRadian(v2);
+
+        int cur = pointLine(startMove, rootPoint, point);
+
+        if (cur > 0) {
+            angle = -angle;
+        }
+
+        for (int index : mapPoints.keySet()) {
+            Geometry g = (Geometry) listShapes.get(index);
+
+            if (g instanceof Rectangle) {
+                Point2D[] pointsRect = new Point2D[4];
+                for (int i = 0; i < pointsRect.length; i++) {
+                    pointsRect[i] = mapPoints.get(index).get(i).rotate(rootPoint, mapPoints.get(index).get(i), angle);
+                    mapNewPoints.get(index).set(i, new Point2D(pointsRect[i]));
+                }
+                ((Rectangle) g).setPoints(pointsRect);
+//                ((Rectangle) g).rotate(rootPoint, angle);
+            } else {
+                Point2D sp = g.getStartPoint();
+                Point2D ep = g.getEndPoint();
+
+                Point2D p1 = mapPoints.get(index).get(0).rotate(rootPoint, mapPoints.get(index).get(0), angle);
+                Point2D p2 = mapPoints.get(index).get(1).rotate(rootPoint, mapPoints.get(index).get(1), angle);
+
+                sp.set(p1.getX(), p1.getY());
+                ep.set(p2.getX(), p2.getY());
+
+                mapNewPoints.get(index).set(0, p1);
+                mapNewPoints.get(index).set(1, p2);
+            }
+
+            g.setupDraw();
+            listener.notifyShapeChanged(index, g.toString());
+        }
+    }
+
+    public int pointLine(Point2D p1, Point2D p2, Point2D p) {
+        return (p1.getY() - p2.getY()) * p.getX() - (p1.getY() - p2.getY()) * p1.getX()
+                + (p2.getX() - p1.getX()) * p.getY() - (p2.getX() - p1.getX()) * p1.getY();
+    }
 
 }

@@ -5,6 +5,8 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
 
+import java.util.List;
+
 /**
  * Create by VinhIT
  * On 25/03/2021
@@ -44,6 +46,8 @@ public class Line extends Geometry {
             showPointsCoordinate();
         }
     }
+
+
 
     /*
      * Hiển thị tọa độ 2 điểm start và end

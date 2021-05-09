@@ -1,4 +1,6 @@
-package com.demo;
+package com.demo.listeners;
+
+import com.demo.Mode;
 
 import java.util.List;
 
@@ -13,5 +15,6 @@ public interface CanvasListener {
     void notifyDataSetChanged(List listShape);
     void notifyShapeChanged(int position, String newTitle);
     void notifyDeselectedAllItems();
+    void notifyShapeModeChanged(Mode MODE);
     void clear();
 }
