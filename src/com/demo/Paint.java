@@ -20,7 +20,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
     private JButton btnRotate;
     private JButton btnMove;
     private JButton btnScale;
-    private JButton btnSymmetry;
+    private JButton btnReflect;
     private JButton btnRedo;
     private JButton btnClear;
     private JButton btnUndo;
@@ -153,6 +153,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
 
         btnMove.addActionListener(e -> {
             int[] indexMove = listShape.getSelectedIndices();
+            if(indexMove.length == 0){
+                JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             Arrays.sort(indexMove);
             for (int i : indexMove) {
                 System.out.print(i + " ");
@@ -166,8 +171,36 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
         btnDeseleted.addActionListener(e -> listShape.clearSelection());
 
         btnRotate.addActionListener(e -> {
-            PointInputDialog dialog = new PointInputDialog(this);
+            int[] indexMove = listShape.getSelectedIndices();
+            if(indexMove.length == 0){
+                JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            RotationDialog dialog = new RotationDialog(this);
             canvas.setMode(Mode.ROTATE);
+        });
+
+        btnReflect.addActionListener(e -> {
+            int[] indexMove = listShape.getSelectedIndices();
+            if(indexMove.length == 0){
+                JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            ReflectionDialog dialog = new ReflectionDialog(this);
+            canvas.setMode(Mode.REFLECT);
+        });
+
+        btnScale.addActionListener(e->{
+            int[] indexMove = listShape.getSelectedIndices();
+            if(indexMove.length == 0){
+                JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            ScaleDialog dialog = new ScaleDialog(this);
+            canvas.setMode(Mode.SCALE);
+
         });
 
 
@@ -211,7 +244,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
 
     @Override
     public void notifyShapeModeChanged(Mode MODE) {
-        labelDrawMode.setText("MODE: "+ MODE);
+        labelDrawMode.setText("MODE: " + MODE);
     }
 
     @Override
@@ -220,9 +253,29 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
     }
 
     @Override
-    public void onPoint(int x, int y) {
+    public void onPointRotate(int x, int y) {
         int[] indexMove = listShape.getSelectedIndices();
         Arrays.sort(indexMove);
-        canvas.rotate(indexMove, new Point2D(x,y));
+        canvas.rotate(indexMove, new Point2D(x, y));
     }
+
+    @Override
+    public void onPointReflect(int x, int y) {
+        int[] indexMove = listShape.getSelectedIndices();
+        Arrays.sort(indexMove);
+        canvas.reflect(indexMove, new Point2D(x, y), null);
+    }
+
+    @Override
+    public void onTwoPointReflect(int x1, int y1, int x2, int y2) {
+        int[] indexMove = listShape.getSelectedIndices();
+        Arrays.sort(indexMove);
+        canvas.reflect(indexMove, new Point2D(x1, y1), new Point2D(x2, y2));
+    }
+
+    @Override
+    public void onScale(double scaleX, double scaleY) {
+        System.out.println("Scale: "+scaleX + " ; "+scaleY);
+    }
+
 }

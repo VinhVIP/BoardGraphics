@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class PointInputDialog extends JDialog {
+public class RotationDialog extends JDialog {
 
     private DialogListener listener;
 
@@ -18,7 +18,7 @@ public class PointInputDialog extends JDialog {
     private JTextField tfX;
     private JTextField tfY;
 
-    public PointInputDialog(DialogListener listener) {
+    public RotationDialog(DialogListener listener) {
         this.listener = listener;
 
         setTitle("Dialog");
@@ -50,7 +50,7 @@ public class PointInputDialog extends JDialog {
         try {
             int x = Integer.parseInt(tfX.getText().trim());
             int y = Integer.parseInt(tfY.getText().trim());
-            listener.onPoint(x, y);
+            listener.onPointRotate(x, y);
 
             dispose();
         } catch (Exception e) {

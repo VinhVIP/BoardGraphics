@@ -27,7 +27,7 @@ public class Point2D {
         this.color = color;
     }
 
-    public Point2D(Point2D p){
+    public Point2D(Point2D p) {
         this(p.x, p.y, p.color);
     }
 
@@ -112,6 +112,64 @@ public class Point2D {
 
         // Di chuyển point về hệ tọa độ cũ
         p.set(p.x + root.x, p.y + root.y);
+
+        return p;
+    }
+
+    /*
+     * Lấy điểm đối xứng với this qua điểm root
+     */
+    public Point2D reflect(Point2D root) {
+        Point2D p = new Point2D(this);
+        // Di chuyển root về gốc tọa độ
+        p.set(p.x - root.x, p.y - root.y);
+
+        // Lấy đối xứng qua gốc O
+        p.set(-p.x, -p.y);
+
+        // Di chuyển trở về
+        p.set(p.x + root.x, p.y + root.y);
+
+        return p;
+    }
+
+    /*
+     * Lấy điểm đối xứng qua đường thẳng đi qua 2 điểm p1, p2
+     */
+    public Point2D reflect(Point2D p1, Point2D p2) {
+        Point2D p = new Point2D(this);
+
+        int x = p1.x;
+        int y = p1.y;
+
+        // Dịch chuyển p1 về gốc O, các điểm khác di chuyển theo tương ứng
+        p1.set(0, 0);
+        p2.set(p2.x - x, p2.y - y);
+        p.set(p.x - x, p.y - y);
+
+        // Xác định góc xoay và xoay đường thẳng p1,p2 trùng với trục Ox
+        Vector2D v12 = new Vector2D(p1, p2);
+        double angle = v12.angleRadian(Vector2D.oX);
+
+        if(p2.y > 0) angle = -angle;
+
+        p2 = p2.rotate(angle);
+        p = p.rotate(angle);
+
+        System.out.println("p2.y="+p2.y + " & angle="+angle);
+
+        // Lấy đối xứng p qua Ox
+        p.set(p.x, -p.y);
+
+        // Xoay về như cữ
+        p = p.rotate(-angle);
+        p2 = p2.rotate(-angle);
+
+        // Di chuyển về lại
+        p.set(p.x + x, p.y + y);
+        p1.set(x, y);
+        p2.set(p2.x + x, p2.y + y);
+
 
         return p;
     }

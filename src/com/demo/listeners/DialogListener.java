@@ -6,5 +6,8 @@ package com.demo.listeners;
  */
 
 public interface DialogListener {
-    void onPoint(int x, int y);
+    void onPointRotate(int x, int y);
+    void onPointReflect(int x, int y);
+    void onTwoPointReflect(int x1, int y1, int x2, int y2);
+    void onScale(double scaleX, double scaleY);
 }

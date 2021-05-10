@@ -62,7 +62,7 @@
               <toolTipText value="Scale"/>
             </properties>
           </component>
-          <component id="1a2f5" class="javax.swing.JButton" binding="btnSymmetry">
+          <component id="1a2f5" class="javax.swing.JButton" binding="btnReflect">
             <constraints>
               <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="50" height="50"/>
@@ -73,7 +73,7 @@
               <background color="-1"/>
               <icon value="com/demo/icons/symmetry.png"/>
               <text value=""/>
-              <toolTipText value="Symmetry"/>
+              <toolTipText value="Reflect"/>
             </properties>
           </component>
           <component id="669f6" class="javax.swing.JButton" binding="btnChooseColor">

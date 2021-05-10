@@ -129,9 +129,11 @@ public class Rectangle extends Geometry {
     @Override
     public String toString() {
         try {
-            return String.format("Rectangle: (%d, %d) <-> (%d, %d)",
-                    startPoint.getX(), startPoint.getY(),
-                    endPoint.getX(), endPoint.getY());
+            return String.format("Rectangle: (%d, %d)  (%d, %d)  (%d, %d)  (%d, %d)",
+                    points[0].getX(), points[0].getY(),
+                    points[1].getX(), points[1].getY(),
+                    points[2].getX(), points[2].getY(),
+                    points[3].getX(), points[3].getY());
         } catch (Exception e) {
             return "";
         }
