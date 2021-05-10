@@ -1,10 +1,12 @@
 package com.demo;
 
 import com.demo.listeners.DialogListener;
+import com.demo.models.Point2D;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ScaleDialog extends JDialog {
     private JPanel contentPane;
@@ -12,6 +14,8 @@ public class ScaleDialog extends JDialog {
     private JButton buttonCancel;
     private JTextField tfScaleX;
     private JTextField tfScaleY;
+    private JTextField tfX;
+    private JTextField tfY;
 
     private DialogListener listener;
 
@@ -45,13 +49,16 @@ public class ScaleDialog extends JDialog {
 
     private void onOK() {
         try {
+            int x = Integer.parseInt(tfX.getText());
+            int y = Integer.parseInt(tfY.getText());
             double scaleX = Double.parseDouble(tfScaleX.getText().trim());
             double scaleY = Double.parseDouble(tfScaleY.getText().trim());
-            listener.onScale(scaleX, scaleY);
+
+            listener.onScale(new Point2D(x, y), scaleX, scaleY);
 
             dispose();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Tỉ lệ nhập không hợp lệ", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Thông tin nhập không hợp lệ", "Thông báo", JOptionPane.WARNING_MESSAGE);
         }
     }
 

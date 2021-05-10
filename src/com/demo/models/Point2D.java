@@ -151,12 +151,12 @@ public class Point2D {
         Vector2D v12 = new Vector2D(p1, p2);
         double angle = v12.angleRadian(Vector2D.oX);
 
-        if(p2.y > 0) angle = -angle;
+        if (p2.y > 0) angle = -angle;
 
         p2 = p2.rotate(angle);
         p = p.rotate(angle);
 
-        System.out.println("p2.y="+p2.y + " & angle="+angle);
+        System.out.println("p2.y=" + p2.y + " & angle=" + angle);
 
         // Lấy đối xứng p qua Ox
         p.set(p.x, -p.y);
@@ -171,6 +171,26 @@ public class Point2D {
         p2.set(p2.x + x, p2.y + y);
 
 
+        return p;
+    }
+
+    /*
+     * Thu phóng điểm this với tâm phóng là gốc O
+     */
+    public Point2D scale(double scaleX, double scaleY) {
+        Point2D p = new Point2D(this);
+        p.set((int) (p.x * scaleX), (int) (p.y * scaleY));
+        return p;
+    }
+
+    /*
+     * Thu phóng điểm this với tâm phóng là root
+     */
+    public Point2D scale(Point2D root, double scaleX, double scaleY) {
+        Point2D p = new Point2D(this);
+        int distanceX = p.x - root.x;
+        int distanceY = p.y - root.y;
+        p.set(root.x + (int) (distanceX * scaleX), root.y + (int) (distanceY * scaleY));
         return p;
     }
 

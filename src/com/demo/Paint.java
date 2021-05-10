@@ -274,8 +274,10 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
     }
 
     @Override
-    public void onScale(double scaleX, double scaleY) {
-        System.out.println("Scale: "+scaleX + " ; "+scaleY);
+    public void onScale(Point2D root, double scaleX, double scaleY) {
+        int[] indexMove = listShape.getSelectedIndices();
+        Arrays.sort(indexMove);
+        canvas.scale(indexMove, root, scaleX, scaleY);
     }
 
 }

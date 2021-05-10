@@ -547,6 +547,18 @@ public class DrawCanvas extends Canvas {
 
     }
 
+    public void scale(int[] indexMove, Point2D root, double scaleX, double scaleY){
+        listIndexMove.clear();
+        for (int i : indexMove) listIndexMove.add(i);
+
+        if (indexMove.length > 0) {
+            scaleShapes(root, scaleX, scaleY);
+        }
+
+        setMode(Mode.NONE);
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+    }
+
 
     // -------------- Lớp cài đặt sự kiện nhấn chuột ----------------
     public class MyMouseAdapter extends MouseAdapter {
@@ -630,6 +642,7 @@ public class DrawCanvas extends Canvas {
     }
 
 
+
     Point2D startMove = null, endMove = null;
     List<Integer> listIndexMove = new ArrayList<>();
 
@@ -690,6 +703,42 @@ public class DrawCanvas extends Canvas {
             listener.mouseCoordinate(point.getX(), point.getY());
         }
 
+    }
+
+    public void scaleShapes(Point2D root, double scaleX, double scaleY){
+        System.out.println("Scale");
+
+        convertShapeToPreview();
+
+        for (int index : mapPoints.keySet()) {
+            Geometry g = (Geometry) listShapes.get(index);
+
+            if (g instanceof Rectangle) {
+                Point2D[] points = ((Rectangle) g).getPoints();
+                for (int i = 0; i < points.length; i++) {
+                    points[i] = points[i].scale(root, scaleX, scaleY);
+                    mapNewPoints.get(index).set(i, points[i]);
+                }
+                ((Rectangle) g).setPoints(points);
+            } else {
+                Point2D sp = g.getStartPoint();
+                Point2D ep = g.getEndPoint();
+
+                sp = sp.scale(root, scaleX, scaleY);
+                ep = ep.scale(root, scaleX, scaleY);
+
+                g.setStartPoint(sp);
+                g.setEndPoint(ep);
+
+                mapNewPoints.get(index).set(0, sp);
+                mapNewPoints.get(index).set(1, ep);
+            }
+
+            g.setupDraw();
+            listener.notifyShapeChanged(index, g.toString());
+        }
+
+        applyShapesChange();
     }
 
     public void reflectShapes(boolean isReflectByPoint) {
@@ -811,7 +860,6 @@ public class DrawCanvas extends Canvas {
                 Point2D[] pointsRect = ((Rectangle) g).getPoints();
                 for (int i = 0; i < pointsRect.length; i++) {
                     pointsRect[i].set(mapPoints.get(index).get(i).getX() + xMove, mapPoints.get(index).get(i).getY() + yMove);
-                    System.out.println(pointsRect[i].getX());
                 }
                 ((Rectangle) g).setPoints(pointsRect);
                 for (int i = 0; i < pointsRect.length; i++) {
