@@ -114,6 +114,9 @@ public class DrawCanvas extends Canvas {
             case ELLIPSE_DASH -> {
                 geometry = new EllipseDash(this);
             }
+            case TRIANGLE -> {
+                geometry = new Triangle(this, drawMode);
+            }
         }
     }
 
@@ -417,6 +420,7 @@ public class DrawCanvas extends Canvas {
         }
 
         drawAllPoints();
+
     }
 
 
@@ -547,7 +551,7 @@ public class DrawCanvas extends Canvas {
 
     }
 
-    public void scale(int[] indexMove, Point2D root, double scaleX, double scaleY){
+    public void scale(int[] indexMove, Point2D root, double scaleX, double scaleY) {
         listIndexMove.clear();
         for (int i : indexMove) listIndexMove.add(i);
 
@@ -612,16 +616,12 @@ public class DrawCanvas extends Canvas {
 
         for (int index : mapNewPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
-            if (g instanceof Rectangle) {
-                Point2D[] pointsRect = new Point2D[4];
-                for (int i = 0; i < pointsRect.length; i++) {
-                    pointsRect[i] = mapNewPoints.get(index).get(i);
-                }
-                ((Rectangle) g).setPoints(pointsRect);
-            } else {
-                g.setStartPoint(mapNewPoints.get(index).get(0));
-                g.setEndPoint(mapNewPoints.get(index).get(1));
+
+            Point2D[] pointsRect = g.getPoints();
+            for (int i = 0; i < pointsRect.length; i++) {
+                pointsRect[i] = mapNewPoints.get(index).get(i);
             }
+            g.setPoints(pointsRect);
 
             listShapes.set(index, g);
         }
@@ -640,7 +640,6 @@ public class DrawCanvas extends Canvas {
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         listener.notifyDeselectedAllItems();
     }
-
 
 
     Point2D startMove = null, endMove = null;
@@ -705,7 +704,7 @@ public class DrawCanvas extends Canvas {
 
     }
 
-    public void scaleShapes(Point2D root, double scaleX, double scaleY){
+    public void scaleShapes(Point2D root, double scaleX, double scaleY) {
         System.out.println("Scale");
 
         convertShapeToPreview();
@@ -713,26 +712,12 @@ public class DrawCanvas extends Canvas {
         for (int index : mapPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
-            if (g instanceof Rectangle) {
-                Point2D[] points = ((Rectangle) g).getPoints();
-                for (int i = 0; i < points.length; i++) {
-                    points[i] = points[i].scale(root, scaleX, scaleY);
-                    mapNewPoints.get(index).set(i, points[i]);
-                }
-                ((Rectangle) g).setPoints(points);
-            } else {
-                Point2D sp = g.getStartPoint();
-                Point2D ep = g.getEndPoint();
-
-                sp = sp.scale(root, scaleX, scaleY);
-                ep = ep.scale(root, scaleX, scaleY);
-
-                g.setStartPoint(sp);
-                g.setEndPoint(ep);
-
-                mapNewPoints.get(index).set(0, sp);
-                mapNewPoints.get(index).set(1, ep);
+            Point2D[] points = g.getPoints();
+            for (int i = 0; i < points.length; i++) {
+                points[i] = points[i].scale(root, scaleX, scaleY);
+                mapNewPoints.get(index).set(i, points[i]);
             }
+            g.setPoints(points);
 
             g.setupDraw();
             listener.notifyShapeChanged(index, g.toString());
@@ -749,36 +734,17 @@ public class DrawCanvas extends Canvas {
         for (int index : mapPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
-            if (g instanceof Rectangle) {
-                Point2D[] points = ((Rectangle) g).getPoints();
-                for (int i = 0; i < points.length; i++) {
-                    if (isReflectByPoint) {
-                        points[i] = points[i].reflect(rootPoint);
-                    } else {
-                        points[i] = points[i].reflect(new Point2D(rootPoint), new Point2D(rootPoint2));
-                    }
-                    mapNewPoints.get(index).set(i, points[i]);
-                }
-                ((Rectangle) g).setPoints(points);
-            } else {
-                Point2D sp = g.getStartPoint();
-                Point2D ep = g.getEndPoint();
-
+            Point2D[] points = g.getPoints();
+            for (int i = 0; i < points.length; i++) {
                 if (isReflectByPoint) {
-                    sp = sp.reflect(rootPoint);
-                    ep = ep.reflect(rootPoint);
+                    points[i] = points[i].reflect(rootPoint);
                 } else {
-                    sp = sp.reflect(rootPoint, rootPoint2);
-                    ep = ep.reflect(rootPoint, rootPoint2);
+                    points[i] = points[i].reflect(new Point2D(rootPoint), new Point2D(rootPoint2));
                 }
-
-                g.setStartPoint(sp);
-                g.setEndPoint(ep);
-
-
-                mapNewPoints.get(index).set(0, sp);
-                mapNewPoints.get(index).set(1, ep);
+                mapNewPoints.get(index).set(i, points[i]);
             }
+            g.setPoints(points);
+
 
             g.setupDraw();
             listener.notifyShapeChanged(index, g.toString());
@@ -797,18 +763,10 @@ public class DrawCanvas extends Canvas {
                 mapPoints.put(index, new ArrayList<>());
                 mapNewPoints.put(index, new ArrayList<>());
 
-                if (g instanceof Rectangle) {
-                    Point2D[] pointsRect = ((Rectangle) g).getPoints();
-                    for (int j = 0; j < pointsRect.length; j++) {
-                        mapPoints.get(index).add(new Point2D(pointsRect[j]));
-                        mapNewPoints.get(index).add(new Point2D(pointsRect[j]));
-                    }
-                } else {
-                    mapPoints.get(index).add(new Point2D(g.getStartPoint()));
-                    mapPoints.get(index).add(new Point2D(g.getEndPoint()));
-
-                    mapNewPoints.get(index).add(new Point2D(g.getStartPoint()));
-                    mapNewPoints.get(index).add(new Point2D(g.getEndPoint()));
+                Point2D[] points = g.getPoints();
+                for (int j = 0; j < points.length; j++) {
+                    mapPoints.get(index).add(new Point2D(points[j]));
+                    mapNewPoints.get(index).add(new Point2D(points[j]));
                 }
 
                 g.clearListDraw();
@@ -856,24 +814,15 @@ public class DrawCanvas extends Canvas {
         for (int index : mapPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
-            if (g instanceof Rectangle) {
-                Point2D[] pointsRect = ((Rectangle) g).getPoints();
-                for (int i = 0; i < pointsRect.length; i++) {
-                    pointsRect[i].set(mapPoints.get(index).get(i).getX() + xMove, mapPoints.get(index).get(i).getY() + yMove);
-                }
-                ((Rectangle) g).setPoints(pointsRect);
-                for (int i = 0; i < pointsRect.length; i++) {
-                    mapNewPoints.get(index).set(i, pointsRect[i]);
-                }
-            } else {
-                Point2D sp = g.getStartPoint();
-                Point2D ep = g.getEndPoint();
+            Point2D[] points = g.getPoints();
+            for (int i = 0; i < points.length; i++) {
+                points[i].set(mapPoints.get(index).get(i).getX() + xMove, mapPoints.get(index).get(i).getY() + yMove);
+            }
 
-                sp.set(mapPoints.get(index).get(0).getX() + xMove, mapPoints.get(index).get(0).getY() + yMove);
-                ep.set(mapPoints.get(index).get(1).getX() + xMove, mapPoints.get(index).get(1).getY() + yMove);
+            g.setPoints(points);
 
-                mapNewPoints.get(index).set(0, sp);
-                mapNewPoints.get(index).set(1, ep);
+            for (int i = 0; i < points.length; i++) {
+                mapNewPoints.get(index).set(i, points[i]);
             }
 
             g.setupDraw();
@@ -914,26 +863,12 @@ public class DrawCanvas extends Canvas {
         for (int index : mapPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
-            if (g instanceof Rectangle) {
-                Point2D[] pointsRect = new Point2D[4];
-                for (int i = 0; i < pointsRect.length; i++) {
-                    pointsRect[i] = mapPoints.get(index).get(i).rotate(rootPoint, mapPoints.get(index).get(i), angle);
-                    mapNewPoints.get(index).set(i, new Point2D(pointsRect[i]));
-                }
-                ((Rectangle) g).setPoints(pointsRect);
-            } else {
-                Point2D sp = g.getStartPoint();
-                Point2D ep = g.getEndPoint();
-
-                Point2D p1 = mapPoints.get(index).get(0).rotate(rootPoint, mapPoints.get(index).get(0), angle);
-                Point2D p2 = mapPoints.get(index).get(1).rotate(rootPoint, mapPoints.get(index).get(1), angle);
-
-                sp.set(p1.getX(), p1.getY());
-                ep.set(p2.getX(), p2.getY());
-
-                mapNewPoints.get(index).set(0, p1);
-                mapNewPoints.get(index).set(1, p2);
+            Point2D[] points = g.getPoints();
+            for (int i = 0; i < points.length; i++) {
+                points[i] = mapPoints.get(index).get(i).rotate(rootPoint, mapPoints.get(index).get(i), angle);
+                mapNewPoints.get(index).set(i, new Point2D(points[i]));
             }
+            g.setPoints(points);
 
             g.setupDraw();
             listener.notifyShapeChanged(index, g.toString());

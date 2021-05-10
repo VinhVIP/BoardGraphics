@@ -16,22 +16,26 @@ public class Rectangle extends Geometry {
     // Khai báo 4 đoạn thẳng của hình chữ nhật
     private Line[] lines = new Line[4];
 
-
-    private Point2D[] points = new Point2D[4];
-
     public Rectangle(DrawCanvas canvas, Point2D startPoint2D, Point2D endPoint2D) {
         super(canvas, startPoint2D, endPoint2D);
         init4Lines(canvas);
+        initPoints();
     }
 
     public Rectangle(DrawCanvas canvas) {
         super(canvas);
         init4Lines(canvas);
+        initPoints();
     }
 
     public Rectangle(DrawCanvas canvas, DrawMode drawMode) {
         super(canvas, drawMode);
         init4Lines(canvas);
+        initPoints();
+    }
+
+    private void initPoints(){
+        points = new Point2D[4];
     }
 
     /*
@@ -69,10 +73,6 @@ public class Rectangle extends Geometry {
 
     }
 
-    public Point2D[] getPoints() {
-        return points;
-    }
-
     @Override
     public void setDrawMode(DrawMode drawMode) {
         for (Line line : lines) {
@@ -89,41 +89,25 @@ public class Rectangle extends Geometry {
         return listDraw;
     }
 
-    private void drawRectangle(int x1, int y1, int x2, int y2) {
-        int xUnit = 1, yUnit = 1;
-        if (x2 < x1) xUnit = -xUnit;
-        if (y2 < y1) yUnit = -yUnit;
 
-        int x = x1, y = y1;
-        Point2D pt;
+//    public void rotate(Point2D root, double angle) {
+//        for (int i = 0; i < 4; i++) {
+//            points[i] = points[i].rotate(root, points[i], angle);
+//        }
+//    }
 
-        pt = new Point2D(x2, y2, DrawCanvas.currentColor);
-        listDraw.add(pt);
 
-        while (x != x2) {
-            pt = new Point2D(x, y1, DrawCanvas.currentColor);
-            listDraw.add(pt);
-            pt = new Point2D(x, y2, DrawCanvas.currentColor);
-            listDraw.add(pt);
-            x += xUnit;
-        }
-        while (y != y2) {
-            pt = new Point2D(x1, y, DrawCanvas.currentColor);
-            listDraw.add(pt);
-            pt = new Point2D(x2, y, DrawCanvas.currentColor);
-            listDraw.add(pt);
-            y += yUnit;
-        }
-    }
+    @Override
+    public void setEndPoint(Point2D endPoint) {
+        super.setEndPoint(endPoint);
 
-    public void rotate(Point2D root, double angle) {
-        for (int i = 0; i < 4; i++) {
-            points[i] = points[i].rotate(root, points[i], angle);
-        }
-    }
+        Point2D pointB = new Point2D(endPoint.getX(), startPoint.getY());
+        Point2D pointD = new Point2D(startPoint.getX(), endPoint.getY());
 
-    public void setPoints(Point2D[] points) {
-        this.points = points;
+        points[0] = startPoint;
+        points[1] = pointB;
+        points[2] = endPoint;
+        points[3] = pointD;
     }
 
     @Override
@@ -139,16 +123,4 @@ public class Rectangle extends Geometry {
         }
     }
 
-    @Override
-    public void setEndPoint(Point2D endPoint) {
-        super.setEndPoint(endPoint);
-
-        Point2D pointB = new Point2D(endPoint.getX(), startPoint.getY());
-        Point2D pointD = new Point2D(startPoint.getX(), endPoint.getY());
-
-        points[0] = startPoint;
-        points[1] = pointB;
-        points[2] = endPoint;
-        points[3] = pointD;
-    }
 }

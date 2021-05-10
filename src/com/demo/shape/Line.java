@@ -14,18 +14,23 @@ import java.util.List;
 
 public class Line extends Geometry {
 
+    private int totalPoints = 2;
 
     public Line(DrawCanvas canvas, Point2D startPoint2D, Point2D endPoint2D) {
         super(canvas, startPoint2D, endPoint2D);
+        initSizePoints(totalPoints);
     }
 
     public Line(DrawCanvas canvas) {
         super(canvas);
+        initSizePoints(totalPoints);
     }
 
     public Line(DrawCanvas canvas, DrawMode drawMode) {
         super(canvas, drawMode);
+        initSizePoints(totalPoints);
     }
+
 
     @Override
     public void setupDraw() {
@@ -46,7 +51,6 @@ public class Line extends Geometry {
             showPointsCoordinate();
         }
     }
-
 
 
     /*
@@ -168,5 +172,24 @@ public class Line extends Geometry {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    @Override
+    public void setPoints(Point2D[] points) {
+        super.setPoints(points);
+        startPoint = points[0];
+        endPoint = points[1];
+    }
+
+    @Override
+    public void setStartPoint(Point2D startPoint) {
+        super.setStartPoint(startPoint);
+        points[0] = startPoint;
+    }
+
+    @Override
+    public void setEndPoint(Point2D endPoint) {
+        super.setEndPoint(endPoint);
+        points[1] = endPoint;
     }
 }

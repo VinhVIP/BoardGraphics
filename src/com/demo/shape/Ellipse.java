@@ -14,16 +14,21 @@ import java.util.List;
 
 public class Ellipse extends Geometry {
 
+    private int totalPoints = 3;
+
     public Ellipse(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
         super(canvas, startPoint, endPoint);
+        initSizePoints(totalPoints);
     }
 
     public Ellipse(DrawCanvas canvas) {
         super(canvas);
+        initSizePoints(totalPoints);
     }
 
     public Ellipse(DrawCanvas canvas, DrawMode drawMode) {
         super(canvas, drawMode);
+        initSizePoints(totalPoints);
     }
 
     @Override
@@ -31,7 +36,9 @@ public class Ellipse extends Geometry {
         if (startPoint != null && endPoint != null) {
             swapList();
 
-            midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), color);
+//            midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), color);
+
+            midEllipse(points[0].getX(), points[0].getY(), Math.abs(points[1].getX()-points[0].getX()), Math.abs(points[2].getY()-points[0].getY()), color);
 
             choosePoints();
 
@@ -125,6 +132,28 @@ public class Ellipse extends Geometry {
             plot(xc, yc, x, y, color);
         }
 
+    }
+
+    @Override
+    public void setPoints(Point2D[] points) {
+        super.setPoints(points);
+        startPoint = points[0];
+    }
+
+    @Override
+    public void setStartPoint(Point2D startPoint) {
+        super.setStartPoint(startPoint);
+        points[0] = startPoint;
+    }
+
+    @Override
+    public void setEndPoint(Point2D endPoint) {
+        super.setEndPoint(endPoint);
+        points[1] = new Point2D(endPoint);
+        points[1].set(endPoint.getX(), points[0].getY());
+
+        points[2] = new Point2D(endPoint);
+        points[2].set(points[0].getX(), endPoint.getY());
     }
 
     @Override

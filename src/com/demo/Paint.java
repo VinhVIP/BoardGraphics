@@ -39,6 +39,8 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
     private JLabel labelCoordinate;
     private JPanel rootPanel;
     private JButton btnDeseleted;
+    private JButton btnTriangle;
+    private JButton btnPolygon;
 
 
     private DrawCanvas canvas;
@@ -96,6 +98,10 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
         btnEllipse.addActionListener(e -> {
             canvas.setMode(Mode.ELLIPSE);
             labelDrawMode.setText("MODE: ELLIPSE");
+        });
+
+        btnTriangle.addActionListener(e->{
+            canvas.setMode(Mode.TRIANGLE);
         });
 
 //        btnEllipseDash.addActionListener(e -> {

@@ -18,6 +18,8 @@ public abstract class Geometry {
     protected List<Point2D> listDraw = new ArrayList<>(), listClear = new ArrayList<>();
     protected Point2D startPoint, endPoint;
 
+    protected Point2D[] points;
+
     protected int color;
 
     protected DrawMode drawMode;
@@ -44,19 +46,13 @@ public abstract class Geometry {
         this(canvas, null, null, drawMode);
     }
 
+    protected void initSizePoints(int size){
+        points = new Point2D[size];
+    }
+
     public abstract void setupDraw();
 
     public abstract void showPointsCoordinate();
-
-    public void previewRotate(List<Point2D> newPoints){
-        swapList();
-
-        listDraw.addAll(newPoints);
-
-        clearOldPoints();
-
-        drawNewPoints();
-    }
 
     /*
      * Lọc ra những điểm cần xóa và xóa nó
@@ -176,5 +172,13 @@ public abstract class Geometry {
     public void translate(int translateX, int translateY) {
         startPoint.set(startPoint.getX() + translateX, startPoint.getY() + translateY);
         endPoint.set(endPoint.getX() + translateX, endPoint.getY() + translateY);
+    }
+
+    public Point2D[] getPoints() {
+        return points;
+    }
+
+    public void setPoints(Point2D[] points) {
+        this.points = points;
     }
 }

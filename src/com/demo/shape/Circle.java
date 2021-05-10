@@ -13,17 +13,21 @@ import java.util.ArrayList;
 
 public class Circle extends Geometry {
 
+    private int totalPoints = 2;
 
     public Circle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
         super(canvas, startPoint, endPoint);
+        initSizePoints(totalPoints);
     }
 
     public Circle(DrawCanvas canvas) {
         super(canvas);
+        initSizePoints(totalPoints);
     }
 
     public Circle(DrawCanvas canvas, DrawMode drawMode) {
         super(canvas, drawMode);
+        initSizePoints(2);
     }
 
     @Override
@@ -47,13 +51,20 @@ public class Circle extends Geometry {
 
     }
 
-    public int getCircleRadius(){
-        if(startPoint == null || endPoint == null) return 0;
+    @Override
+    public void setPoints(Point2D[] points) {
+        super.setPoints(points);
+        startPoint = points[0];
+        endPoint = points[1];
+    }
+
+    public int getCircleRadius() {
+        if (startPoint == null || endPoint == null) return 0;
         return (int) Math.sqrt((startPoint.getX() - endPoint.getX()) * (startPoint.getX() - endPoint.getX()) +
                 (startPoint.getY() - endPoint.getY()) * (startPoint.getY() - endPoint.getY()));
     }
 
-    Point2D getPoint(Point2D p, int k) {
+    private Point2D getPoint(Point2D p, int k) {
         int xc = startPoint.getX();
         int yc = startPoint.getY();
         int x = p.getX() - xc;
@@ -72,8 +83,7 @@ public class Circle extends Geometry {
     }
 
 
-
-    void choosePoints() {
+    private void choosePoints() {
         int n = listDraw.size();
 
         ArrayList<Point2D> listTemp = new ArrayList<>();
@@ -104,7 +114,7 @@ public class Circle extends Geometry {
 
     }
 
-    void putPixel(int x, int y, int color) {
+    private void putPixel(int x, int y, int color) {
         int xc = startPoint.getX();
         int yc = startPoint.getY();
 
@@ -114,7 +124,7 @@ public class Circle extends Geometry {
     }
 
 
-    void circleMidPoint(int R) {
+    private void circleMidPoint(int R) {
         int x, y;
 
         x = 0;
@@ -135,10 +145,22 @@ public class Circle extends Geometry {
     }
 
     @Override
+    public void setStartPoint(Point2D startPoint) {
+        super.setStartPoint(startPoint);
+        points[0] = startPoint;
+    }
+
+    @Override
+    public void setEndPoint(Point2D endPoint) {
+        super.setEndPoint(endPoint);
+        points[1] = endPoint;
+    }
+
+    @Override
     public String toString() {
-        try{
+        try {
             return String.format("Circle: (%d, %d) ; R = %d", startPoint.getX(), startPoint.getY(), getCircleRadius());
-        }catch (Exception e){
+        } catch (Exception e) {
             return "";
         }
     }
