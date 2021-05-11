@@ -19,7 +19,6 @@ public class Ellipse extends Geometry {
     private double rotateAngle;
     private int a,b;
 
-
     private int totalPoints = 3;
 
     public Ellipse(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
@@ -35,6 +34,15 @@ public class Ellipse extends Geometry {
     public Ellipse(DrawCanvas canvas, DrawMode drawMode) {
         super(canvas, drawMode);
         initSizePoints(totalPoints);
+    }
+
+    public Ellipse copy(){
+        Ellipse g = new Ellipse(canvas);
+        g.setStartPoint(new Point2D(startPoint));
+        g.setEndPoint(new Point2D(endPoint));
+        g.setDrawMode(drawMode);
+
+        return g;
     }
 
     @Override

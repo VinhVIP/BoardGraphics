@@ -41,6 +41,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
     private JButton btnDeseleted;
     private JButton btnTriangle;
     private JButton btnPolygon;
+    private JButton btnCopy;
 
 
     private DrawCanvas canvas;
@@ -207,6 +208,15 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
             ScaleDialog dialog = new ScaleDialog(this);
             canvas.setMode(Mode.SCALE);
 
+        });
+
+        btnCopy.addActionListener(e->{
+            int[] selectedIndex = listShape.getSelectedIndices();
+            if(selectedIndex.length == 0){
+                JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            }else{
+                canvas.copyShapes(selectedIndex);
+            }
         });
 
 

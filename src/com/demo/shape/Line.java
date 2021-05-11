@@ -31,6 +31,14 @@ public class Line extends Geometry {
         initSizePoints(totalPoints);
     }
 
+    public Line copy(){
+        Line g = new Line(canvas);
+        g.setStartPoint(new Point2D(startPoint));
+        g.setEndPoint(new Point2D(endPoint));
+        g.setDrawMode(drawMode);
+
+        return g;
+    }
 
     @Override
     public void setupDraw() {

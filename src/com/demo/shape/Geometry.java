@@ -38,6 +38,14 @@ public abstract class Geometry {
         this(canvas, startPoint, endPoint, DrawMode.DEFAULT);
     }
 
+    public Geometry(Geometry g){
+        this(g.canvas, g.startPoint, g.endPoint, g.drawMode);
+        this.points = g.points;
+        this.color = g.color;
+        this.listDraw = g.listDraw;
+        this.listClear = g.listClear;
+    }
+
     public Geometry(DrawCanvas canvas) {
         this(canvas, DrawMode.DEFAULT);
     }

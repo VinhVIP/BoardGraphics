@@ -30,6 +30,15 @@ public class Circle extends Geometry {
         initSizePoints(2);
     }
 
+    public Circle copy(){
+        Circle g = new Circle(canvas);
+        g.setStartPoint(new Point2D(startPoint));
+        g.setEndPoint(new Point2D(endPoint));
+        g.setDrawMode(drawMode);
+
+        return g;
+    }
+
     @Override
     public void setupDraw() {
         if (startPoint != null && endPoint != null) {

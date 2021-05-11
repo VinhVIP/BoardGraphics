@@ -875,8 +875,8 @@ public class DrawCanvas extends Canvas {
             if (g instanceof Ellipse) {
                 ((Ellipse) g).setRotate(rootPoint, angle);
             }
-
             g.setupDraw();
+
             listener.notifyShapeChanged(index, g.toString());
         }
     }
@@ -888,6 +888,34 @@ public class DrawCanvas extends Canvas {
     public int pointLine(Point2D p1, Point2D p2, Point2D p) {
         return (p1.getY() - p2.getY()) * p.getX() - (p1.getY() - p2.getY()) * p1.getX()
                 + (p2.getX() - p1.getX()) * p.getY() - (p2.getX() - p1.getX()) * p1.getY();
+    }
+
+    public void copyShapes(int[] indexCopy) {
+        for (int index : indexCopy) {
+            Geometry g = (Geometry) listShapes.get(index);
+            if (g instanceof Circle) {
+                Geometry geo = ((Circle) g).copy();
+                listShapes.add(geo);
+                geo.setupDraw();
+            } else if (g instanceof Ellipse) {
+                Geometry geo = ((Ellipse) g).copy();
+                listShapes.add(geo);
+                geo.setupDraw();
+            } else if (g instanceof Line) {
+                Geometry geo = ((Line) g).copy();
+                listShapes.add(geo);
+                geo.setupDraw();
+            } else if (g instanceof Rectangle) {
+                Geometry geo = ((Rectangle) g).copy();
+                listShapes.add(geo);
+                geo.setupDraw();
+            } else if (g instanceof Triangle) {
+                Geometry geo = ((Triangle) g).copy();
+                listShapes.add(geo);
+                geo.setupDraw();
+            }
+            listener.notifyShapeInserted(g.toString());
+        }
     }
 
 }

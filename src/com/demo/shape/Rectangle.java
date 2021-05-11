@@ -34,6 +34,15 @@ public class Rectangle extends Geometry {
         initPoints();
     }
 
+    public Rectangle copy(){
+        Rectangle g = new Rectangle(canvas);
+        g.setStartPoint(new Point2D(startPoint));
+        g.setEndPoint(new Point2D(endPoint));
+        g.setDrawMode(drawMode);
+
+        return g;
+    }
+
     private void initPoints(){
         points = new Point2D[4];
     }

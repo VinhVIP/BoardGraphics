@@ -41,6 +41,15 @@ public class Triangle extends Geometry{
         init3Lines();
     }
 
+    public Triangle copy(){
+        Triangle g = new Triangle(canvas);
+        g.setStartPoint(new Point2D(startPoint));
+        g.setEndPoint(new Point2D(endPoint));
+        g.setDrawMode(drawMode);
+
+        return g;
+    }
+
     private void init3Lines() {
         for (int i = 0; i < lines.length; i++) {
             lines[i] = new Line(canvas);
