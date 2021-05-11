@@ -3,6 +3,7 @@ package com.demo.shape;
 import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
+import com.demo.models.Vector2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,11 @@ import java.util.List;
  */
 
 public class Ellipse extends Geometry {
+
+    private Point2D rootPoint;
+    private double rotateAngle;
+    private int a,b;
+
 
     private int totalPoints = 3;
 
@@ -36,15 +42,69 @@ public class Ellipse extends Geometry {
         if (startPoint != null && endPoint != null) {
             swapList();
 
-//            midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), color);
-
-            midEllipse(points[0].getX(), points[0].getY(), Math.abs(points[1].getX()-points[0].getX()), Math.abs(points[2].getY()-points[0].getY()), color);
-
-            choosePoints();
+            process();
 
             clearOldPoints();
             drawNewPoints();
         }
+    }
+
+    /*
+       --A(2)--
+     -         -
+    |    O'(0)  |B(1)
+     -         -
+       -------
+     */
+    private void process() {
+//        int x = points[0].getX();
+//        int y = points[0].getY();
+//
+//        // Dịch chuyển tâm elip về gốc tọa độ
+//        for(int i=0; i<points.length; i++)
+//            points[i].set(points[i].getX()-x, points[i].getY()-y);
+
+        // Xác định góc giữa O'B và trục Ox
+        Vector2D vOB = new Vector2D(points[0], points[1]);
+        double angle = vOB.angleRadian(Vector2D.oX);
+
+        if (points[1].getY() > points[0].getY()) angle = -angle;
+
+        // Xoay O'B trùng với trục Ox
+        // O'A xoay theo tương ứng
+        if (angle != 0) {
+            points[1] = points[1].rotate(points[0], angle);
+            points[2] = points[2].rotate(points[0], angle);
+        }
+
+        a = (int) Math.sqrt((points[0].getX() - points[1].getX()) * (points[0].getX() - points[1].getX()) + (points[0].getY() - points[1].getY()) * (points[0].getY() - points[1].getY()));
+        b = (int) Math.sqrt((points[0].getX() - points[2].getX()) * (points[0].getX() - points[2].getX()) + (points[0].getY() - points[2].getY()) * (points[0].getY() - points[2].getY()));
+        midEllipse(points[0].getX(), points[0].getY(), a, b, color);
+
+        // Xoay trở về vị trí cũ
+        if (angle != 0) {
+            angle = -angle;
+
+            points[1] = points[1].rotate(points[0], angle);
+            points[2] = points[2].rotate(points[0], angle);
+        }
+
+        choosePoints();
+
+        for (int i = 0; i < listDraw.size(); i++) {
+            Point2D p = listDraw.get(i);
+            if (rootPoint != null)
+                p = p.rotate(rootPoint, rotateAngle);
+            else
+                p = p.rotate(points[0], angle);
+            listDraw.set(i, p);
+        }
+
+    }
+
+    public void setRotate(Point2D rootPoint, double rotateAngle) {
+        this.rootPoint = rootPoint;
+        this.rotateAngle = rotateAngle;
     }
 
     @Override
@@ -60,20 +120,20 @@ public class Ellipse extends Geometry {
         for (int k = 2; k <= 4; k++) {
             for (int i = 0; i < n; i++) {
                 point = listDraw.get(i);
-                int x = point.getX() - startPoint.getX();
-                int y = point.getY() - startPoint.getY();
+                int x = point.getX() - points[0].getX();
+                int y = point.getY() - points[0].getY();
 
                 switch (k) {
                     case 2 -> {
-                        Point2D p = new Point2D(startPoint.getX() + x, startPoint.getY() - y, point.getColor());
+                        Point2D p = new Point2D(points[0].getX() + x, points[0].getY() - y, point.getColor());
                         if (!isListDrawContain(p)) listTmp.add(0, p);
                     }
                     case 3 -> {
-                        Point2D p = new Point2D(startPoint.getX() - x, startPoint.getY() - y, point.getColor());
+                        Point2D p = new Point2D(points[0].getX() - x, points[0].getY() - y, point.getColor());
                         if (!isListDrawContain(p)) listTmp.add(p);
                     }
                     case 4 -> {
-                        Point2D p = new Point2D(startPoint.getX() - x, startPoint.getY() + y, point.getColor());
+                        Point2D p = new Point2D(points[0].getX() - x, points[0].getY() + y, point.getColor());
                         if (!isListDrawContain(p)) listTmp.add(0, p);
                     }
                 }
@@ -153,17 +213,21 @@ public class Ellipse extends Geometry {
         points[1].set(endPoint.getX(), points[0].getY());
 
         points[2] = new Point2D(endPoint);
-        points[2].set(points[0].getX(), endPoint.getY());
+        if (endPoint.getY() < points[0].getY()) {
+            points[2].set(points[0].getX(), points[0].getY() + (points[0].getY() - endPoint.getY()));
+        } else {
+            points[2].set(points[0].getX(), endPoint.getY());
+        }
     }
 
     @Override
     public String toString() {
-        try{
+        try {
             return String.format("Ellipse: (%d, %d) a=%d, b=%d",
-                    startPoint.getX(), startPoint.getY(),
-                    Math.abs(endPoint.getX() - startPoint.getX()),
-                    Math.abs(endPoint.getY() - startPoint.getY()));
-        }catch (Exception e){
+                    points[0].getX(), points[0].getY(),
+                    a,
+                    b);
+        } catch (Exception e) {
             return "";
         }
 

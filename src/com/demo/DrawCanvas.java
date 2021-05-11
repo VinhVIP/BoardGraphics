@@ -622,6 +622,9 @@ public class DrawCanvas extends Canvas {
                 pointsRect[i] = mapNewPoints.get(index).get(i);
             }
             g.setPoints(pointsRect);
+            if (g instanceof Ellipse) {
+                ((Ellipse) g).setRotate(null, 0);
+            }
 
             listShapes.set(index, g);
         }
@@ -642,6 +645,7 @@ public class DrawCanvas extends Canvas {
     }
 
 
+    Point2D rootPoint = null, rootPoint2 = null;
     Point2D startMove = null, endMove = null;
     List<Integer> listIndexMove = new ArrayList<>();
 
@@ -762,7 +766,6 @@ public class DrawCanvas extends Canvas {
 
                 mapPoints.put(index, new ArrayList<>());
                 mapNewPoints.put(index, new ArrayList<>());
-
                 Point2D[] points = g.getPoints();
                 for (int j = 0; j < points.length; j++) {
                     mapPoints.get(index).add(new Point2D(points[j]));
@@ -831,7 +834,6 @@ public class DrawCanvas extends Canvas {
 
     }
 
-    Point2D rootPoint = null, rootPoint2 = null;
 
     public void rotateShapes(Point2D point) {
 
@@ -865,16 +867,24 @@ public class DrawCanvas extends Canvas {
 
             Point2D[] points = g.getPoints();
             for (int i = 0; i < points.length; i++) {
-                points[i] = mapPoints.get(index).get(i).rotate(rootPoint, mapPoints.get(index).get(i), angle);
+                points[i] = mapPoints.get(index).get(i).rotate(rootPoint, angle);
                 mapNewPoints.get(index).set(i, new Point2D(points[i]));
             }
             g.setPoints(points);
+
+            if (g instanceof Ellipse) {
+                ((Ellipse) g).setRotate(rootPoint, angle);
+            }
 
             g.setupDraw();
             listener.notifyShapeChanged(index, g.toString());
         }
     }
 
+    /*
+     * Xác định vị trí tương đối của điểm p
+     * So với đường thẳng đi qua 2 điểm p1 và p2
+     */
     public int pointLine(Point2D p1, Point2D p2, Point2D p) {
         return (p1.getY() - p2.getY()) * p.getX() - (p1.getY() - p2.getY()) * p1.getX()
                 + (p2.getX() - p1.getX()) * p.getY() - (p2.getX() - p1.getX()) * p1.getY();
