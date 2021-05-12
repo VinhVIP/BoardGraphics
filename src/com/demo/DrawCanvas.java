@@ -37,14 +37,15 @@ public class DrawCanvas extends Canvas {
     private Set<Point2D> coordinatePoints = new HashSet<>();
     private List listShapes = new ArrayList<>();
     private List<int[][]> boardStates = new ArrayList<>();
+    private List<List> shapesStates = new ArrayList<>();
 
     private int curState = 0;
-    //    private boolean isMove = false;
-//    private boolean isRotate = false;
+
     private boolean isShowAxis = true;
     private boolean isShowGrid = true;
     private boolean isShowPointCoord = false;
 
+    private final int MAX_UNDO = 10;
 
     //------------------------------------------------------------------------//
 
@@ -67,6 +68,7 @@ public class DrawCanvas extends Canvas {
 
 
         boardStates.add(getCurrentBoard());
+        shapesStates.add(new ArrayList());
 
         // Mode mặc định là vẽ PEN
         drawMode = DrawMode.DEFAULT;
@@ -242,7 +244,13 @@ public class DrawCanvas extends Canvas {
             }
         }
 
-        addToListStates();
+        if (curState < boardStates.size() - 1) {
+            clearStatesFrom(curState + 1);
+        }
+
+        listShapes.add(geometry);
+
+        saveStates();
 
         if (isShowPointCoord) drawAllPoints();
     }
@@ -255,37 +263,61 @@ public class DrawCanvas extends Canvas {
         return a;
     }
 
-    private void addToListStates() {
-        int[][] a = getCurrentBoard();
-
-        if (curState == boardStates.size() - 1) {
-            boardStates.add(a);
-
-            listShapes.add(geometry);
-            if (geometry.toString().length() > 0)
-                listener.notifyShapeInserted(geometry.toString());
-            System.out.println("add 1: " + geometry.getListDraw().size());
-
-            curState++;
-        } else {
-            int len = boardStates.size() - curState - 1;
-            while (len-- > 0) {
-                boardStates.remove(boardStates.size() - 1);
-                listShapes.remove(listShapes.size() - 1);
-            }
-
-            boardStates.add(a);
-            listShapes.add(geometry);
-            if (geometry.toString().length() > 0)
-                listener.notifyShapeInserted(geometry.toString());
-            System.out.println("add 2");
-
-            curState = boardStates.size() - 1;
+    List getCurrentShapes() {
+        List list = new ArrayList();
+        for (int i = 0; i < listShapes.size(); i++) {
+            Geometry geo = (Geometry) listShapes.get(i);
+            list.add(geo.copy());
         }
+        return list;
+    }
+
+    List getListShapesAt(int state) {
+        List list = new ArrayList();
+        for (int i = 0; i < shapesStates.get(state).size(); i++) {
+            Geometry geo = (Geometry) shapesStates.get(state).get(i);
+            list.add(geo.copy());
+        }
+        return list;
+    }
+
+    private void clearStatesFrom(int startIndex) {
+        int i = boardStates.size() - 1;
+        while (i >= startIndex) {
+            boardStates.remove(i);
+            shapesStates.remove(i);
+            i--;
+        }
+
+        listShapes = getListShapesAt(curState);
+    }
+
+    private void saveStates() {
+
+        boardStates.add(getCurrentBoard());
+        shapesStates.add(getCurrentShapes());
+
+        curState++;
+
+        if(curState > MAX_UNDO){
+            boardStates.remove(0);
+            shapesStates.remove(0);
+            curState--;
+        }
+
+        listShapes = getListShapesAt(curState);
+        listener.notifyDataSetChanged(listShapes);
+
+        System.out.println("saved state: " + curState);
+
     }
 
 
     private void applyState(int state) {
+        listShapes = getListShapesAt(state);
+
+        listener.notifyDataSetChanged(listShapes);
+
         int[][] stateBoard = boardStates.get(state);
         Point2D p;
 
@@ -301,7 +333,7 @@ public class DrawCanvas extends Canvas {
             }
         }
 
-        System.out.println("apply state " + state + " done");
+        System.out.println("apply state " + state + " done: " + listShapes.size());
     }
 
 
@@ -505,6 +537,8 @@ public class DrawCanvas extends Canvas {
         }
 
         applyBoard(temp);
+
+        saveStates();
     }
 
     public void move(int[] indexMove) {
@@ -514,6 +548,7 @@ public class DrawCanvas extends Canvas {
         if (indexMove.length > 0) {
             setMode(Mode.MOVE);
             setCursor(new Cursor(Cursor.MOVE_CURSOR));
+            mapPoints.clear();
         } else {
             setMode(Mode.NONE);
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -529,6 +564,7 @@ public class DrawCanvas extends Canvas {
         if (indexMove.length > 0) {
             setMode(Mode.ROTATE);
             setCursor(new Cursor(Cursor.MOVE_CURSOR));
+            mapPoints.clear();
         } else {
             setMode(Mode.MOVE);
             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -548,6 +584,7 @@ public class DrawCanvas extends Canvas {
         }
         setMode(Mode.NONE);
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+
 
     }
 
@@ -597,13 +634,13 @@ public class DrawCanvas extends Canvas {
 
             if (mode == Mode.MOVE || mode == Mode.ROTATE) {
                 // Hoàn thành moving | rotating
+                System.out.println("Done move or rotate");
                 applyShapesChange();
 
             } else {
                 if (geometry.getEndPoint() != null)
                     merge();
 
-                System.out.println("clear");
                 setMode(mode);
             }
         }
@@ -642,6 +679,8 @@ public class DrawCanvas extends Canvas {
 
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         listener.notifyDeselectedAllItems();
+
+        saveStates();
     }
 
 
@@ -836,7 +875,6 @@ public class DrawCanvas extends Canvas {
 
 
     public void rotateShapes(Point2D point) {
-
         if (rootPoint == null) {
             System.out.println("root point null");
             return;
@@ -892,30 +930,15 @@ public class DrawCanvas extends Canvas {
 
     public void copyShapes(int[] indexCopy) {
         for (int index : indexCopy) {
-            Geometry g = (Geometry) listShapes.get(index);
-            if (g instanceof Circle) {
-                Geometry geo = ((Circle) g).copy();
-                listShapes.add(geo);
-                geo.setupDraw();
-            } else if (g instanceof Ellipse) {
-                Geometry geo = ((Ellipse) g).copy();
-                listShapes.add(geo);
-                geo.setupDraw();
-            } else if (g instanceof Line) {
-                Geometry geo = ((Line) g).copy();
-                listShapes.add(geo);
-                geo.setupDraw();
-            } else if (g instanceof Rectangle) {
-                Geometry geo = ((Rectangle) g).copy();
-                listShapes.add(geo);
-                geo.setupDraw();
-            } else if (g instanceof Triangle) {
-                Geometry geo = ((Triangle) g).copy();
-                listShapes.add(geo);
-                geo.setupDraw();
-            }
+            // Tạo bản sao
+            Geometry g = ((Geometry) listShapes.get(index)).copy();
+
+            listShapes.add(g);
+            g.setupDraw();
+
             listener.notifyShapeInserted(g.toString());
         }
+        saveStates();
     }
 
 }

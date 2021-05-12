@@ -30,14 +30,24 @@ public class Circle extends Geometry {
         initSizePoints(2);
     }
 
-    public Circle copy(){
+    @Override
+    public Geometry copy() {
         Circle g = new Circle(canvas);
         g.setStartPoint(new Point2D(startPoint));
         g.setEndPoint(new Point2D(endPoint));
         g.setDrawMode(drawMode);
 
+        g.points = new Point2D[totalPoints];
+        for(int i=0; i<totalPoints; i++)
+            g.points[i] = new Point2D(points[i]);
+
+        for (Point2D p : listDraw) {
+            g.listDraw.add(new Point2D(p));
+        }
+
         return g;
     }
+
 
     @Override
     public void setupDraw() {

@@ -24,6 +24,12 @@ public abstract class Geometry {
 
     protected DrawMode drawMode;
 
+    // mảng chứa các điểm sẽ vẽ
+    protected int[][] shapeBoard = new int[DrawCanvas.rowSize][DrawCanvas.colSize];
+
+    int[] spillX = new int[]{0, 1, 0, -1};
+    int[] spillY = new int[]{-1, 0, 1, 0};
+
 
     public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode) {
         this.canvas = canvas;
@@ -53,6 +59,8 @@ public abstract class Geometry {
     public Geometry(DrawCanvas canvas, DrawMode drawMode) {
         this(canvas, null, null, drawMode);
     }
+
+    public abstract Geometry copy();
 
     protected void initSizePoints(int size){
         points = new Point2D[size];

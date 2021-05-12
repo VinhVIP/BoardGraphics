@@ -41,11 +41,20 @@ public class Triangle extends Geometry{
         init3Lines();
     }
 
-    public Triangle copy(){
+    @Override
+    public Geometry copy() {
         Triangle g = new Triangle(canvas);
         g.setStartPoint(new Point2D(startPoint));
         g.setEndPoint(new Point2D(endPoint));
         g.setDrawMode(drawMode);
+
+        g.points = new Point2D[totalPoints];
+        for(int i=0; i<totalPoints; i++)
+            g.points[i] = new Point2D(points[i]);
+
+        for (Point2D p : listDraw) {
+            g.listDraw.add(new Point2D(p));
+        }
 
         return g;
     }
@@ -56,7 +65,6 @@ public class Triangle extends Geometry{
             lines[i].setDrawMode(drawMode);
         }
     }
-
 
     @Override
     public void setupDraw() {

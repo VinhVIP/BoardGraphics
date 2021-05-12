@@ -20,6 +20,11 @@ public class SinglePoint extends Geometry {
     }
 
     @Override
+    public Geometry copy() {
+        return null;
+    }
+
+    @Override
     public void setupDraw() {
         if(startPoint != null){
             listDraw.add(startPoint);

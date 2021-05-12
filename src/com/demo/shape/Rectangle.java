@@ -4,6 +4,7 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -12,6 +13,8 @@ import java.util.List;
  */
 
 public class Rectangle extends Geometry {
+
+    private int totalPoints = 4;
 
     // Khai báo 4 đoạn thẳng của hình chữ nhật
     private Line[] lines = new Line[4];
@@ -34,17 +37,27 @@ public class Rectangle extends Geometry {
         initPoints();
     }
 
-    public Rectangle copy(){
+    @Override
+    public Geometry copy() {
         Rectangle g = new Rectangle(canvas);
         g.setStartPoint(new Point2D(startPoint));
         g.setEndPoint(new Point2D(endPoint));
         g.setDrawMode(drawMode);
 
+        g.points = new Point2D[totalPoints];
+        for(int i=0; i<totalPoints; i++)
+            g.points[i] = new Point2D(points[i]);
+
+        for (Point2D p : listDraw) {
+            g.listDraw.add(new Point2D(p));
+        }
+
         return g;
     }
 
-    private void initPoints(){
-        points = new Point2D[4];
+
+    private void initPoints() {
+        points = new Point2D[totalPoints];
     }
 
     /*
@@ -61,6 +74,8 @@ public class Rectangle extends Geometry {
     public void setupDraw() {
         if (startPoint != null && endPoint != null) {
 
+            swapList();
+
             for (int i = 0; i < 4; i++) {
                 lines[i].setStartPoint(points[i % 4]);
                 lines[i].setEndPoint(points[(i + 1) % 4]);
@@ -74,12 +89,57 @@ public class Rectangle extends Geometry {
 
             for (int i = 0; i < 4; i++) lines[i].drawNewPoints();
 
+            for (int i = 0; i < lines.length; i++) {
+                listDraw.addAll(lines[i].getListDraw());
+            }
+
+//            for (Point2D p : listDraw) {
+//                if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
+//                    continue;
+//                shapeBoard[p.getComputerX()][p.getComputerY()] = color;
+//            }
+//
+//            fillColor();
+//
+//            for(int i=0; i<shapeBoard.length;i++){
+//                for(int j=0; j<shapeBoard[0].length; j++){
+//                    if(shapeBoard[i][j] == color){
+//                        Point2D p = Point2D.fromComputerCoordinate(i,j);
+//                        p.setColor(color);
+//                        listDraw.add(p);
+//                    }
+//                }
+//            }
+//
+//            clearOldPoints();
+//            drawNewPoints();
         }
     }
 
     @Override
     public void showPointsCoordinate() {
 
+    }
+
+    private void fillColor() {
+        int centerX = (points[0].getX() + points[2].getX()) / 2;
+        int centerY = (points[0].getY() + points[2].getY()) / 2;
+
+        fillPoint(centerX, centerY, color);
+    }
+
+    private void fillPoint(int x, int y, int color) {
+        Point2D p = new Point2D(x, y, color);
+
+        if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
+            return;
+
+        if (shapeBoard[p.getComputerX()][p.getComputerY()] == color) return;
+        else shapeBoard[p.getComputerX()][p.getComputerY()] = color;
+
+        for (int i = 0; i < spillX.length; i++) {
+            fillPoint(x + spillX[i], y + spillY[i], color);
+        }
     }
 
     @Override
@@ -91,19 +151,9 @@ public class Rectangle extends Geometry {
 
     @Override
     public List<Point2D> getListDraw() {
-        listDraw.clear();
-        for (int i = 0; i < lines.length; i++) {
-            listDraw.addAll(lines[i].getListDraw());
-        }
+
         return listDraw;
     }
-
-
-//    public void rotate(Point2D root, double angle) {
-//        for (int i = 0; i < 4; i++) {
-//            points[i] = points[i].rotate(root, points[i], angle);
-//        }
-//    }
 
 
     @Override

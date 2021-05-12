@@ -18,6 +18,11 @@ public class Pen extends Geometry {
     }
 
     @Override
+    public Geometry copy() {
+        return null;
+    }
+
+    @Override
     public void setupDraw() {
         // TODO: Thuật toán vẽ PEN lỗi, rảnh fix sau
 
