@@ -42,6 +42,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
     private JButton btnTriangle;
     private JButton btnPolygon;
     private JButton btnCopy;
+    private JButton btnFillColor;
 
 
     private DrawCanvas canvas;
@@ -219,6 +220,9 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
             }
         });
 
+        btnFillColor.addActionListener(e->{
+            canvas.setMode(Mode.FILL_COLOR);
+        });
 
         listShape.setModel(listModel);
 
