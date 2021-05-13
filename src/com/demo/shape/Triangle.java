@@ -17,38 +17,31 @@ public class Triangle extends Geometry{
 
     private Line[] lines = new Line[3];
 
-    public Triangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode) {
-        super(canvas, startPoint, endPoint, drawMode);
-        initSizePoints(totalPoints);
-        init3Lines();
+    public Triangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
+        super(canvas, startPoint, endPoint, color, drawMode);
+        initPointsAndLines();
     }
 
-    public Triangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
-        super(canvas, startPoint, endPoint);
-        initSizePoints(totalPoints);
-        init3Lines();
+    public Triangle(DrawCanvas canvas, int color, DrawMode drawMode) {
+        super(canvas, color, drawMode);
+        initPointsAndLines();
     }
 
     public Triangle(DrawCanvas canvas) {
         super(canvas);
-        initSizePoints(totalPoints);
-        init3Lines();
+        initPointsAndLines();
     }
 
     public Triangle(DrawCanvas canvas, DrawMode drawMode) {
         super(canvas, drawMode);
-        initSizePoints(totalPoints);
-        init3Lines();
+        initPointsAndLines();
     }
+
 
     @Override
     public Geometry copy() {
-        Triangle g = new Triangle(canvas);
-        g.setStartPoint(new Point2D(startPoint));
-        g.setEndPoint(new Point2D(endPoint));
-        g.setDrawMode(drawMode);
+        Triangle g = new Triangle(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
 
-        g.points = new Point2D[totalPoints];
         for(int i=0; i<totalPoints; i++)
             g.points[i] = new Point2D(points[i]);
 
@@ -59,10 +52,10 @@ public class Triangle extends Geometry{
         return g;
     }
 
-    private void init3Lines() {
+    private void initPointsAndLines() {
+        initSizePoints(totalPoints);
         for (int i = 0; i < lines.length; i++) {
-            lines[i] = new Line(canvas);
-            lines[i].setDrawMode(drawMode);
+            lines[i] = new Line(canvas, color, drawMode);
         }
     }
 
@@ -89,6 +82,13 @@ public class Triangle extends Geometry{
         for (Line line : lines) {
             line.setDrawMode(drawMode);
         }
+    }
+
+    @Override
+    public void setColor(int color) {
+        super.setColor(color);
+        for (int i=0; i<lines.length; i++)
+            lines[i].setColor(color);
     }
 
     @Override

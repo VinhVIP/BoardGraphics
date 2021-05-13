@@ -5,8 +5,6 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
 
-import java.util.List;
-
 /**
  * Create by VinhIT
  * On 25/03/2021
@@ -16,8 +14,13 @@ public class Line extends Geometry {
 
     private int totalPoints = 2;
 
-    public Line(DrawCanvas canvas, Point2D startPoint2D, Point2D endPoint2D) {
-        super(canvas, startPoint2D, endPoint2D);
+    public Line(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
+        super(canvas, startPoint, endPoint, color, drawMode);
+        initSizePoints(totalPoints);
+    }
+
+    public Line(DrawCanvas canvas, int color, DrawMode drawMode) {
+        super(canvas, color, drawMode);
         initSizePoints(totalPoints);
     }
 
@@ -31,15 +34,12 @@ public class Line extends Geometry {
         initSizePoints(totalPoints);
     }
 
+
     @Override
     public Geometry copy() {
-        Line g = new Line(canvas);
-        g.setStartPoint(new Point2D(startPoint));
-        g.setEndPoint(new Point2D(endPoint));
-        g.setDrawMode(drawMode);
+        Line g = new Line(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
 
-        g.points = new Point2D[totalPoints];
-        for(int i=0; i<totalPoints; i++)
+        for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);
 
         for (Point2D p : listDraw) {

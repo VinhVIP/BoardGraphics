@@ -11,10 +11,6 @@ import com.demo.shape.Geometry;
 
 public class SinglePoint extends Geometry {
 
-    public SinglePoint(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
-        super(canvas, startPoint, endPoint);
-    }
-
     public SinglePoint(DrawCanvas canvas) {
         super(canvas);
     }

@@ -125,23 +125,6 @@ public class DrawCanvas extends Canvas {
         System.out.println("Done fill color: " + cnt);
     }
 
-//    private void fillPoint(int x, int y, int color, int color2, Graphics g) {
-//        Point2D p = new Point2D(x, y, color);
-//
-//        if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
-//            return;
-//
-//        if (board[p.getComputerX()][p.getComputerY()] == color) return;
-//        else if (board[p.getComputerX()][p.getComputerY()] == color2) {
-//            board[p.getComputerX()][p.getComputerY()] = tempBoard[p.getComputerX()][p.getComputerY()] = color;
-//            putPixel2(p, g);
-//
-//            for (int i = 0; i < spillX.length; i++) {
-//                fillPoint(x + spillX[i], y + spillY[i], color, color2, g);
-//            }
-//        }
-//    }
-
     public void setDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
         if (geometry != null) {
@@ -312,6 +295,7 @@ public class DrawCanvas extends Canvas {
         }
 
         listShapes.add(geometry);
+        listener.notifyDataSetChanged(listShapes);
 
         saveStates();
 
@@ -332,6 +316,7 @@ public class DrawCanvas extends Canvas {
             Geometry geo = (Geometry) listShapes.get(i);
             list.add(geo.copy());
         }
+        System.out.println("Saved list size: "+list.size());
         return list;
     }
 
@@ -368,8 +353,8 @@ public class DrawCanvas extends Canvas {
             curState--;
         }
 
-        listShapes = getListShapesAt(curState);
-        listener.notifyDataSetChanged(listShapes);
+//        listShapes = getListShapesAt(curState);
+//        listener.notifyDataSetChanged(listShapes);
 
         System.out.println("saved state: " + curState);
 
@@ -395,6 +380,8 @@ public class DrawCanvas extends Canvas {
                 }
             }
         }
+
+        if (isShowAxis) drawAxis();
 
         System.out.println("apply state " + state + " done: " + listShapes.size());
     }
@@ -535,6 +522,8 @@ public class DrawCanvas extends Canvas {
      * Xóa toàn bộ màn hình, mặc định màn hình sẽ quay về màu trắng
      */
     public void clearScreen() {
+        System.out.println("Clear screen");
+
         coordinatePoints.clear();
 
         geometry.clearAll();
@@ -553,12 +542,13 @@ public class DrawCanvas extends Canvas {
 
         if (isShowGrid) drawGrid(); // Xóa xong thì vẽ lại lưới tọa độ
 
-        resetStates();
-        listShapes.clear();
-        setMode(mode.NONE);
+//        resetStates();
+        setMode(Mode.NONE);
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
+        listShapes.clear();
         listener.clear();
+        saveStates();
     }
 
     private void resetStates() {
@@ -597,6 +587,8 @@ public class DrawCanvas extends Canvas {
         for (int i = removeIndex.length - 1; i >= 0; i--) {
             listShapes.remove(removeIndex[i]);
         }
+
+        listener.notifyDataSetChanged(listShapes);
 
         applyBoard(temp);
 
@@ -689,6 +681,7 @@ public class DrawCanvas extends Canvas {
 
             if (mode == Mode.FILL_COLOR) {
                 fillColor(point);
+                saveStates();
             }
 
         }
@@ -746,6 +739,8 @@ public class DrawCanvas extends Canvas {
             }
         }
 
+        if (isShowAxis) drawAxis();
+
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         listener.notifyDeselectedAllItems();
 
@@ -773,7 +768,7 @@ public class DrawCanvas extends Canvas {
             geometry.setColor(DrawCanvas.currentColor);
             listener.mouseCoordinate(point.getX(), point.getY());
 
-            if (mode == mode.NONE) return;
+            if (mode == Mode.NONE || mode == Mode.FILL_COLOR) return;
             if (geometry instanceof SinglePoint) return;
 
 

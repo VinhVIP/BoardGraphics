@@ -19,32 +19,31 @@ public class Rectangle extends Geometry {
     // Khai báo 4 đoạn thẳng của hình chữ nhật
     private Line[] lines = new Line[4];
 
-    public Rectangle(DrawCanvas canvas, Point2D startPoint2D, Point2D endPoint2D) {
-        super(canvas, startPoint2D, endPoint2D);
-        init4Lines(canvas);
-        initPoints();
+    public Rectangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
+        super(canvas, startPoint, endPoint, color, drawMode);
+        initPointsAndLines();
+    }
+
+    public Rectangle(DrawCanvas canvas, int color, DrawMode drawMode) {
+        super(canvas, color, drawMode);
+        initPointsAndLines();
     }
 
     public Rectangle(DrawCanvas canvas) {
         super(canvas);
-        init4Lines(canvas);
-        initPoints();
+        initPointsAndLines();
     }
 
     public Rectangle(DrawCanvas canvas, DrawMode drawMode) {
         super(canvas, drawMode);
-        init4Lines(canvas);
-        initPoints();
+        initPointsAndLines();
     }
+
 
     @Override
     public Geometry copy() {
-        Rectangle g = new Rectangle(canvas);
-        g.setStartPoint(new Point2D(startPoint));
-        g.setEndPoint(new Point2D(endPoint));
-        g.setDrawMode(drawMode);
+        Rectangle g = new Rectangle(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
 
-        g.points = new Point2D[totalPoints];
         for(int i=0; i<totalPoints; i++)
             g.points[i] = new Point2D(points[i]);
 
@@ -56,19 +55,13 @@ public class Rectangle extends Geometry {
     }
 
 
-    private void initPoints() {
-        points = new Point2D[totalPoints];
-    }
-
-    /*
-     * Khởi tạo 1 đường thẳng
-     */
-    private void init4Lines(DrawCanvas canvas) {
+    private void initPointsAndLines() {
+        initSizePoints(totalPoints);
         for (int i = 0; i < lines.length; i++) {
-            lines[i] = new Line(canvas);
-            lines[i].setDrawMode(drawMode);
+            lines[i] = new Line(canvas, color, drawMode);
         }
     }
+
 
     @Override
     public void setupDraw() {
@@ -92,27 +85,6 @@ public class Rectangle extends Geometry {
             for (int i = 0; i < lines.length; i++) {
                 listDraw.addAll(lines[i].getListDraw());
             }
-
-//            for (Point2D p : listDraw) {
-//                if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
-//                    continue;
-//                shapeBoard[p.getComputerX()][p.getComputerY()] = color;
-//            }
-//
-//            fillColor();
-//
-//            for(int i=0; i<shapeBoard.length;i++){
-//                for(int j=0; j<shapeBoard[0].length; j++){
-//                    if(shapeBoard[i][j] == color){
-//                        Point2D p = Point2D.fromComputerCoordinate(i,j);
-//                        p.setColor(color);
-//                        listDraw.add(p);
-//                    }
-//                }
-//            }
-//
-//            clearOldPoints();
-//            drawNewPoints();
         }
     }
 
@@ -121,25 +93,11 @@ public class Rectangle extends Geometry {
 
     }
 
-    private void fillColor() {
-        int centerX = (points[0].getX() + points[2].getX()) / 2;
-        int centerY = (points[0].getY() + points[2].getY()) / 2;
-
-        fillPoint(centerX, centerY, color);
-    }
-
-    private void fillPoint(int x, int y, int color) {
-        Point2D p = new Point2D(x, y, color);
-
-        if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
-            return;
-
-        if (shapeBoard[p.getComputerX()][p.getComputerY()] == color) return;
-        else shapeBoard[p.getComputerX()][p.getComputerY()] = color;
-
-        for (int i = 0; i < spillX.length; i++) {
-            fillPoint(x + spillX[i], y + spillY[i], color);
-        }
+    @Override
+    public void setColor(int color) {
+        super.setColor(color);
+        for (int i=0; i<lines.length; i++)
+            lines[i].setColor(color);
     }
 
     @Override

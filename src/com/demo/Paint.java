@@ -63,12 +63,12 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
             int[] indexes = listShape.getSelectedIndices();
             if (indexes.length > 0) {
                 canvas.clearShapes(indexes);
-                Arrays.sort(indexes);
-                for (int i = indexes.length - 1; i >= 0; i--) {
-                    System.out.print(indexes[i] + " ");
-                    listModel.remove(indexes[i]);
-                }
-                System.out.println();
+//                Arrays.sort(indexes);
+//                for (int i = indexes.length - 1; i >= 0; i--) {
+//                    System.out.print(indexes[i] + " ");
+//                    listModel.remove(indexes[i]);
+//                }
+//                System.out.println();
 
             } else {
                 canvas.clearScreen();
@@ -245,6 +245,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
 
     @Override
     public void notifyDataSetChanged(List listShape) {
+        System.out.println("list shape model: "+listShape.size());
         listModel.clear();
         for (int i = 0; i < listShape.size(); i++) {
             Geometry g = (Geometry) listShape.get(i);

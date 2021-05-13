@@ -24,40 +24,27 @@ public abstract class Geometry {
 
     protected DrawMode drawMode;
 
-    // mảng chứa các điểm sẽ vẽ
-    protected int[][] shapeBoard = new int[DrawCanvas.rowSize][DrawCanvas.colSize];
-
     int[] spillX = new int[]{0, 1, 0, -1};
     int[] spillY = new int[]{-1, 0, 1, 0};
 
-
-    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode) {
+    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
         this.canvas = canvas;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.color = color;
         this.drawMode = drawMode;
-
-        this.color = DrawCanvas.currentColor;
     }
 
-    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
-        this(canvas, startPoint, endPoint, DrawMode.DEFAULT);
-    }
-
-    public Geometry(Geometry g){
-        this(g.canvas, g.startPoint, g.endPoint, g.drawMode);
-        this.points = g.points;
-        this.color = g.color;
-        this.listDraw = g.listDraw;
-        this.listClear = g.listClear;
+    public Geometry(DrawCanvas canvas, int color, DrawMode drawMode) {
+        this(canvas, null, null, color, drawMode);
     }
 
     public Geometry(DrawCanvas canvas) {
-        this(canvas, DrawMode.DEFAULT);
+        this(canvas, null, null, DrawCanvas.currentColor, DrawMode.DEFAULT);
     }
 
     public Geometry(DrawCanvas canvas, DrawMode drawMode) {
-        this(canvas, null, null, drawMode);
+        this(canvas, null, null, DrawCanvas.currentColor, drawMode);
     }
 
     public abstract Geometry copy();

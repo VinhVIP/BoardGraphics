@@ -13,10 +13,6 @@ import java.util.List;
 
 public class EllipseDash extends Geometry {
 
-    public EllipseDash(DrawCanvas canvas, Point2D startPoint, Point2D endPoint) {
-        super(canvas, startPoint, endPoint);
-    }
-
     public EllipseDash(DrawCanvas canvas) {
         super(canvas);
     }
