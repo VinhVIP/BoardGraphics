@@ -89,11 +89,6 @@ public class Rectangle extends Geometry {
     }
 
     @Override
-    public void showPointsCoordinate() {
-
-    }
-
-    @Override
     public void setColor(int color) {
         super.setColor(color);
         for (int i=0; i<lines.length; i++)

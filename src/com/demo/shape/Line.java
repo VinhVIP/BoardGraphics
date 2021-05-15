@@ -5,6 +5,8 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
 
+import java.awt.*;
+
 /**
  * Create by VinhIT
  * On 25/03/2021
@@ -65,28 +67,12 @@ public class Line extends Geometry {
             // Vẽ những điểm thuộc listDraw
             drawNewPoints();
 
-            showPointsCoordinate();
+//            showPointsCoordinate();
         }
     }
 
 
-    /*
-     * Hiển thị tọa độ 2 điểm start và end
-     */
-    @Override
-    public void showPointsCoordinate() {
-//        canvas.drawPointsCoordinate(startPoint);
-//        canvas.drawPointsCoordinate(endPoint);
-//        Graphics g = canvas.getGraphics();
-//        g.setColor(Color.BLACK);
-//
-//        if (startPoint != null)
-//            g.drawString(String.format("(%d, %d)", startPoint.getX(), startPoint.getY()), startPoint.getComputerX() * 5 + 5, startPoint.getComputerY() * 5 - 5);
-//        if (endPoint != null)
-//            g.drawString(String.format("(%d, %d)", endPoint.getX(), endPoint.getY()), endPoint.getComputerX() * 5 + 5, endPoint.getComputerY() * 5 - 5);
 
-//        g.dispose();
-    }
 
     public void drawLine() {
         lineBresenham(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());

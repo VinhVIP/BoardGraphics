@@ -92,11 +92,6 @@ public class Triangle extends Geometry{
     }
 
     @Override
-    public void showPointsCoordinate() {
-
-    }
-
-    @Override
     public List<Point2D> getListDraw() {
         listDraw.clear();
         for (int i = 0; i < lines.length; i++) {

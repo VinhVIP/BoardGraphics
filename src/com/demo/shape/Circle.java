@@ -66,10 +66,6 @@ public class Circle extends Geometry {
         }
     }
 
-    @Override
-    public void showPointsCoordinate() {
-
-    }
 
     @Override
     public void setPoints(Point2D[] points) {

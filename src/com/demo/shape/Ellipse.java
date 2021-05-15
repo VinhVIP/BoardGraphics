@@ -125,11 +125,6 @@ public class Ellipse extends Geometry {
         this.rotateAngle = rotateAngle;
     }
 
-    @Override
-    public void showPointsCoordinate() {
-
-    }
-
     void choosePoints() {
         int n = listDraw.size();
         List<Point2D> listTmp = new ArrayList<>();

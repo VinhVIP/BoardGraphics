@@ -49,13 +49,11 @@ public abstract class Geometry {
 
     public abstract Geometry copy();
 
-    protected void initSizePoints(int size){
+    protected void initSizePoints(int size) {
         points = new Point2D[size];
     }
 
     public abstract void setupDraw();
-
-    public abstract void showPointsCoordinate();
 
     /*
      * Lọc ra những điểm cần xóa và xóa nó
@@ -91,6 +89,21 @@ public abstract class Geometry {
         listClear.clear();
         listClear.addAll(listDraw);
         listDraw.clear();
+    }
+
+    /*
+     * Hiển thị tọa độ 2 điểm start và end
+     */
+    public void showPointsCoordinate() {
+        for (Point2D p : points) {
+            canvas.drawPointsCoordinate(p);
+        }
+    }
+
+    public void clearPointsCoordinate() {
+        for (Point2D p : points) {
+            canvas.reDrawPoints(p.getComputerX() - 2, p.getComputerY() - 4, p.getComputerX() + 10, p.getComputerY());
+        }
     }
 
     public void setStartPoint(Point2D startPoint) {
@@ -156,7 +169,7 @@ public abstract class Geometry {
         return listDraw;
     }
 
-    public void clearListDraw(){
+    public void clearListDraw() {
         listDraw.clear();
     }
 

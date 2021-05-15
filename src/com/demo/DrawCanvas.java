@@ -84,7 +84,6 @@ public class DrawCanvas extends Canvas {
     }
 
     private void fillColor(Point2D startPoint) {
-
         Queue<Point2D> queue = new ArrayDeque<>();
         Queue<Point2D> tempQueue = new ArrayDeque<>();
         Queue<Point2D> tempQueue2 = new ArrayDeque<>();
@@ -185,22 +184,16 @@ public class DrawCanvas extends Canvas {
     public void setShowPointCoord(boolean showPointCoord) {
         isShowPointCoord = showPointCoord;
         if (isShowPointCoord) {
-            drawAllPoints();
-            repaint();
-        } else {
-            System.out.println("no show");
-
-            Point2D p;
-            for (int i = 0; i < rowSize; i++) {
-                for (int j = 0; j < colSize; j++) {
-                    p = Point2D.fromComputerCoordinate(i, j);
-
-                    p.setColor(board[i][j]);
-                    putPixel(p);
-                }
+            for (int i = 0; i < listShapes.size(); i++) {
+                Geometry g = (Geometry) listShapes.get(i);
+                g.showPointsCoordinate();
             }
-
-            if (isShowGrid) drawGrid();
+        } else {
+            for (int i = 0; i < listShapes.size(); i++) {
+                Geometry g = (Geometry) listShapes.get(i);
+                g.clearPointsCoordinate();
+            }
+            if(isShowAxis) drawAxis();
         }
     }
 
@@ -262,6 +255,33 @@ public class DrawCanvas extends Canvas {
         drawAllPoints();
     }
 
+    /*
+     * Vẽ lại 1 vùng hình chữ nhật
+     * params đều là tọa độ máy tính
+     */
+    public void reDrawPoints(int startX, int startY, int endX, int endY) {
+        for (int i = startX; i <= endX; i++) {
+            for (int j = startY; j <= endY; j++) {
+                Point2D p = Point2D.fromComputerCoordinate(i, j);
+                p.setColor(board[i][j]);
+                putPixel(p);
+            }
+        }
+
+        if (isShowAxis) {
+            Graphics g = getGraphics();
+            g.setColor(new Color(0xFFD9C7C7));
+
+            for (int i = startX; i <= endX; i++) {
+                g.drawLine(i * pixelSize, startY * pixelSize, i * pixelSize, endY * pixelSize);
+            }
+            for (int i = startY; i <= endY; i++) {
+                g.drawLine(startX * pixelSize, i * pixelSize, endX * pixelSize, i * pixelSize);
+            }
+            g.dispose();
+        }
+    }
+
     public void applyBoard(int[][] newBoard) {
         Point2D p;
         for (int i = 0; i < rowSize; i++) {
@@ -299,7 +319,7 @@ public class DrawCanvas extends Canvas {
 
         saveStates();
 
-        if (isShowPointCoord) drawAllPoints();
+        if (isShowPointCoord) geometry.showPointsCoordinate();
     }
 
     int[][] getCurrentBoard() {
@@ -316,7 +336,7 @@ public class DrawCanvas extends Canvas {
             Geometry geo = (Geometry) listShapes.get(i);
             list.add(geo.copy());
         }
-        System.out.println("Saved list size: "+list.size());
+        System.out.println("Saved list size: " + list.size());
         return list;
     }
 
@@ -716,16 +736,18 @@ public class DrawCanvas extends Canvas {
         for (int index : mapNewPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
-            Point2D[] pointsRect = g.getPoints();
-            for (int i = 0; i < pointsRect.length; i++) {
-                pointsRect[i] = mapNewPoints.get(index).get(i);
+            Point2D[] points = g.getPoints();
+            for (int i = 0; i < points.length; i++) {
+                points[i] = mapNewPoints.get(index).get(i);
             }
-            g.setPoints(pointsRect);
+            g.setPoints(points);
             if (g instanceof Ellipse) {
                 ((Ellipse) g).setRotate(null, 0);
             }
 
             listShapes.set(index, g);
+
+            if (isShowPointCoord) g.showPointsCoordinate();
         }
 
         mapPoints.clear();
@@ -867,6 +889,8 @@ public class DrawCanvas extends Canvas {
             for (int index : listIndexMove) {
                 Geometry g = (Geometry) listShapes.get(index);
 
+                g.clearPointsCoordinate();
+
                 mapPoints.put(index, new ArrayList<>());
                 mapNewPoints.put(index, new ArrayList<>());
                 Point2D[] points = g.getPoints();
@@ -967,9 +991,13 @@ public class DrawCanvas extends Canvas {
         for (int index : mapPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
+
             Point2D[] points = g.getPoints();
             for (int i = 0; i < points.length; i++) {
-                points[i] = mapPoints.get(index).get(i).rotate(rootPoint, angle);
+                if (g instanceof Circle) {
+                } else {
+                    points[i] = mapPoints.get(index).get(i).rotate(rootPoint, angle);
+                }
                 mapNewPoints.get(index).set(i, new Point2D(points[i]));
             }
             g.setPoints(points);
