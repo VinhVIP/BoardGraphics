@@ -84,23 +84,22 @@ public class DrawCanvas extends Canvas {
         Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(c);
 
-        bike = new Bike(this);
     }
 
-    Bike bike;
     Thread threadBike;
-
     public void setShowMotions(boolean showMotions) {
         isShowMotions = showMotions;
 
         if (isShowMotions) {
             if (threadBike == null) {
-                threadBike = new Thread(bike);
+                clearScreen();
+                threadBike = new Thread(new Bike(this));
                 threadBike.start();
             }
         } else {
             threadBike.stop();
             threadBike = null;
+            clearScreen();
         }
     }
 
