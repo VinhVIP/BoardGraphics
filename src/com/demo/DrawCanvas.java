@@ -27,6 +27,8 @@ public class DrawCanvas extends Canvas {
     public static final int pixelSize = 5;  // Kích thước 1 đơn vị
     public static int currentColor = 0xff0000;  // Màu vẽ đang chọn hiện tại
 
+    private boolean isShowMotions = false;
+
     private DrawMode drawMode;
     private Mode mode; // Chế độ hình vẽ
 
@@ -82,6 +84,28 @@ public class DrawCanvas extends Canvas {
         Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(c);
 
+        bike = new Bike(this);
+    }
+
+    Bike bike;
+    Thread threadBike;
+
+    public void setShowMotions(boolean showMotions) {
+        isShowMotions = showMotions;
+
+        if (isShowMotions) {
+            if (threadBike == null) {
+                threadBike = new Thread(bike);
+                threadBike.start();
+            }
+        } else {
+            threadBike.stop();
+            threadBike = null;
+        }
+    }
+
+    public boolean isShowMotions() {
+        return isShowMotions;
     }
 
     private void fillColor(Point2D startPoint) {
@@ -524,8 +548,6 @@ public class DrawCanvas extends Canvas {
 
         drawAllPoints();
 
-        Bike bike = new Bike(this);
-        new Thread(bike).start();
 
     }
 
@@ -689,6 +711,9 @@ public class DrawCanvas extends Canvas {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+
+            if (isShowMotions) return;
+
             // TODO: Them ve diem
             super.mouseClicked(e);
 
@@ -712,6 +737,8 @@ public class DrawCanvas extends Canvas {
 
         @Override
         public void mouseReleased(MouseEvent e) {
+            if (isShowMotions) return;
+
             super.mouseReleased(e);
 
             startMove = endMove = null;
@@ -786,6 +813,8 @@ public class DrawCanvas extends Canvas {
 
         @Override
         public void mouseDragged(MouseEvent e) {
+            if (isShowMotions) return;
+
             // Nhấn giữ chuột và kéo
 
             super.mouseDragged(e);
@@ -827,6 +856,8 @@ public class DrawCanvas extends Canvas {
 
         @Override
         public void mouseMoved(MouseEvent e) {
+            if (isShowMotions) return;
+
             // Chuột di chuyển bình thưởng, KHÔNG nhấn giữ
 
             super.mouseMoved(e);

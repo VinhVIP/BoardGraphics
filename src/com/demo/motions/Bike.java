@@ -29,31 +29,35 @@ public class Bike implements Runnable {
         rim2.setPoints(new Point2D[]{new Point2D(0, 10), new Point2D(0, -10)});
     }
 
-
     @Override
     public void run() {
         while (true) {
+            // Di chuyển sang phải 1 đơn vị
             wheel.move(1, 0);
             rim1.move(1, 0);
             rim2.move(1, 0);
 
+            // Quay quanh tâm đường thẳng
             rim1.rotate(rim1.getCenterPoint(), -0.2);
             rim2.rotate(rim2.getCenterPoint(), -0.2);
 
+            // Xóa những điểm vẽ cũ
             canvas.clearDraw(wheel.getListDraw());
             canvas.clearDraw(rim1.getListDraw());
             canvas.clearDraw(rim2.getListDraw());
 
+            // Thiết lập những điểm vẽ mới
             wheel.processDraw();
             rim1.processDraw();
             rim2.processDraw();
 
+            // Vẽ những điểm vẽ mới
             canvas.applyDraw(wheel.getListDraw());
             canvas.applyDraw(rim1.getListDraw());
             canvas.applyDraw(rim2.getListDraw());
 
             try {
-                Thread.sleep(75);
+                Thread.sleep(60);
             } catch (Exception e) {
                 e.printStackTrace();
             }
