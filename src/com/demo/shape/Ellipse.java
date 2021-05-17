@@ -56,24 +56,20 @@ public class Ellipse extends Geometry {
     }
 
     @Override
-    public void setupDraw() {
+    public void processDraw() {
         if (startPoint != null && endPoint != null) {
             swapList();
-
             process();
-
-            clearOldPoints();
-            drawNewPoints();
         }
     }
 
     /*
-       --A(2)--
-     -         -
-    |    O'(0)  |B(1)
-     -         -
-       -------
-     */
+           --A(2)--
+         -         -
+        |    O'(0)  |B(1)
+         -         -
+           -------
+         */
     private void process() {
 //        int x = points[0].getX();
 //        int y = points[0].getY();
@@ -231,6 +227,11 @@ public class Ellipse extends Geometry {
         } else {
             points[2].set(points[0].getX(), endPoint.getY());
         }
+    }
+
+    @Override
+    public Point2D getCenterPoint() {
+        return new Point2D(points[0]);
     }
 
     @Override

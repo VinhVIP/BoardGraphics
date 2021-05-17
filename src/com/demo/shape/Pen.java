@@ -39,6 +39,11 @@ public class Pen extends Geometry {
     }
 
     @Override
+    public void processDraw() {
+
+    }
+
+    @Override
     public void showPointsCoordinate() {
 //        canvas.addPointsToDrawCoord(startPoint);
 //        Graphics g = canvas.getGraphics();
@@ -65,4 +70,8 @@ public class Pen extends Geometry {
         line.clearAll();
     }
 
+    @Override
+    public Point2D getCenterPoint() {
+        return null;
+    }
 }

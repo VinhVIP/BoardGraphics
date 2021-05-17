@@ -49,23 +49,15 @@ public class Circle extends Geometry {
         return g;
     }
 
-
     @Override
-    public void setupDraw() {
+    public void processDraw() {
         if (startPoint != null && endPoint != null) {
             int r = getCircleRadius();
-
             swapList();
-
             circleMidPoint(r);
-
             choosePoints();
-
-            clearOldPoints();
-            drawNewPoints();
         }
     }
-
 
     @Override
     public void setPoints(Point2D[] points) {
@@ -170,6 +162,11 @@ public class Circle extends Geometry {
     public void setEndPoint(Point2D endPoint) {
         super.setEndPoint(endPoint);
         points[1] = endPoint;
+    }
+
+    @Override
+    public Point2D getCenterPoint() {
+        return new Point2D(points[0]);
     }
 
     @Override

@@ -65,22 +65,25 @@ public class Rectangle extends Geometry {
 
     @Override
     public void setupDraw() {
+        processDraw();
+        for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
+        for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
+    }
+
+    @Override
+    public void processDraw() {
         if (startPoint != null && endPoint != null) {
 
             swapList();
 
-            for (int i = 0; i < 4; i++) {
-                lines[i].setStartPoint(points[i % 4]);
-                lines[i].setEndPoint(points[(i + 1) % 4]);
+            for (int i = 0; i < lines.length; i++) {
+                lines[i].setStartPoint(points[i % lines.length]);
+                lines[i].setEndPoint(points[(i + 1) % lines.length]);
             }
 
-            for (int i = 0; i < 4; i++) {
-                lines[i].swapList();
-                lines[i].drawLine();
-                lines[i].clearOldPoints();
+            for (int i = 0; i < lines.length; i++) {
+                lines[i].processDraw();
             }
-
-            for (int i = 0; i < 4; i++) lines[i].drawNewPoints();
 
             for (int i = 0; i < lines.length; i++) {
                 listDraw.addAll(lines[i].getListDraw());
@@ -102,12 +105,6 @@ public class Rectangle extends Geometry {
         }
     }
 
-    @Override
-    public List<Point2D> getListDraw() {
-
-        return listDraw;
-    }
-
 
     @Override
     public void setEndPoint(Point2D endPoint) {
@@ -120,6 +117,11 @@ public class Rectangle extends Geometry {
         points[1] = pointB;
         points[2] = endPoint;
         points[3] = pointD;
+    }
+
+    @Override
+    public Point2D getCenterPoint() {
+        return new Point2D((points[0].getX() + points[1].getX()) / 2, (points[2].getY() + points[2].getY()) / 2, points[0].getColor());
     }
 
     @Override

@@ -53,7 +53,13 @@ public abstract class Geometry {
         points = new Point2D[size];
     }
 
-    public abstract void setupDraw();
+    public void setupDraw(){
+        processDraw();
+        clearOldPoints();
+        drawNewPoints();
+    }
+
+    public abstract void processDraw();
 
     /*
      * Lọc ra những điểm cần xóa và xóa nó
@@ -196,5 +202,24 @@ public abstract class Geometry {
 
     public void setPoints(Point2D[] points) {
         this.points = points;
+    }
+
+    public abstract Point2D getCenterPoint();
+    /*
+     * Xoay đoạn thẳng hiện tại quanh tâm của đoạn thẳng
+     */
+    public void rotate(Point2D root, double angleRad) {
+        for (int i = 0; i < points.length; i++) {
+            points[i] = points[i].rotate(root, angleRad);
+        }
+    }
+
+    /*
+     * Di chuyển đoạn thẳng 1 đoạn mx, my
+     */
+    public void move(int mx, int my) {
+        for (Point2D p : points) {
+            p.set(p.getX() + mx, p.getY() + my);
+        }
     }
 }

@@ -30,6 +30,11 @@ public class SinglePoint extends Geometry {
     }
 
     @Override
+    public void processDraw() {
+
+    }
+
+    @Override
     public void showPointsCoordinate() {
         canvas.addPointsToDrawCoord(startPoint);
     }
@@ -37,5 +42,10 @@ public class SinglePoint extends Geometry {
     @Override
     public void setEndPoint(Point2D endPoint) {
         setStartPoint(endPoint);
+    }
+
+    @Override
+    public Point2D getCenterPoint() {
+        return null;
     }
 }

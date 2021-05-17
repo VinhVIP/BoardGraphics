@@ -5,8 +5,6 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
 
-import java.awt.*;
-
 /**
  * Create by VinhIT
  * On 25/03/2021
@@ -52,34 +50,19 @@ public class Line extends Geometry {
     }
 
     @Override
-    public void setupDraw() {
+    public void processDraw() {
         if (startPoint != null && endPoint != null) {
-            // Đổ listDraw cho listClear
             swapList();
-
-            // Xác định những điểm thuộc đường thẳng MỚI cần vẽ
-            // Những điểm cần vẽ sẽ được thêm vào listDraw
             drawLine();
-
-            // Xóa những điểm thuộc listClear
-            clearOldPoints();
-
-            // Vẽ những điểm thuộc listDraw
-            drawNewPoints();
-
-//            showPointsCoordinate();
         }
     }
 
-
-
-
     public void drawLine() {
-        lineBresenham(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        lineBresenham(points[0].getX(), points[0].getY(), points[1].getX(), points[1].getY());
 
         if (drawMode == DrawMode.ARROW) {
-            Point2D pA = startPoint.translate(-startPoint.getX(), -startPoint.getY());
-            Point2D pB = endPoint.translate(-startPoint.getX(), -startPoint.getY());
+            Point2D pA = points[0].translate(-points[0].getX(), -points[0].getY());
+            Point2D pB = points[1].translate(-points[0].getX(), -points[0].getY());
 
             Vector2D vAB = new Vector2D(pA, pB);
             double angle = vAB.angleRadian(Vector2D.oX);
@@ -92,11 +75,11 @@ public class Line extends Geometry {
             pU = pU.rotate(pB.getY() < pA.getY() ? -angle : angle);
             pV = pV.rotate(pB.getY() < pA.getY() ? -angle : angle);
 
-            pU = pU.translate(startPoint.getX(), startPoint.getY());
-            pV = pV.translate(startPoint.getX(), startPoint.getY());
+            pU = pU.translate(points[0].getX(), points[0].getY());
+            pV = pV.translate(points[0].getX(), points[0].getY());
 
-            lineBresenham(endPoint.getX(), endPoint.getY(), pU.getX(), pU.getY());
-            lineBresenham(endPoint.getX(), endPoint.getY(), pV.getX(), pV.getY());
+            lineBresenham(points[1].getX(), points[1].getY(), pU.getX(), pU.getY());
+            lineBresenham(points[1].getX(), points[1].getY(), pV.getX(), pV.getY());
         }
     }
 
@@ -194,5 +177,10 @@ public class Line extends Geometry {
     public void setEndPoint(Point2D endPoint) {
         super.setEndPoint(endPoint);
         points[1] = endPoint;
+    }
+
+    @Override
+    public Point2D getCenterPoint() {
+        return new Point2D((points[0].getX() + points[1].getX()) / 2, (points[0].getY() + points[1].getY()) / 2, points[0].getColor());
     }
 }

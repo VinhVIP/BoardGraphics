@@ -61,19 +61,29 @@ public class Triangle extends Geometry{
 
     @Override
     public void setupDraw() {
-        if(endPoint != null){
+        processDraw();
+        for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
+        for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
+    }
+
+    @Override
+    public void processDraw() {
+        if (startPoint != null && endPoint != null) {
+
+            swapList();
+
             for (int i = 0; i < lines.length; i++) {
                 lines[i].setStartPoint(points[i % lines.length]);
                 lines[i].setEndPoint(points[(i + 1) % lines.length]);
             }
 
             for (int i = 0; i < lines.length; i++) {
-                lines[i].swapList();
-                lines[i].drawLine();
-                lines[i].clearOldPoints();
+                lines[i].processDraw();
             }
 
-            for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
+            for (int i = 0; i < lines.length; i++) {
+                listDraw.addAll(lines[i].getListDraw());
+            }
         }
     }
 
@@ -131,6 +141,11 @@ public class Triangle extends Geometry{
         } catch (Exception e) {
             return "";
         }
+    }
+
+    @Override
+    public Point2D getCenterPoint() {
+        return new Point2D((points[1].getX() + points[2].getX()) / 2, (points[0].getY() + points[1].getY()) / 2, points[0].getColor());
     }
 
 }

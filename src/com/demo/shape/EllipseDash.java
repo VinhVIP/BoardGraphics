@@ -24,21 +24,21 @@ public class EllipseDash extends Geometry {
 
     @Override
     public void setupDraw() {
-        if (startPoint != null && endPoint != null) {
-            swapList();
 
-            midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), color);
+    }
 
-            choosePoints();
+    @Override
+    public void processDraw() {
 
-            clearOldPoints();
-            drawNewPoints();
-        }
     }
 
     @Override
     public void showPointsCoordinate() {
-
+        if (startPoint != null && endPoint != null) {
+            swapList();
+            midEllipse(startPoint.getX(), startPoint.getY(), Math.abs(endPoint.getX() - startPoint.getX()), Math.abs(endPoint.getY() - startPoint.getY()), color);
+            choosePoints();
+        }
     }
 
     void choosePoints() {
@@ -128,15 +128,19 @@ public class EllipseDash extends Geometry {
 
     }
 
+    @Override
+    public Point2D getCenterPoint() {
+        return new Point2D(points[0]);
+    }
 
     @Override
     public String toString() {
-        try{
+        try {
             return String.format("Dash Ellipse: (%d, %d) a=%d, b=%d",
                     startPoint.getX(), startPoint.getY(),
                     Math.abs(endPoint.getX() - startPoint.getX()),
                     Math.abs(endPoint.getY() - startPoint.getY()));
-        }catch (Exception e){
+        } catch (Exception e) {
             return "";
         }
 

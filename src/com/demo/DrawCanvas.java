@@ -3,6 +3,7 @@ package com.demo;
 import com.demo.listeners.CanvasListener;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
+import com.demo.motions.Bike;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
 
@@ -193,7 +194,7 @@ public class DrawCanvas extends Canvas {
                 Geometry g = (Geometry) listShapes.get(i);
                 g.clearPointsCoordinate();
             }
-            if(isShowAxis) drawAxis();
+            if (isShowAxis) drawAxis();
         }
     }
 
@@ -523,6 +524,9 @@ public class DrawCanvas extends Canvas {
 
         drawAllPoints();
 
+        Bike bike = new Bike(this);
+        new Thread(bike).start();
+
     }
 
     private void putPixel(Point2D point) {
@@ -733,6 +737,14 @@ public class DrawCanvas extends Canvas {
         startMove = null;
         endMove = null;
 
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < colSize; j++) {
+                if (board[i][j] != tempBoard[i][j]) {
+                    board[i][j] = tempBoard[i][j];
+                }
+            }
+        }
+
         for (int index : mapNewPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
@@ -753,13 +765,6 @@ public class DrawCanvas extends Canvas {
         mapPoints.clear();
         mapNewPoints.clear();
 
-        for (int i = 0; i < rowSize; i++) {
-            for (int j = 0; j < colSize; j++) {
-                if (board[i][j] != tempBoard[i][j]) {
-                    board[i][j] = tempBoard[i][j];
-                }
-            }
-        }
 
         if (isShowAxis) drawAxis();
 
@@ -994,10 +999,9 @@ public class DrawCanvas extends Canvas {
 
             Point2D[] points = g.getPoints();
             for (int i = 0; i < points.length; i++) {
-                if (g instanceof Circle) {
-                } else {
-                    points[i] = mapPoints.get(index).get(i).rotate(rootPoint, angle);
-                }
+
+                points[i] = mapPoints.get(index).get(i).rotate(rootPoint, angle);
+
                 mapNewPoints.get(index).set(i, new Point2D(points[i]));
             }
             g.setPoints(points);
