@@ -4,6 +4,7 @@ import com.demo.listeners.CanvasListener;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
 import com.demo.motions.Bike;
+import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
 
@@ -86,19 +87,19 @@ public class DrawCanvas extends Canvas {
 
     }
 
-    Thread threadBike;
+    Thread motionThread;
     public void setShowMotions(boolean showMotions) {
         isShowMotions = showMotions;
 
         if (isShowMotions) {
-            if (threadBike == null) {
+            if (motionThread == null) {
                 clearScreen();
-                threadBike = new Thread(new Bike(this));
-                threadBike.start();
+                motionThread = new MotionManager(this);
+                motionThread.start();
             }
         } else {
-            threadBike.stop();
-            threadBike = null;
+            motionThread.stop();
+            motionThread = null;
             clearScreen();
         }
     }
