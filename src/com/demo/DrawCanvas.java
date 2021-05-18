@@ -7,6 +7,7 @@ import com.demo.motions.Bike;
 import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
+import com.demo.shapes3D.Rectangular;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -287,6 +288,8 @@ public class DrawCanvas extends Canvas {
     public void reDrawPoints(int startX, int startY, int endX, int endY) {
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
+                if(i < 0 || i >= rowSize || j < 0 || j >= colSize) continue;
+
                 Point2D p = Point2D.fromComputerCoordinate(i, j);
                 p.setColor(board[i][j]);
                 putPixel(p);
@@ -548,7 +551,8 @@ public class DrawCanvas extends Canvas {
 
         drawAllPoints();
 
-
+        Geometry rec = new Rectangular(this);
+        rec.setupDraw();
     }
 
     private void putPixel(Point2D point) {

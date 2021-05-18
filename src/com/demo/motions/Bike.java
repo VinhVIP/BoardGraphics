@@ -25,8 +25,8 @@ public class Bike {
         rim2 = new Line(canvas, DrawCanvas.currentColor, DrawMode.DEFAULT);
 
         wheel.setPoints(new Point2D[]{new Point2D(0, 0), new Point2D(10, 0)});
-        rim1.setPoints(new Point2D[]{new Point2D(-10, 0), new Point2D(10, 0)});
-        rim2.setPoints(new Point2D[]{new Point2D(0, 10), new Point2D(0, -10)});
+        rim1.setPoints(new Point2D[]{new Point2D(0, 10), new Point2D(0, -10)});
+        rim2.setPoints(new Point2D[]{new Point2D(-20, 0), new Point2D(20, 0)});
     }
 
     public void run() {
@@ -36,8 +36,8 @@ public class Bike {
         rim2.move(1, 0);
 
         // Quay quanh tâm đường thẳng
-        rim1.rotate(rim1.getCenterPoint(), -0.2);
-        rim2.rotate(rim2.getCenterPoint(), -0.2);
+        rim1.rotate(rim1.getCenterPoint(), -Math.PI/12);
+        rim2.rotate(rim2.getCenterPoint(), -Math.PI/12);
 
         // Xóa những điểm vẽ cũ
         canvas.clearDraw(wheel.getListDraw());

@@ -64,7 +64,7 @@ public abstract class Geometry {
     /*
      * Lọc ra những điểm cần xóa và xóa nó
      */
-    protected final void clearOldPoints() {
+    public final void clearOldPoints() {
         List<Point2D> list = new ArrayList<>();
 
         for (Point2D pc : listClear) {
@@ -83,7 +83,7 @@ public abstract class Geometry {
     /*
      * Vẽ những điểm mới
      */
-    protected final void drawNewPoints() {
+    public final void drawNewPoints() {
         canvas.applyDraw(listDraw);
     }
 

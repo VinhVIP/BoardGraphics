@@ -17,6 +17,8 @@ public class Line extends Geometry {
     public Line(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
         super(canvas, startPoint, endPoint, color, drawMode);
         initSizePoints(totalPoints);
+        points[0] = startPoint;
+        points[1] = endPoint;
     }
 
     public Line(DrawCanvas canvas, int color, DrawMode drawMode) {
