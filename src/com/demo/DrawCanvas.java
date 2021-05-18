@@ -3,7 +3,6 @@ package com.demo;
 import com.demo.listeners.CanvasListener;
 import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
-import com.demo.motions.Bike;
 import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
@@ -29,6 +28,17 @@ public class DrawCanvas extends Canvas {
     public static final int pixelSize = 5;  // Kích thước 1 đơn vị
     public static int currentColor = 0xff0000;  // Màu vẽ đang chọn hiện tại
 
+    public boolean isIs2DCoordinates() {
+        return is2DCoordinates;
+    }
+
+    public void setIs2DCoordinates(boolean is2DCoordinates) {
+        if(isShowAxis) clearAxis();
+        this.is2DCoordinates = is2DCoordinates;
+        if(isShowAxis) drawAxis();
+    }
+
+    private boolean is2DCoordinates = true;
     private boolean isShowMotions = false;
 
     private DrawMode drawMode;
@@ -89,6 +99,7 @@ public class DrawCanvas extends Canvas {
     }
 
     Thread motionThread;
+
     public void setShowMotions(boolean showMotions) {
         isShowMotions = showMotions;
 
@@ -190,6 +201,9 @@ public class DrawCanvas extends Canvas {
             case TRIANGLE -> {
                 geometry = new Triangle(this, drawMode);
             }
+            case RECTANGULAR -> {
+                geometry = new Rectangular(this);
+            }
         }
     }
 
@@ -288,7 +302,7 @@ public class DrawCanvas extends Canvas {
     public void reDrawPoints(int startX, int startY, int endX, int endY) {
         for (int i = startX; i <= endX; i++) {
             for (int j = startY; j <= endY; j++) {
-                if(i < 0 || i >= rowSize || j < 0 || j >= colSize) continue;
+                if (i < 0 || i >= rowSize || j < 0 || j >= colSize) continue;
 
                 Point2D p = Point2D.fromComputerCoordinate(i, j);
                 p.setColor(board[i][j]);
@@ -449,12 +463,22 @@ public class DrawCanvas extends Canvas {
     private void drawAxis() {
         Graphics g = getGraphics();
         g.setColor(Color.BLACK);
-        g.drawLine(canvasWidth / 2, 0, canvasWidth / 2, canvasHeight);
-        g.drawLine(canvasWidth / 2 + 1, 0, canvasWidth / 2 + 1, canvasHeight);
-        g.drawLine(0, canvasHeight / 2, canvasWidth, canvasHeight / 2);
-        g.drawLine(0, canvasHeight / 2 + 1, canvasWidth, canvasHeight / 2 + 1);
 
-//        if(isShowGrid) drawGrid();
+        if (is2DCoordinates) {
+            g.drawLine(canvasWidth / 2, 0, canvasWidth / 2, canvasHeight);
+            g.drawLine(canvasWidth / 2 + 1, 0, canvasWidth / 2 + 1, canvasHeight);
+            g.drawLine(0, canvasHeight / 2, canvasWidth, canvasHeight / 2);
+            g.drawLine(0, canvasHeight / 2 + 1, canvasWidth, canvasHeight / 2 + 1);
+        } else {
+            g.drawLine(canvasWidth / 2, 0, canvasWidth / 2, canvasHeight / 2);
+            g.drawLine(canvasWidth / 2 + 1, 0, canvasWidth / 2 + 1, canvasHeight / 2);
+            g.drawLine(canvasWidth / 2, canvasHeight / 2, canvasWidth, canvasHeight / 2);
+            g.drawLine(canvasWidth / 2, canvasHeight / 2 + 1, canvasWidth, canvasHeight / 2 + 1);
+
+            g.drawLine(canvasWidth / 2, canvasHeight / 2, canvasWidth / 2 - canvasHeight / 2, canvasHeight);
+            g.drawLine(canvasWidth / 2 + 2, canvasHeight / 2, canvasWidth / 2 - canvasHeight / 2 + 2, canvasHeight);
+            g.drawLine(canvasWidth / 2 + 1, canvasHeight / 2, canvasWidth / 2 - canvasHeight / 2 + 1, canvasHeight);
+        }
     }
 
     /*
@@ -463,29 +487,60 @@ public class DrawCanvas extends Canvas {
     private void clearAxis() {
         Point2D p;
 
-        int j = colSize / 2;
-        int i = 0;
-        for (; i < rowSize; i++) {
-            p = Point2D.fromComputerCoordinate(i, j);
-            p.setColor(board[i][j]);
-            putPixel(p);
+        if (is2DCoordinates) {
+            int j = colSize / 2;
+            int i = 0;
+            for (; i < rowSize; i++) {
+                p = Point2D.fromComputerCoordinate(i, j);
+                p.setColor(board[i][j]);
+                putPixel(p);
+            }
+
+            i = rowSize / 2;
+            j = 0;
+            for (; j < colSize; j++) {
+                p = Point2D.fromComputerCoordinate(i, j);
+                p.setColor(board[i][j]);
+                putPixel(p);
+            }
+        } else {
+            int j = colSize / 2;
+            int i = rowSize / 2;
+            for (; i < rowSize; i++) {
+                p = Point2D.fromComputerCoordinate(i, j);
+                p.setColor(board[i][j]);
+                putPixel(p);
+            }
+
+            i = rowSize / 2;
+            j = colSize / 2;
+            for (; j >= 0; j--) {
+                p = Point2D.fromComputerCoordinate(i, j);
+                p.setColor(board[i][j]);
+                putPixel(p);
+            }
+
+            i = rowSize / 2;
+            j = colSize / 2;
+            for (; j < colSize; j++) {
+                p = Point2D.fromComputerCoordinate(i, j);
+                p.setColor(board[i][j]);
+                putPixel(p);
+                p = Point2D.fromComputerCoordinate(i+1, j);
+                p.setColor(board[i+1][j]);
+                putPixel(p);
+                i--;
+            }
         }
 
-        i = rowSize / 2;
-        j = 0;
-        for (; j < colSize; j++) {
-            p = Point2D.fromComputerCoordinate(i, j);
-            p.setColor(board[i][j]);
-            putPixel(p);
-        }
         if (isShowGrid) {
             Graphics g = getGraphics();
             g.setColor(new Color(0xFFD9C7C7));
 
-            for (i = 0; i <= rowSize; i++) {
+            for (int i = 0; i <= rowSize; i++) {
                 g.drawLine(i * pixelSize, 0, i * pixelSize, canvasHeight);
             }
-            for (i = 0; i <= colSize; i++) {
+            for (int i = 0; i <= colSize; i++) {
                 g.drawLine(0, i * pixelSize, canvasWidth, i * pixelSize);
             }
             g.dispose();
@@ -551,8 +606,8 @@ public class DrawCanvas extends Canvas {
 
         drawAllPoints();
 
-        Geometry rec = new Rectangular(this);
-        rec.setupDraw();
+//        Geometry rec = new Rectangular(this);
+//        rec.setupDraw();
     }
 
     private void putPixel(Point2D point) {

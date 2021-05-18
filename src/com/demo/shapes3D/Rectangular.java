@@ -44,30 +44,32 @@ public class Rectangular extends Geometry {
         lines = new Line[12];
 
         x = y = z = 50;
-        cd = cr = cc = 15;
+        cd = 40;
+        cr = 25;
+        cc = 30;
 
         points[0] = Point3D.to2DPoint(x, y, z);
-        points[1] = Point3D.to2DPoint(x + cd, y, z);
-        points[2] = Point3D.to2DPoint(x + cd, y, z + cr);
-        points[3] = Point3D.to2DPoint(x, y, z + cr);
-        points[4] = Point3D.to2DPoint(x, y + cc, z);
-        points[5] = Point3D.to2DPoint(x + cd, y + cc, z);
-        points[6] = Point3D.to2DPoint(x + cd, y + cc, z + cr);
-        points[7] = Point3D.to2DPoint(x, y + cc, z + cr);
+        points[1] = Point3D.to2DPoint(x, y - cr, z);
+        points[2] = Point3D.to2DPoint(x + cd, y - cr, z);
+        points[3] = Point3D.to2DPoint(x + cd, y, z);
+        points[4] = Point3D.to2DPoint(x, y, z - cc);
+        points[5] = Point3D.to2DPoint(x, y - cr, z - cc);
+        points[6] = Point3D.to2DPoint(x + cd, y - cr, z - cc);
+        points[7] = Point3D.to2DPoint(x + cd, y, z - cc);
 
-        lines[0] = new Line(canvas, points[0], points[1], color, DrawMode.DOT);
-        lines[1] = new Line(canvas, points[0], points[3], color, DrawMode.DOT);
-        lines[2] = new Line(canvas, points[0], points[4], color, DrawMode.DOT);
+        lines[0] = new Line(canvas, points[5], points[4], color, DrawMode.DASH);
+        lines[1] = new Line(canvas, points[5], points[6], color, DrawMode.DASH);
+        lines[2] = new Line(canvas, points[5], points[1], color, DrawMode.DASH);
 
-        lines[3] = new Line(canvas, points[1], points[2], color, DrawMode.DEFAULT);
-        lines[4] = new Line(canvas, points[2], points[3], color, DrawMode.DEFAULT);
-        lines[5] = new Line(canvas, points[4], points[5], color, DrawMode.DEFAULT);
-        lines[6] = new Line(canvas, points[5], points[6], color, DrawMode.DEFAULT);
-        lines[7] = new Line(canvas, points[6], points[7], color, DrawMode.DEFAULT);
+        lines[3] = new Line(canvas, points[0], points[1], color, DrawMode.DEFAULT);
+        lines[4] = new Line(canvas, points[1], points[2], color, DrawMode.DEFAULT);
+        lines[5] = new Line(canvas, points[2], points[3], color, DrawMode.DEFAULT);
+        lines[6] = new Line(canvas, points[0], points[3], color, DrawMode.DEFAULT);
+        lines[7] = new Line(canvas, points[0], points[4], color, DrawMode.DEFAULT);
         lines[8] = new Line(canvas, points[4], points[7], color, DrawMode.DEFAULT);
-        lines[9] = new Line(canvas, points[1], points[5], color, DrawMode.DEFAULT);
+        lines[9] = new Line(canvas, points[3], points[7], color, DrawMode.DEFAULT);
         lines[10] = new Line(canvas, points[2], points[6], color, DrawMode.DEFAULT);
-        lines[11] = new Line(canvas, points[3], points[7], color, DrawMode.DEFAULT);
+        lines[11] = new Line(canvas, points[6], points[7], color, DrawMode.DEFAULT);
 
     }
 
@@ -76,21 +78,31 @@ public class Rectangular extends Geometry {
         return null;
     }
 
-    @Override
-    public void setupDraw() {
-        processDraw();
-        for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
-        for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
-    }
+//    @Override
+//    public void setupDraw() {
+//        processDraw();
+//        for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
+//        for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
+//    }
 
     @Override
     public void processDraw() {
         swapList();
 
-//        for (int i = 0; i < lines.length; i++) {
-//            lines[i].setStartPoint(points[i % lines.length]);
-//            lines[i].setEndPoint(points[(i + 1) % lines.length]);
-//        }
+        lines[0].setPoints(new Point2D[]{points[5], points[4]});
+        lines[1].setPoints(new Point2D[]{points[5], points[6]});
+        lines[2].setPoints(new Point2D[]{points[5], points[1]});
+
+        lines[3].setPoints(new Point2D[]{points[0], points[1]});
+        lines[4].setPoints(new Point2D[]{points[1], points[2]});
+        lines[5].setPoints(new Point2D[]{points[2], points[3]});
+        lines[6].setPoints(new Point2D[]{points[0], points[3]});
+        lines[7].setPoints(new Point2D[]{points[0], points[4]});
+        lines[8].setPoints(new Point2D[]{points[4], points[7]});
+        lines[9].setPoints(new Point2D[]{points[3], points[7]});
+        lines[10].setPoints(new Point2D[]{points[2], points[6]});
+        lines[11].setPoints(new Point2D[]{points[6], points[7]});
+
 
         for (int i = 0; i < lines.length; i++) {
             lines[i].processDraw();
@@ -99,6 +111,30 @@ public class Rectangular extends Geometry {
         for (int i = 0; i < lines.length; i++) {
             listDraw.addAll(lines[i].getListDraw());
         }
+    }
+
+    @Override
+    public void setStartPoint(Point2D startPoint) {
+        super.setStartPoint(startPoint);
+        points[0] = startPoint;
+    }
+
+    @Override
+    public void setEndPoint(Point2D endPoint) {
+        super.setEndPoint(endPoint);
+        points[0] = new Point2D(Math.min(startPoint.getX(), endPoint.getX()), Math.max(startPoint.getY(), endPoint.getY()));
+        points[7] = new Point2D(Math.max(startPoint.getX(), endPoint.getX()), Math.min(startPoint.getY(), endPoint.getY()));
+
+        cd = Math.abs(points[7].getX() - points[0].getX());
+        cc = Math.abs(points[7].getY() - points[0].getY());
+
+        points[3] = new Point2D(points[7].getX(), points[0].getY());
+        points[4] = new Point2D(points[0].getX(), points[7].getY());
+
+        points[1] = new Point2D(points[0].getX() + cc / 3, points[0].getY() + cc / 3);
+        points[2] = new Point2D(points[7].getX() + cc / 3, points[1].getY());
+        points[5] = new Point2D(points[1].getX(), points[1].getY() - cc);
+        points[6] = new Point2D(points[2].getX(), points[5].getY());
     }
 
     @Override

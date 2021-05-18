@@ -7,6 +7,8 @@ import com.demo.shape.Geometry;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * On 05/05/2021
  */
 
-public class Paint extends JFrame implements CanvasListener, DialogListener {
+public class Paint extends JFrame implements CanvasListener, DialogListener, ActionListener {
 
     private JButton btnRotate;
     private JButton btnMove;
@@ -38,12 +40,19 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
     private JLabel labelDrawMode;
     private JLabel labelCoordinate;
     private JPanel rootPanel;
-    private JButton btnDeseleted;
+    private JButton btnDeselected;
     private JButton btnTriangle;
     private JButton btnPolygon;
     private JButton btnCopy;
     private JButton btnFillColor;
     private JButton btnMotion;
+    private JButton btnRectangular;
+    private JButton btnCylinder;
+    private JButton btnCone;
+    private JRadioButton radio2D;
+    private JRadioButton radio3D;
+
+    private ButtonGroup radioGroup;
 
 
     private DrawCanvas canvas;
@@ -103,7 +112,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
             labelDrawMode.setText("MODE: ELLIPSE");
         });
 
-        btnTriangle.addActionListener(e->{
+        btnTriangle.addActionListener(e -> {
             canvas.setMode(Mode.TRIANGLE);
         });
 
@@ -162,7 +171,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
 
         btnMove.addActionListener(e -> {
             int[] indexMove = listShape.getSelectedIndices();
-            if(indexMove.length == 0){
+            if (indexMove.length == 0) {
                 JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -177,11 +186,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
             canvas.setMode(Mode.MOVE);
         });
 
-        btnDeseleted.addActionListener(e -> listShape.clearSelection());
+        btnDeselected.addActionListener(e -> listShape.clearSelection());
 
         btnRotate.addActionListener(e -> {
             int[] indexMove = listShape.getSelectedIndices();
-            if(indexMove.length == 0){
+            if (indexMove.length == 0) {
                 JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -192,7 +201,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
 
         btnReflect.addActionListener(e -> {
             int[] indexMove = listShape.getSelectedIndices();
-            if(indexMove.length == 0){
+            if (indexMove.length == 0) {
                 JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -201,9 +210,9 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
             canvas.setMode(Mode.REFLECT);
         });
 
-        btnScale.addActionListener(e->{
+        btnScale.addActionListener(e -> {
             int[] indexMove = listShape.getSelectedIndices();
-            if(indexMove.length == 0){
+            if (indexMove.length == 0) {
                 JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -212,25 +221,38 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
 
         });
 
-        btnCopy.addActionListener(e->{
+        btnCopy.addActionListener(e -> {
             int[] selectedIndex = listShape.getSelectedIndices();
-            if(selectedIndex.length == 0){
+            if (selectedIndex.length == 0) {
                 JOptionPane.showMessageDialog(null, "Chưa có hình nào được chọn!", "Thông báo", JOptionPane.WARNING_MESSAGE);
-            }else{
+            } else {
                 canvas.copyShapes(selectedIndex);
             }
         });
 
-        btnFillColor.addActionListener(e->{
+        btnFillColor.addActionListener(e -> {
             canvas.setMode(Mode.FILL_COLOR);
         });
 
-        btnMotion.addActionListener(e->{
+        btnMotion.addActionListener(e -> {
             canvas.setShowMotions(!canvas.isShowMotions());
         });
 
         listShape.setModel(listModel);
 
+
+        radio2D.addActionListener(this);
+        radio3D.addActionListener(this);
+
+        radioGroup = new ButtonGroup();
+        radioGroup.add(radio2D);
+        radioGroup.add(radio3D);
+
+        stateButtons();
+
+        btnRectangular.addActionListener(e->{
+            canvas.setMode(Mode.RECTANGULAR);
+        });
 
         // Important
         add(rootPanel);
@@ -250,7 +272,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
 
     @Override
     public void notifyDataSetChanged(List listShape) {
-        System.out.println("list shape model: "+listShape.size());
+        System.out.println("list shape model: " + listShape.size());
         listModel.clear();
         for (int i = 0; i < listShape.size(); i++) {
             Geometry g = (Geometry) listShape.get(i);
@@ -306,4 +328,28 @@ public class Paint extends JFrame implements CanvasListener, DialogListener {
         canvas.scale(indexMove, root, scaleX, scaleY);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        stateButtons();
+        canvas.setIs2DCoordinates(radio2D.isSelected());
+        canvas.setMode(Mode.NONE);
+    }
+
+    private void stateButtons(){
+        btnLine.setEnabled(radio2D.isSelected());
+        btnRect.setEnabled(radio2D.isSelected());
+        btnTriangle.setEnabled(radio2D.isSelected());
+        btnCircle.setEnabled(radio2D.isSelected());
+        btnEllipse.setEnabled(radio2D.isSelected());
+        btnPolygon.setEnabled(radio2D.isSelected());
+
+        btnRotate.setEnabled(radio2D.isSelected());
+        btnReflect.setEnabled(radio2D.isSelected());
+        btnMove.setEnabled(radio2D.isSelected());
+        btnScale.setEnabled(radio2D.isSelected());
+
+        btnRectangular.setEnabled(radio3D.isSelected());
+        btnCone.setEnabled(radio3D.isSelected());
+        btnCylinder.setEnabled(radio3D.isSelected());
+    }
 }
