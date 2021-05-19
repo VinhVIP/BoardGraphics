@@ -7,6 +7,7 @@ import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
 import com.demo.shapes3D.Rectangular;
+import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -27,6 +28,7 @@ public class DrawCanvas extends Canvas {
     public static final int rowSize = canvasWidth / 5, colSize = canvasHeight / 5;
     public static final int pixelSize = 5;  // Kích thước 1 đơn vị
     public static int currentColor = 0xff0000;  // Màu vẽ đang chọn hiện tại
+    public static int currentFillColor = 0xffffff;  // Màu vẽ đang chọn hiện tại
 
     public boolean isIs2DCoordinates() {
         return is2DCoordinates;
@@ -120,46 +122,7 @@ public class DrawCanvas extends Canvas {
         return isShowMotions;
     }
 
-    private void fillColor(Point2D startPoint) {
-        Queue<Point2D> queue = new ArrayDeque<>();
-        Queue<Point2D> tempQueue = new ArrayDeque<>();
-        Queue<Point2D> tempQueue2 = new ArrayDeque<>();
 
-        int colorBg = board[startPoint.getComputerX()][startPoint.getComputerY()];
-        int colorFill = DrawCanvas.currentColor;
-
-        tempQueue.add(startPoint);
-        while (!tempQueue.isEmpty()) {
-            Point2D point = tempQueue.remove();
-
-            for (int i = 0; i < spillX.length; i++) {
-                Point2D p = new Point2D(point.getX() + spillX[i], point.getY() + spillY[i], point.getColor());
-                if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
-                    continue;
-                if (board[p.getComputerX()][p.getComputerY()] == colorFill) continue;
-                if (board[p.getComputerX()][p.getComputerY()] == colorBg) {
-                    board[p.getComputerX()][p.getComputerY()] = tempBoard[p.getComputerX()][p.getComputerY()] = colorFill;
-                    tempQueue2.add(new Point2D(p));
-                    queue.add(new Point2D(p));
-                }
-
-            }
-            if (tempQueue.isEmpty()) {
-                while (!tempQueue2.isEmpty()) {
-                    tempQueue.add(new Point2D(tempQueue2.remove()));
-                }
-            }
-        }
-
-        int cnt = 0;
-        while (!queue.isEmpty()) {
-            Point2D p = queue.remove();
-            putPixel(p);
-            cnt++;
-        }
-
-        System.out.println("Done fill color: " + cnt);
-    }
 
     public void setDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
@@ -292,7 +255,51 @@ public class DrawCanvas extends Canvas {
             }
         }
 
+
+
         drawAllPoints();
+    }
+
+    private void fillColor(Point2D startPoint) {
+        Queue<Point2D> queue = new ArrayDeque<>();
+        Queue<Point2D> tempQueue = new ArrayDeque<>();
+        Queue<Point2D> tempQueue2 = new ArrayDeque<>();
+
+        int colorBg = tempBoard[startPoint.getComputerX()][startPoint.getComputerY()];
+        int colorFill = DrawCanvas.currentColor;
+
+        tempQueue.add(startPoint);
+        while (!tempQueue.isEmpty()) {
+            Point2D point = tempQueue.remove();
+
+            for (int i = 0; i < spillX.length; i++) {
+                Point2D p = new Point2D(point.getX() + spillX[i], point.getY() + spillY[i], point.getColor());
+                if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
+                    continue;
+                if (tempBoard[p.getComputerX()][p.getComputerY()] == colorFill) continue;
+                if (tempBoard[p.getComputerX()][p.getComputerY()] == colorBg) {
+//                    board[p.getComputerX()][p.getComputerY()] = tempBoard[p.getComputerX()][p.getComputerY()] = colorFill;
+                    tempBoard[p.getComputerX()][p.getComputerY()] = colorFill;
+                    tempQueue2.add(new Point2D(p));
+                    queue.add(new Point2D(p));
+                }
+
+            }
+            if (tempQueue.isEmpty()) {
+                while (!tempQueue2.isEmpty()) {
+                    tempQueue.add(new Point2D(tempQueue2.remove()));
+                }
+            }
+        }
+
+        int cnt = 0;
+        while (!queue.isEmpty()) {
+            Point2D p = queue.remove();
+            putPixel(p);
+            cnt++;
+        }
+
+        System.out.println("Done fill color: " + cnt);
     }
 
     /*
@@ -610,7 +617,7 @@ public class DrawCanvas extends Canvas {
 //        rec.setupDraw();
     }
 
-    private void putPixel(Point2D point) {
+    public void putPixel(Point2D point) {
         Graphics g = getGraphics();
         g.setColor(new Color(point.getColor()));
 
@@ -662,7 +669,7 @@ public class DrawCanvas extends Canvas {
         curState = 0;
     }
 
-    private int[][] newDefaultBoard() {
+    public static int[][] newDefaultBoard() {
         int[][] a = new int[rowSize][colSize];
         for (int i = 0; i < rowSize; i++)
             for (int j = 0; j < colSize; j++)
@@ -881,6 +888,8 @@ public class DrawCanvas extends Canvas {
 
             Point2D point = Point2D.fromComputerCoordinate(e.getX() / DrawCanvas.pixelSize, e.getY() / DrawCanvas.pixelSize);
             geometry.setColor(DrawCanvas.currentColor);
+            geometry.setColorFill(DrawCanvas.currentFillColor);
+
             listener.mouseCoordinate(point.getX(), point.getY());
 
             if (mode == Mode.NONE || mode == Mode.FILL_COLOR) return;

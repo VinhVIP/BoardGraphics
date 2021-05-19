@@ -231,7 +231,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         });
 
         btnFillColor.addActionListener(e -> {
-            canvas.setMode(Mode.FILL_COLOR);
+            Color color = JColorChooser.showDialog(null, "Choose Fill Color", btnChooseColor.getBackground());
+            if (color != null) {
+                btnFillColor.setBackground(color);
+                DrawCanvas.currentFillColor = color.getRGB();
+            }
         });
 
         btnMotion.addActionListener(e -> {
@@ -250,7 +254,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
         stateButtons();
 
-        btnRectangular.addActionListener(e->{
+        btnRectangular.addActionListener(e -> {
             canvas.setMode(Mode.RECTANGULAR);
         });
 
@@ -330,12 +334,15 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        stateButtons();
-        canvas.setIs2DCoordinates(radio2D.isSelected());
-        canvas.setMode(Mode.NONE);
+        if (canvas.isIs2DCoordinates() != radio2D.isSelected()) {
+            stateButtons();
+            canvas.setIs2DCoordinates(radio2D.isSelected());
+            canvas.setMode(Mode.NONE);
+            canvas.clearScreen();
+        }
     }
 
-    private void stateButtons(){
+    private void stateButtons() {
         btnLine.setEnabled(radio2D.isSelected());
         btnRect.setEnabled(radio2D.isSelected());
         btnTriangle.setEnabled(radio2D.isSelected());

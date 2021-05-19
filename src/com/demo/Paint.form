@@ -110,34 +110,6 @@
               <toolTipText value="Clear"/>
             </properties>
           </component>
-          <component id="edbdf" class="javax.swing.JButton" binding="btnRedo">
-            <constraints>
-              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="50" height="50"/>
-                <maximum-size width="50" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-1"/>
-              <icon value="com/demo/icons/redo.png"/>
-              <text value=""/>
-              <toolTipText value="Redo"/>
-            </properties>
-          </component>
-          <component id="b3e88" class="javax.swing.JButton" binding="btnUndo">
-            <constraints>
-              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="50" height="50"/>
-                <maximum-size width="50" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-1"/>
-              <icon value="com/demo/icons/undo.png"/>
-              <text value=""/>
-              <toolTipText value="Undo"/>
-            </properties>
-          </component>
           <component id="2ae30" class="javax.swing.JButton" binding="btnLine">
             <constraints>
               <grid row="2" column="8" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -262,7 +234,7 @@
           </vspacer>
           <component id="e3567" class="javax.swing.JLabel" binding="labelDrawMode">
             <constraints>
-              <grid row="4" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="4" column="8" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <preferred-size width="200" height="-1"/>
               </grid>
             </constraints>
@@ -373,7 +345,7 @@
           </component>
           <component id="c24df" class="javax.swing.JButton" binding="btnCopy">
             <constraints>
-              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="0" indent="0" use-parent-layout="false">
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <preferred-size width="50" height="50"/>
                 <maximum-size width="50" height="50"/>
               </grid>
@@ -382,20 +354,6 @@
               <background color="-1"/>
               <icon value="com/demo/icons/copy.png"/>
               <text value=""/>
-            </properties>
-          </component>
-          <component id="3830c" class="javax.swing.JButton" binding="btnFillColor">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="0" indent="0" use-parent-layout="false">
-                <preferred-size width="50" height="50"/>
-                <maximum-size width="50" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-1"/>
-              <icon value="com/demo/icons/fill_color.png"/>
-              <text value=""/>
-              <toolTipText value="Fill Color"/>
             </properties>
           </component>
           <component id="3fd70" class="javax.swing.JButton" binding="btnMotion">
@@ -470,6 +428,47 @@
             </constraints>
             <properties>
               <text value="3D"/>
+            </properties>
+          </component>
+          <component id="b3e88" class="javax.swing.JButton" binding="btnUndo">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <icon value="com/demo/icons/undo.png"/>
+              <text value=""/>
+              <toolTipText value="Undo"/>
+            </properties>
+          </component>
+          <component id="edbdf" class="javax.swing.JButton" binding="btnRedo">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <icon value="com/demo/icons/redo.png"/>
+              <text value=""/>
+              <toolTipText value="Redo"/>
+            </properties>
+          </component>
+          <component id="3830c" class="javax.swing.JButton" binding="btnFillColor">
+            <constraints>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="50" height="50"/>
+                <maximum-size width="50" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-1"/>
+              <text value=""/>
+              <toolTipText value="Fill Color"/>
             </properties>
           </component>
         </children>

@@ -4,9 +4,6 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
-import java.awt.*;
-import java.util.List;
-
 /**
  * Create by VinhIT
  * On 28/03/2021
@@ -44,7 +41,7 @@ public class Rectangle extends Geometry {
     public Geometry copy() {
         Rectangle g = new Rectangle(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
 
-        for(int i=0; i<totalPoints; i++)
+        for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);
 
         for (Point2D p : listDraw) {
@@ -63,11 +60,15 @@ public class Rectangle extends Geometry {
     }
 
 
+
+
     @Override
     public void setupDraw() {
         processDraw();
         for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
         for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
+
+        if(colorFill != defaultColorFill) fillColor();
     }
 
     @Override
@@ -94,7 +95,7 @@ public class Rectangle extends Geometry {
     @Override
     public void setColor(int color) {
         super.setColor(color);
-        for (int i=0; i<lines.length; i++)
+        for (int i = 0; i < lines.length; i++)
             lines[i].setColor(color);
     }
 
@@ -121,7 +122,7 @@ public class Rectangle extends Geometry {
 
     @Override
     public Point2D getCenterPoint() {
-        return new Point2D((points[0].getX() + points[1].getX()) / 2, (points[2].getY() + points[2].getY()) / 2, points[0].getColor());
+        return new Point2D((points[0].getX() + points[2].getX()) / 2, (points[0].getY() + points[2].getY()) / 2, points[0].getColor());
     }
 
     @Override

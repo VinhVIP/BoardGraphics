@@ -4,8 +4,10 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * Create by VinhIT
@@ -20,7 +22,10 @@ public abstract class Geometry {
 
     protected Point2D[] points;
 
-    protected int color;
+    protected int defaultColorFill = 0xffffff;
+
+    protected int color, colorFill = defaultColorFill;
+    protected int[][] board = DrawCanvas.newDefaultBoard();
 
     protected DrawMode drawMode;
 
@@ -53,13 +58,75 @@ public abstract class Geometry {
         points = new Point2D[size];
     }
 
-    public void setupDraw(){
+    public void setupDraw() {
         processDraw();
         clearOldPoints();
         drawNewPoints();
+
+        fillColor();
     }
 
     public abstract void processDraw();
+
+    protected void fillColor() {
+        if (listDraw.isEmpty()) return;
+        int[][] tempBoardOutline = DrawCanvas.newDefaultBoard();
+        int[][] tempBoard = DrawCanvas.newDefaultBoard();
+
+        int outlineColor = color;
+
+        for (Point2D p : listDraw) {
+            if (p.insideScreen()) tempBoardOutline[p.getComputerX()][p.getComputerY()] = outlineColor;
+        }
+
+        Queue<Point2D> queue = new ArrayDeque<>();
+        Queue<Point2D> tempQueue = new ArrayDeque<>();
+        Queue<Point2D> tempQueue2 = new ArrayDeque<>();
+
+        int bgColor = defaultColorFill;
+
+        Point2D pt = getCenterPoint();
+
+        if (pt.insideScreen() && tempBoardOutline[pt.getComputerX()][pt.getComputerY()] == defaultColorFill) {
+            tempQueue.add(pt);
+            tempBoard[pt.getComputerX()][pt.getComputerY()] = colorFill;
+        }
+
+        while (!tempQueue.isEmpty()) {
+            Point2D point = tempQueue.remove();
+
+            for (int i = 0; i < spillX.length; i++) {
+                Point2D p = new Point2D(point.getX() + spillX[i], point.getY() + spillY[i], colorFill);
+
+                if (p.insideScreen()) {
+                    if (tempBoard[p.getComputerX()][p.getComputerY()] == bgColor && tempBoardOutline[p.getComputerX()][p.getComputerY()] != outlineColor) {
+                        tempBoard[p.getComputerX()][p.getComputerY()] = colorFill;
+                        tempQueue2.add(new Point2D(p));
+                        queue.add(new Point2D(p));
+                    }
+                }
+
+            }
+            if (tempQueue.isEmpty()) {
+                while (!tempQueue2.isEmpty()) {
+                    tempQueue.add(new Point2D(tempQueue2.remove()));
+                }
+            }
+        }
+
+        Point2D point2D;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] != tempBoard[i][j]) {
+                    board[i][j] = tempBoard[i][j];
+                    point2D = Point2D.fromComputerCoordinate(i, j);
+                    point2D.setColor(board[i][j]);
+                    if (point2D.insideScreen()) canvas.putPixel(point2D);
+                }
+            }
+        }
+
+    }
 
     /*
      * Lọc ra những điểm cần xóa và xóa nó
@@ -191,6 +258,14 @@ public abstract class Geometry {
         this.color = color;
     }
 
+    public int getColorFill() {
+        return colorFill;
+    }
+
+    public void setColorFill(int colorFill) {
+        this.colorFill = colorFill;
+    }
+
     public void translate(int translateX, int translateY) {
         startPoint.set(startPoint.getX() + translateX, startPoint.getY() + translateY);
         endPoint.set(endPoint.getX() + translateX, endPoint.getY() + translateY);
@@ -205,6 +280,7 @@ public abstract class Geometry {
     }
 
     public abstract Point2D getCenterPoint();
+
     /*
      * Xoay đoạn thẳng hiện tại quanh tâm của đoạn thẳng
      */

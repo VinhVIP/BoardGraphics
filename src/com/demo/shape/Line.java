@@ -36,6 +36,12 @@ public class Line extends Geometry {
         initSizePoints(totalPoints);
     }
 
+    @Override
+    public void setupDraw() {
+        processDraw();
+        clearOldPoints();
+        drawNewPoints();
+    }
 
     @Override
     public Geometry copy() {

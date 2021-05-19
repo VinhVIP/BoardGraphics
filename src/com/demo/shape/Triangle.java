@@ -64,6 +64,8 @@ public class Triangle extends Geometry{
         processDraw();
         for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
         for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
+
+        fillColor();
     }
 
     @Override

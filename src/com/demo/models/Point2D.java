@@ -209,6 +209,11 @@ public class Point2D {
         this.y = y;
     }
 
+    public boolean insideScreen(){
+        if(getComputerX() < 0 || getComputerX() >= DrawCanvas.rowSize || getComputerY() < 0 || getComputerY() >= DrawCanvas.colSize) return false;
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Point2D{" +
