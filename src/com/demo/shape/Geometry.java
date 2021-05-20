@@ -348,4 +348,10 @@ public abstract class Geometry {
             points[i] = points[i].scale(getCenterPoint(), sx, sy);
         }
     }
+
+    public void scale(Point2D root, double sx, double sy){
+        for (int i = 0; i < points.length; i++) {
+            points[i] = points[i].scale(root, sx, sy);
+        }
+    }
 }

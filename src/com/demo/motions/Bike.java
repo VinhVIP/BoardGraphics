@@ -54,7 +54,9 @@ public class Bike {
         rim1Temp = (Line) rim1.copy();
         scale += dv;
         if (scale > 2.5 || scale < 0.5) dv = -dv;
-        rim1Temp.scale(scale, scale);
+        // Lấy gốc scale là tâm của bánh xe
+        rim1Temp.scale(wheel.getCenterPoint(), scale, scale);
+
         System.out.println(rim1Temp.getCenterPoint());
 
         wheelTemp = (Circle) wheel.copy();
@@ -67,10 +69,13 @@ public class Bike {
         bg.processDraw();
 
 //        wheel.fillColor();
-        bg.fillColor();
+//        bg.fillColor();
 
         int[][] b = DrawCanvas.newDefaultBoard();
-        addToBoard(b, wheelTemp.getListDraw(), rim1Temp.getListDraw(), rim2.getListDraw());
+        addToBoard(b,
+                wheelTemp.getListDraw(),
+                rim1Temp.getListDraw(),
+                rim2.getListDraw());
         canvas.applyBoard(b);
 
     }
