@@ -7,6 +7,8 @@ import com.demo.shape.Circle;
 import com.demo.shape.Line;
 import com.demo.shape.Rectangle;
 
+import java.util.List;
+
 /**
  * Create by VinhIT
  * On 15/05/2021
@@ -23,7 +25,7 @@ public class Bike {
         this.canvas = canvas;
 
         wheel = new Circle(canvas, null, null, DrawMode.DEFAULT, 0xffff00, 0xff00ff, true, true);
-        rim1 = new Line(canvas, DrawMode.DEFAULT, DrawCanvas.currentColor);
+        rim1 = new Line(canvas, DrawMode.DEFAULT, 0x000);
         rim2 = new Line(canvas, DrawMode.DEFAULT, DrawCanvas.currentColor);
         bg = new Rectangle(canvas, null, null, DrawMode.DEFAULT, 0xffff00, 0xffff00, true, true);
 
@@ -33,63 +35,53 @@ public class Bike {
         bg.setPoints(new Point2D[]{new Point2D(-40, 0), new Point2D(90, 0), new Point2D(90, -40), new Point2D(-40, -40)});
     }
 
+
+    Line rim1Temp;
+    Circle wheelTemp;
+    double scale = 1, dv = 0.1;
+
     public void run() {
         // Di chuyển sang phải 1 đơn vị
-        wheel.move(1, 0);
-        rim1.move(1, 0);
-        rim2.move(1, 0);
+//        wheel.move(1, 0);
+//        rim1.move(1, 0);
+//        rim2.move(1, 0);
 
         // Quay quanh tâm đường thẳng
-        rim1.rotate(rim1.getCenterPoint(), -Math.PI / 12);
-        rim2.rotate(rim2.getCenterPoint(), -Math.PI / 12);
+//        rim1.rotate(rim1.getCenterPoint(), -Math.PI / 12);
+//        rim2.rotate(rim2.getCenterPoint(), -Math.PI / 12);
 
-        // Xóa những điểm vẽ cũ
-        canvas.clearDraw(wheel.getListDraw());
-        canvas.clearDraw(rim1.getListDraw());
-        canvas.clearDraw(rim2.getListDraw());
+        // Tạo 1 bản copy rồi mới scale trên bản copy đó
+        rim1Temp = (Line) rim1.copy();
+        scale += dv;
+        if (scale > 2.5 || scale < 0.5) dv = -dv;
+        rim1Temp.scale(scale, scale);
+        System.out.println(rim1Temp.getCenterPoint());
+
+        wheelTemp = (Circle) wheel.copy();
+        wheelTemp.scale(scale, scale);
 
         // Thiết lập những điểm vẽ mới
-        wheel.processDraw();
-        rim1.processDraw();
+        wheelTemp.processDraw();
+        rim1Temp.processDraw();
         rim2.processDraw();
-//        wheel.draw();
-//        rim1.draw();
-//        rim2.draw();
         bg.processDraw();
 
-        wheel.fillColor();
+//        wheel.fillColor();
         bg.fillColor();
-//        bg.draw();
 
         int[][] b = DrawCanvas.newDefaultBoard();
-        for (Point2D p : wheel.getListDraw()) {
-            if (p.insideScreen()) {
-                b[p.getComputerX()][p.getComputerY()] = p.getColor();
-            }
-        }
-        for (Point2D p : rim1.getListDraw()) {
-            if (p.insideScreen()) {
-                b[p.getComputerX()][p.getComputerY()] = p.getColor();
-            }
-        }
-        for (Point2D p : rim2.getListDraw()) {
-            if (p.insideScreen()) {
-                b[p.getComputerX()][p.getComputerY()] = p.getColor();
-            }
-        }
-        for (Point2D p : bg.getListDraw()) {
-            if (p.insideScreen()) {
-                b[p.getComputerX()][p.getComputerY()] = p.getColor();
-            }
-        }
+        addToBoard(b, wheelTemp.getListDraw(), rim1Temp.getListDraw(), rim2.getListDraw());
         canvas.applyBoard(b);
 
-        // Vẽ những điểm vẽ mới
-//        canvas.applyDraw(wheel.getListDraw());
-//        canvas.applyDraw(rim1.getListDraw());
-//        canvas.applyDraw(rim2.getListDraw());
-//        canvas.applyDraw(bg.getListDraw());
+    }
 
-
+    private void addToBoard(int[][] b, List<Point2D>... lists) {
+        for (List<Point2D> list : lists) {
+            for (Point2D p : list) {
+                if (p.insideScreen()) {
+                    b[p.getComputerX()][p.getComputerY()] = p.getColor();
+                }
+            }
+        }
     }
 }

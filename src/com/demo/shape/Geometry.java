@@ -342,4 +342,10 @@ public abstract class Geometry {
             p.set(p.getX() + mx, p.getY() + my);
         }
     }
+
+    public void scale(double sx, double sy){
+        for (int i = 0; i < points.length; i++) {
+            points[i] = points[i].scale(getCenterPoint(), sx, sy);
+        }
+    }
 }

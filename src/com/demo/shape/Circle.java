@@ -57,7 +57,7 @@ public class Circle extends Geometry {
 
     @Override
     public void processDraw() {
-        if (startPoint != null && endPoint != null) {
+        if (points[0] != null && points[1] != null) {
             int r = getCircleRadius();
             swapList();
             circleMidPoint(r);
@@ -73,9 +73,8 @@ public class Circle extends Geometry {
     }
 
     public int getCircleRadius() {
-        if (startPoint == null || endPoint == null) return 0;
-        return (int) Math.sqrt((startPoint.getX() - endPoint.getX()) * (startPoint.getX() - endPoint.getX()) +
-                (startPoint.getY() - endPoint.getY()) * (startPoint.getY() - endPoint.getY()));
+        return (int) Math.sqrt((points[0].getX() - points[1].getX()) * (points[0].getX() - points[1].getX()) +
+                (points[0].getY() - points[1].getY()) * (points[0].getY() - points[1].getY()));
     }
 
     private Point2D getPoint(Point2D p, int k) {
