@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Circle extends Geometry {
 
     private int totalPoints = 2;
+    private int radius;
 
     public Circle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
         super(canvas, startPoint, endPoint, drawMode, color, colorFill, isFillColor, is2DShape);
@@ -43,7 +44,7 @@ public class Circle extends Geometry {
 
     @Override
     public Geometry copy() {
-        Circle g = new Circle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color, colorFill, isFillColor, is2DShape);
+        Circle g = new Circle(canvas, new Point2D(points[0]), new Point2D(points[1]), drawMode, color, colorFill, isFillColor, is2DShape);
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);
@@ -58,10 +59,10 @@ public class Circle extends Geometry {
     @Override
     public void processDraw() {
         if (points[0] != null && points[1] != null) {
-            int r = getCircleRadius();
             swapList();
-            circleMidPoint(r);
+            circleMidPoint(radius);
             choosePoints();
+            System.out.println(radius);
         }
     }
 
@@ -70,11 +71,7 @@ public class Circle extends Geometry {
         super.setPoints(points);
         startPoint = points[0];
         endPoint = points[1];
-    }
-
-    public int getCircleRadius() {
-        return (int) Math.sqrt((points[0].getX() - points[1].getX()) * (points[0].getX() - points[1].getX()) +
-                (points[0].getY() - points[1].getY()) * (points[0].getY() - points[1].getY()));
+        radius = startPoint.distance(endPoint);
     }
 
     private Point2D getPoint(Point2D p, int k) {
@@ -166,7 +163,8 @@ public class Circle extends Geometry {
     @Override
     public void setEndPoint(Point2D endPoint) {
         super.setEndPoint(endPoint);
-        points[1] = endPoint;
+        radius = points[0].distance(endPoint);
+        points[1] = new Point2D(points[0].getX() + radius, points[0].getY());
     }
 
     @Override
@@ -177,7 +175,7 @@ public class Circle extends Geometry {
     @Override
     public String toString() {
         try {
-            return String.format("Circle: (%d, %d) ; R = %d", startPoint.getX(), startPoint.getY(), getCircleRadius());
+            return String.format("Circle: (%d, %d) ; R = %d", startPoint.getX(), startPoint.getY(), radius);
         } catch (Exception e) {
             return "";
         }

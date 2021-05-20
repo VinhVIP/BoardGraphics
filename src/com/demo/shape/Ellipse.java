@@ -66,6 +66,7 @@ public class Ellipse extends Geometry {
         if (startPoint != null && endPoint != null) {
             swapList();
             process();
+            if (drawMode == DrawMode.DEFAULT) connect();
         }
     }
 
@@ -120,6 +121,29 @@ public class Ellipse extends Geometry {
             listDraw.set(i, p);
         }
 
+    }
+
+    private void connect() {
+        List<Point2D> list = new ArrayList<>();
+        list.add(listDraw.get(0));
+        Point2D p1, p2;
+        Line line = new Line(canvas, DrawMode.DEFAULT, color);
+        for (int i = 1; i <= listDraw.size(); i++) {
+            p1 = list.get(list.size() - 1);
+            p2 = listDraw.get(i % listDraw.size());
+            if (!p1.isNear(p2)) {
+                line.setStartPoint(new Point2D(p1));
+                line.setEndPoint(new Point2D(p2));
+                line.processDraw();
+                for (int j = 1; j < line.getListDraw().size() - 1; j++) {
+                    list.add(new Point2D(line.getListDraw().get(j)));
+                }
+            }
+        }
+
+        listDraw.clear();
+        listDraw.addAll(list);
+        list.clear();
     }
 
     public void setRotate(Point2D rootPoint, double rotateAngle) {

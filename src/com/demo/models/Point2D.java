@@ -209,6 +209,19 @@ public class Point2D {
         this.y = y;
     }
 
+    public int distance(Point2D p) {
+        return (int) Math.sqrt((x - p.x) * (x - p.x) + (y - p.y) * (y - p.y));
+    }
+
+    public boolean isNear(Point2D p) {
+        int[] xx = {-1, 0, 1, 1, 1, 0, -1, -1};
+        int[] yy = {-1, -1, -1, 0, 1, 1, 1, 0};
+        for (int i = 0; i < xx.length; i++) {
+            if (p.x + xx[i] == x && p.y + yy[i] == y) return true;
+        }
+        return false;
+    }
+
     public boolean insideScreen() {
         if (getComputerX() < 0 || getComputerX() >= DrawCanvas.rowSize || getComputerY() < 0 || getComputerY() >= DrawCanvas.colSize)
             return false;
