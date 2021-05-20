@@ -111,12 +111,12 @@ public class Triangle extends Geometry {
     @Override
     public void setStartPoint(Point2D startPoint) {
         super.setStartPoint(startPoint);
-        points[0] = startPoint;
     }
 
     @Override
     public void setEndPoint(Point2D endPoint) {
         super.setEndPoint(endPoint);
+        points[0] = startPoint;
         points[1] = endPoint;
         points[2] = new Point2D(endPoint);
         points[2].setX(points[0].getX() - (points[1].getX() - points[0].getX()));

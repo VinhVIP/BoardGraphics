@@ -67,7 +67,7 @@ public class Rectangle extends Geometry {
 
     @Override
     public void processDraw() {
-        if (startPoint != null && endPoint != null) {
+        if (points[0] != null && points[2] != null) {
 
             swapList();
 
