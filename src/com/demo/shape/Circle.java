@@ -15,18 +15,18 @@ public class Circle extends Geometry {
 
     private int totalPoints = 2;
 
-    public Circle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
-        super(canvas, startPoint, endPoint, color, drawMode);
+    public Circle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
+        super(canvas, startPoint, endPoint, drawMode, color, colorFill, isFillColor, is2DShape);
         initSizePoints(totalPoints);
     }
 
-    public Circle(DrawCanvas canvas, int color, DrawMode drawMode) {
-        super(canvas, color, drawMode);
+    public Circle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color) {
+        super(canvas, startPoint, endPoint, drawMode, color);
         initSizePoints(totalPoints);
     }
 
-    public Circle(DrawCanvas canvas) {
-        super(canvas);
+    public Circle(DrawCanvas canvas, DrawMode drawMode, int color) {
+        super(canvas, drawMode, color);
         initSizePoints(totalPoints);
     }
 
@@ -35,9 +35,15 @@ public class Circle extends Geometry {
         initSizePoints(totalPoints);
     }
 
+    public Circle(DrawCanvas canvas) {
+        super(canvas);
+        initSizePoints(totalPoints);
+    }
+
+
     @Override
     public Geometry copy() {
-        Circle g = new Circle(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
+        Circle g = new Circle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color);
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);

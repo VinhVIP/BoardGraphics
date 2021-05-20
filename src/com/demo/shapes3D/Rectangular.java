@@ -17,18 +17,18 @@ public class Rectangular extends Geometry {
 
     private Line[] lines;
 
-    public Rectangular(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
-        super(canvas, startPoint, endPoint, color, drawMode);
+    public Rectangular(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
+        super(canvas, startPoint, endPoint, drawMode, color, colorFill, isFillColor, is2DShape);
         init();
     }
 
-    public Rectangular(DrawCanvas canvas, int color, DrawMode drawMode) {
-        super(canvas, color, drawMode);
+    public Rectangular(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color) {
+        super(canvas, startPoint, endPoint, drawMode, color);
         init();
     }
 
-    public Rectangular(DrawCanvas canvas) {
-        super(canvas);
+    public Rectangular(DrawCanvas canvas, DrawMode drawMode, int color) {
+        super(canvas, drawMode, color);
         init();
     }
 
@@ -37,6 +37,12 @@ public class Rectangular extends Geometry {
         init();
     }
 
+    public Rectangular(DrawCanvas canvas) {
+        super(canvas);
+        init();
+    }
+
+
     private void init() {
         // Đây là hình 3D
         is2DShape = false;
@@ -44,19 +50,19 @@ public class Rectangular extends Geometry {
         initSizePoints(totalPoints);
         lines = new Line[12];
 
-        lines[0] = new Line(canvas, color, DrawMode.DASH);
-        lines[1] = new Line(canvas, color, DrawMode.DASH);
-        lines[2] = new Line(canvas, color, DrawMode.DASH);
+        lines[0] = new Line(canvas, DrawMode.DASH, color);
+        lines[1] = new Line(canvas, DrawMode.DASH, color);
+        lines[2] = new Line(canvas, DrawMode.DASH, color);
 
-        lines[3] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[4] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[5] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[6] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[7] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[8] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[9] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[10] = new Line(canvas, color, DrawMode.DEFAULT);
-        lines[11] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[3] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[4] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[5] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[6] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[7] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[8] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[9] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[10] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[11] = new Line(canvas, DrawMode.DEFAULT, color);
 
     }
 

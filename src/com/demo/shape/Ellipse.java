@@ -21,18 +21,18 @@ public class Ellipse extends Geometry {
 
     private int totalPoints = 3;
 
-    public Ellipse(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
-        super(canvas, startPoint, endPoint, color, drawMode);
+    public Ellipse(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
+        super(canvas, startPoint, endPoint, drawMode, color, colorFill, isFillColor, is2DShape);
         initSizePoints(totalPoints);
     }
 
-    public Ellipse(DrawCanvas canvas, int color, DrawMode drawMode) {
-        super(canvas, color, drawMode);
+    public Ellipse(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color) {
+        super(canvas, startPoint, endPoint, drawMode, color);
         initSizePoints(totalPoints);
     }
 
-    public Ellipse(DrawCanvas canvas) {
-        super(canvas);
+    public Ellipse(DrawCanvas canvas, DrawMode drawMode, int color) {
+        super(canvas, drawMode, color);
         initSizePoints(totalPoints);
     }
 
@@ -41,9 +41,15 @@ public class Ellipse extends Geometry {
         initSizePoints(totalPoints);
     }
 
+    public Ellipse(DrawCanvas canvas) {
+        super(canvas);
+        initSizePoints(totalPoints);
+    }
+
+
     @Override
     public Geometry copy() {
-        Ellipse g = new Ellipse(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
+        Ellipse g = new Ellipse(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color);
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);

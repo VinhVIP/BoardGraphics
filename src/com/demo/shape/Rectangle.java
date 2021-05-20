@@ -16,18 +16,18 @@ public class Rectangle extends Geometry {
     // Khai báo 4 đoạn thẳng của hình chữ nhật
     private Line[] lines = new Line[4];
 
-    public Rectangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
-        super(canvas, startPoint, endPoint, color, drawMode);
+    public Rectangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
+        super(canvas, startPoint, endPoint, drawMode, color, colorFill, isFillColor, is2DShape);
         initPointsAndLines();
     }
 
-    public Rectangle(DrawCanvas canvas, int color, DrawMode drawMode) {
-        super(canvas, color, drawMode);
+    public Rectangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color) {
+        super(canvas, startPoint, endPoint, drawMode, color);
         initPointsAndLines();
     }
 
-    public Rectangle(DrawCanvas canvas) {
-        super(canvas);
+    public Rectangle(DrawCanvas canvas, DrawMode drawMode, int color) {
+        super(canvas, drawMode, color);
         initPointsAndLines();
     }
 
@@ -36,10 +36,15 @@ public class Rectangle extends Geometry {
         initPointsAndLines();
     }
 
+    public Rectangle(DrawCanvas canvas) {
+        super(canvas);
+        initPointsAndLines();
+    }
+
 
     @Override
     public Geometry copy() {
-        Rectangle g = new Rectangle(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
+        Rectangle g = new Rectangle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color);
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);
@@ -55,7 +60,7 @@ public class Rectangle extends Geometry {
     private void initPointsAndLines() {
         initSizePoints(totalPoints);
         for (int i = 0; i < lines.length; i++) {
-            lines[i] = new Line(canvas, color, drawMode);
+            lines[i] = new Line(canvas, drawMode, color);
         }
     }
 

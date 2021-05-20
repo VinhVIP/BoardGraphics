@@ -51,6 +51,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private JButton btnCone;
     private JRadioButton radio2D;
     private JRadioButton radio3D;
+    private JCheckBox checkBoxColorFill;
 
     private ButtonGroup radioGroup;
 
@@ -237,6 +238,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
                 DrawCanvas.currentFillColor = color.getRGB();
             }
         });
+
+        checkBoxColorFill.addActionListener(e->{
+            canvas.setFillColor(checkBoxColorFill.isSelected());
+        });
+
 
         btnMotion.addActionListener(e -> {
             canvas.setShowMotions(!canvas.isShowMotions());

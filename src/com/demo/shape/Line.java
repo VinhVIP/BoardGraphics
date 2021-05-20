@@ -14,15 +14,23 @@ public class Line extends Geometry {
 
     private int totalPoints = 2;
 
-    public Line(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
-        super(canvas, startPoint, endPoint, color, drawMode);
+    public Line(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
+        super(canvas, startPoint, endPoint, drawMode, color, colorFill, isFillColor, is2DShape);
         initSizePoints(totalPoints);
-        points[0] = startPoint;
-        points[1] = endPoint;
     }
 
-    public Line(DrawCanvas canvas, int color, DrawMode drawMode) {
-        super(canvas, color, drawMode);
+    public Line(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color) {
+        super(canvas, startPoint, endPoint, drawMode, color);
+        initSizePoints(totalPoints);
+    }
+
+    public Line(DrawCanvas canvas, DrawMode drawMode, int color) {
+        super(canvas, drawMode, color);
+        initSizePoints(totalPoints);
+    }
+
+    public Line(DrawCanvas canvas, DrawMode drawMode) {
+        super(canvas, drawMode);
         initSizePoints(totalPoints);
     }
 
@@ -31,10 +39,6 @@ public class Line extends Geometry {
         initSizePoints(totalPoints);
     }
 
-    public Line(DrawCanvas canvas, DrawMode drawMode) {
-        super(canvas, drawMode);
-        initSizePoints(totalPoints);
-    }
 
     @Override
     public void setupDraw() {
@@ -45,7 +49,7 @@ public class Line extends Geometry {
 
     @Override
     public Geometry copy() {
-        Line g = new Line(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
+        Line g = new Line(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color);
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);

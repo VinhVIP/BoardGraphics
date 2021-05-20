@@ -19,6 +19,7 @@ public abstract class Geometry {
 
     protected Point2D[] points;
 
+    protected boolean isFillColor = false;
     protected int defaultColorFill = 0xffffff;
 
     protected int color, colorFill = defaultColorFill;
@@ -31,25 +32,33 @@ public abstract class Geometry {
     int[] spillX = new int[]{0, 1, 0, -1};
     int[] spillY = new int[]{-1, 0, 1, 0};
 
-    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
+    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
         this.canvas = canvas;
         this.startPoint = startPoint;
         this.endPoint = endPoint;
+        this.isFillColor = isFillColor;
         this.color = color;
+        this.colorFill = colorFill;
         this.drawMode = drawMode;
+        this.is2DShape = is2DShape;
     }
 
-    public Geometry(DrawCanvas canvas, int color, DrawMode drawMode) {
-        this(canvas, null, null, color, drawMode);
+    public Geometry(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color) {
+        this(canvas, startPoint, endPoint, drawMode, color, color, false, true);
     }
 
-    public Geometry(DrawCanvas canvas) {
-        this(canvas, null, null, DrawCanvas.currentColor, DrawMode.DEFAULT);
+    public Geometry(DrawCanvas canvas, DrawMode drawMode, int color) {
+        this(canvas, null, null, drawMode, color);
     }
 
     public Geometry(DrawCanvas canvas, DrawMode drawMode) {
-        this(canvas, null, null, DrawCanvas.currentColor, drawMode);
+        this(canvas, null, null, drawMode, DrawCanvas.currentColor, DrawCanvas.currentFillColor, true, true);
     }
+
+    public Geometry(DrawCanvas canvas) {
+        this(canvas, null, null, DrawMode.DEFAULT, DrawCanvas.currentColor, DrawCanvas.currentFillColor, true, true);
+    }
+
 
     public abstract Geometry copy();
 
@@ -63,14 +72,13 @@ public abstract class Geometry {
         processDraw();
 
         // Chỉ tô màu với hình 2D
-        if(is2DShape) fillColor();
+        if (isFillColor && is2DShape) fillColor();
 
         clearOldPoints();
 
         drawNewPoints();
 
     }
-
 
 
     /*
@@ -221,6 +229,14 @@ public abstract class Geometry {
 
     public Point2D getEndPoint() {
         return endPoint;
+    }
+
+    public boolean isFillColor() {
+        return isFillColor;
+    }
+
+    public void setFillColor(boolean fillColor) {
+        isFillColor = fillColor;
     }
 
     /*

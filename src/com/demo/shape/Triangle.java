@@ -11,24 +11,24 @@ import java.util.List;
  * On 10/05/2021
  */
 
-public class Triangle extends Geometry{
+public class Triangle extends Geometry {
 
     private int totalPoints = 3;
 
     private Line[] lines = new Line[3];
 
-    public Triangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
-        super(canvas, startPoint, endPoint, color, drawMode);
+    public Triangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
+        super(canvas, startPoint, endPoint, drawMode, color, colorFill, isFillColor, is2DShape);
         initPointsAndLines();
     }
 
-    public Triangle(DrawCanvas canvas, int color, DrawMode drawMode) {
-        super(canvas, color, drawMode);
+    public Triangle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color) {
+        super(canvas, startPoint, endPoint, drawMode, color);
         initPointsAndLines();
     }
 
-    public Triangle(DrawCanvas canvas) {
-        super(canvas);
+    public Triangle(DrawCanvas canvas, DrawMode drawMode, int color) {
+        super(canvas, drawMode, color);
         initPointsAndLines();
     }
 
@@ -37,12 +37,17 @@ public class Triangle extends Geometry{
         initPointsAndLines();
     }
 
+    public Triangle(DrawCanvas canvas) {
+        super(canvas);
+        initPointsAndLines();
+    }
+
 
     @Override
     public Geometry copy() {
-        Triangle g = new Triangle(canvas, new Point2D(startPoint), new Point2D(endPoint), color, drawMode);
+        Triangle g = new Triangle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color);
 
-        for(int i=0; i<totalPoints; i++)
+        for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);
 
         for (Point2D p : listDraw) {
@@ -55,7 +60,7 @@ public class Triangle extends Geometry{
     private void initPointsAndLines() {
         initSizePoints(totalPoints);
         for (int i = 0; i < lines.length; i++) {
-            lines[i] = new Line(canvas, color, drawMode);
+            lines[i] = new Line(canvas, drawMode, color);
         }
     }
 
@@ -90,7 +95,7 @@ public class Triangle extends Geometry{
     @Override
     public void setColor(int color) {
         super.setColor(color);
-        for (int i=0; i<lines.length; i++)
+        for (int i = 0; i < lines.length; i++)
             lines[i].setColor(color);
     }
 
@@ -114,7 +119,7 @@ public class Triangle extends Geometry{
         super.setEndPoint(endPoint);
         points[1] = endPoint;
         points[2] = new Point2D(endPoint);
-        points[2].setX(points[0].getX()-(points[1].getX()-points[0].getX()));
+        points[2].setX(points[0].getX() - (points[1].getX() - points[0].getX()));
     }
 
     @Override

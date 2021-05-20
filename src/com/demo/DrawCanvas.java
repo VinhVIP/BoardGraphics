@@ -29,6 +29,7 @@ public class DrawCanvas extends Canvas {
     public static int currentColor = 0xff0000;  // Màu vẽ đang chọn hiện tại
     public static int currentFillColor = 0xffffff;  // Màu vẽ đang chọn hiện tại
 
+
     public boolean isIs2DCoordinates() {
         return is2DCoordinates;
     }
@@ -57,6 +58,16 @@ public class DrawCanvas extends Canvas {
     private List<List> shapesStates = new ArrayList<>();
 
     private int curState = 0;
+    private boolean isFillColor = false;
+
+    public boolean isFillColor() {
+        return isFillColor;
+    }
+
+    public void setFillColor(boolean fillColor) {
+        isFillColor = fillColor;
+        geometry.setFillColor(fillColor);
+    }
 
     private boolean isShowAxis = true;
     private boolean isShowGrid = true;
