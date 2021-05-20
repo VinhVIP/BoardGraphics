@@ -61,16 +61,14 @@ public class Ellipse extends Geometry {
 
     @Override
     public void processDraw() {
-        if (startPoint != null && endPoint != null) {
-            // Xác định góc giữa O'B và trục Ox
-            Vector2D vOB = new Vector2D(points[0], points[1]);
-            double angle = vOB.angleRadian(Vector2D.oX);
-            if (Double.isNaN(angle)) return;
+        // Xác định góc giữa O'B và trục Ox
+        Vector2D vOB = new Vector2D(points[0], points[1]);
+        double angle = vOB.angleRadian(Vector2D.oX);
+        if (Double.isNaN(angle)) return;
 
-            swapList();
-            process(angle);
-            if (drawMode == DrawMode.DEFAULT) connect();
-        }
+        swapList();
+        process(angle);
+        if (drawMode == DrawMode.DEFAULT) connect();
     }
 
     /*
@@ -91,7 +89,7 @@ public class Ellipse extends Geometry {
             points[2] = points[2].rotate(points[0], angle);
         }
 
-        radiusA = points[0].distance(points[1]);
+        radiusA = points[0].distance(points[1]) + 1;
         radiusB = points[0].distance(points[2]);
         midEllipse(points[0].getX(), points[0].getY(), radiusA, radiusB, color);
 

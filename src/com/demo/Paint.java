@@ -264,6 +264,8 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
             canvas.setMode(Mode.RECTANGULAR);
         });
 
+        btnCylinder.addActionListener(e->canvas.setMode(Mode.CYLINDER));
+
         // Important
         add(rootPanel);
 

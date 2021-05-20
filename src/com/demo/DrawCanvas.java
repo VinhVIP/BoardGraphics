@@ -6,6 +6,7 @@ import com.demo.models.Vector2D;
 import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
+import com.demo.shapes3D.Cylinder;
 import com.demo.shapes3D.Rectangular;
 
 import java.awt.*;
@@ -175,6 +176,9 @@ public class DrawCanvas extends Canvas {
             }
             case RECTANGULAR -> {
                 geometry = new Rectangular(this);
+            }
+            case CYLINDER -> {
+                geometry = new Cylinder(this);
             }
         }
     }
@@ -1139,8 +1143,6 @@ public class DrawCanvas extends Canvas {
         double angle = v.angleRadian(v2);
 
         if(Double.isNaN(angle)) return;
-
-        System.out.println("ang: "+angle);
 
         int cur = pointLine(startMove, rootPoint, point);
 
