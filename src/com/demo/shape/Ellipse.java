@@ -15,9 +15,7 @@ import java.util.List;
 
 public class Ellipse extends Geometry {
 
-    private Point2D rootPoint;
-    private double rotateAngle;
-    private int a, b;
+    private int radiusA, radiusB;
 
     private int totalPoints = 3;
 
@@ -64,8 +62,13 @@ public class Ellipse extends Geometry {
     @Override
     public void processDraw() {
         if (startPoint != null && endPoint != null) {
+            // Xác định góc giữa O'B và trục Ox
+            Vector2D vOB = new Vector2D(points[0], points[1]);
+            double angle = vOB.angleRadian(Vector2D.oX);
+            if (Double.isNaN(angle)) return;
+
             swapList();
-            process();
+            process(angle);
             if (drawMode == DrawMode.DEFAULT) connect();
         }
     }
@@ -76,18 +79,8 @@ public class Ellipse extends Geometry {
         |    O'(0)  |B(1)
          -         -
            -------
-         */
-    private void process() {
-//        int x = points[0].getX();
-//        int y = points[0].getY();
-//
-//        // Dịch chuyển tâm elip về gốc tọa độ
-//        for(int i=0; i<points.length; i++)
-//            points[i].set(points[i].getX()-x, points[i].getY()-y);
-
-        // Xác định góc giữa O'B và trục Ox
-        Vector2D vOB = new Vector2D(points[0], points[1]);
-        double angle = vOB.angleRadian(Vector2D.oX);
+    */
+    private void process(double angle) {
 
         if (points[1].getY() > points[0].getY()) angle = -angle;
 
@@ -98,9 +91,9 @@ public class Ellipse extends Geometry {
             points[2] = points[2].rotate(points[0], angle);
         }
 
-        a = (int) Math.sqrt((points[0].getX() - points[1].getX()) * (points[0].getX() - points[1].getX()) + (points[0].getY() - points[1].getY()) * (points[0].getY() - points[1].getY()));
-        b = (int) Math.sqrt((points[0].getX() - points[2].getX()) * (points[0].getX() - points[2].getX()) + (points[0].getY() - points[2].getY()) * (points[0].getY() - points[2].getY()));
-        midEllipse(points[0].getX(), points[0].getY(), a, b, color);
+        radiusA = points[0].distance(points[1]);
+        radiusB = points[0].distance(points[2]);
+        midEllipse(points[0].getX(), points[0].getY(), radiusA, radiusB, color);
 
         // Xoay trở về vị trí cũ
         if (angle != 0) {
@@ -114,10 +107,7 @@ public class Ellipse extends Geometry {
 
         for (int i = 0; i < listDraw.size(); i++) {
             Point2D p = listDraw.get(i);
-            if (rootPoint != null)
-                p = p.rotate(rootPoint, rotateAngle);
-            else
-                p = p.rotate(points[0], angle);
+            p = p.rotate(points[0], angle);
             listDraw.set(i, p);
         }
 
@@ -125,13 +115,13 @@ public class Ellipse extends Geometry {
 
     private void connect() {
         List<Point2D> list = new ArrayList<>();
-        list.add(listDraw.get(0));
         Point2D p1, p2;
         Line line = new Line(canvas, DrawMode.DEFAULT, color);
-        for (int i = 1; i <= listDraw.size(); i++) {
-            p1 = list.get(list.size() - 1);
-            p2 = listDraw.get(i % listDraw.size());
-            if (!p1.isNear(p2)) {
+
+        for (int i = 0; i < listDraw.size(); i++) {
+            p1 = listDraw.get(i);
+            p2 = listDraw.get((i + 1) % listDraw.size());
+            if (p1.distance(p2) > 1) {
                 line.setStartPoint(new Point2D(p1));
                 line.setEndPoint(new Point2D(p2));
                 line.processDraw();
@@ -141,17 +131,11 @@ public class Ellipse extends Geometry {
             }
         }
 
-        listDraw.clear();
         listDraw.addAll(list);
         list.clear();
     }
 
-    public void setRotate(Point2D rootPoint, double rotateAngle) {
-        this.rootPoint = rootPoint;
-        this.rotateAngle = rotateAngle;
-    }
-
-    void choosePoints() {
+    private void choosePoints() {
         int n = listDraw.size();
         List<Point2D> listTmp = new ArrayList<>();
         Point2D point;
@@ -269,8 +253,8 @@ public class Ellipse extends Geometry {
         try {
             return String.format("Ellipse: (%d, %d) a=%d, b=%d",
                     points[0].getX(), points[0].getY(),
-                    a,
-                    b);
+                    radiusA,
+                    radiusB);
         } catch (Exception e) {
             return "";
         }

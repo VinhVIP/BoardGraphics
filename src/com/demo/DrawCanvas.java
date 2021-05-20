@@ -901,9 +901,6 @@ public class DrawCanvas extends Canvas {
                 points[i] = mapNewPoints.get(index).get(i);
             }
             g.setPoints(points);
-            if (g instanceof Ellipse) {
-                ((Ellipse) g).setRotate(null, 0);
-            }
 
             listShapes.set(index, g);
 
@@ -1141,6 +1138,10 @@ public class DrawCanvas extends Canvas {
         Vector2D v2 = new Vector2D(endMove, rootPoint);
         double angle = v.angleRadian(v2);
 
+        if(Double.isNaN(angle)) return;
+
+        System.out.println("ang: "+angle);
+
         int cur = pointLine(startMove, rootPoint, point);
 
         if (cur > 0) {
@@ -1160,9 +1161,7 @@ public class DrawCanvas extends Canvas {
             }
             g.setPoints(points);
 
-            if (g instanceof Ellipse) {
-                ((Ellipse) g).setRotate(rootPoint, angle);
-            }
+
             g.draw();
 
             listener.notifyShapeChanged(index, g.toString());

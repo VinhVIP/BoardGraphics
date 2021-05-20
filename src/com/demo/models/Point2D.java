@@ -215,7 +215,7 @@ public class Point2D {
 
     public boolean isNear(Point2D p) {
         int[] xx = {-1, 0, 1, 1, 1, 0, -1, -1};
-        int[] yy = {-1, -1, -1, 0, 1, 1, 1, 0};
+        int[] yy = {1, 1, 1, 0, -1, -1, -1, 0};
         for (int i = 0; i < xx.length; i++) {
             if (p.x + xx[i] == x && p.y + yy[i] == y) return true;
         }
