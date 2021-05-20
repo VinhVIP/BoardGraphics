@@ -51,12 +51,12 @@ public abstract class Geometry {
         this(canvas, null, null, drawMode, color);
     }
 
-    public Geometry(DrawCanvas canvas, DrawMode drawMode) {
-        this(canvas, null, null, drawMode, DrawCanvas.currentColor, DrawCanvas.currentFillColor, true, true);
+    public Geometry(DrawCanvas canvas, DrawMode drawMode, boolean isFillColor) {
+        this(canvas, null, null, drawMode, DrawCanvas.currentColor, DrawCanvas.currentFillColor, isFillColor, true);
     }
 
     public Geometry(DrawCanvas canvas) {
-        this(canvas, null, null, DrawMode.DEFAULT, DrawCanvas.currentColor, DrawCanvas.currentFillColor, true, true);
+        this(canvas, DrawMode.DEFAULT, false);
     }
 
 
@@ -68,7 +68,7 @@ public abstract class Geometry {
 
     public abstract void processDraw();
 
-    public void setupDraw() {
+    public void draw() {
         processDraw();
 
         // Chỉ tô màu với hình 2D

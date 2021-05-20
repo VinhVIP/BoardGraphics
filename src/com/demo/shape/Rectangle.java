@@ -31,8 +31,8 @@ public class Rectangle extends Geometry {
         initPointsAndLines();
     }
 
-    public Rectangle(DrawCanvas canvas, DrawMode drawMode) {
-        super(canvas, drawMode);
+    public Rectangle(DrawCanvas canvas, DrawMode drawMode, boolean isFillColor) {
+        super(canvas, drawMode, isFillColor);
         initPointsAndLines();
     }
 
@@ -44,7 +44,7 @@ public class Rectangle extends Geometry {
 
     @Override
     public Geometry copy() {
-        Rectangle g = new Rectangle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color);
+        Rectangle g = new Rectangle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color, colorFill, isFillColor, is2DShape);
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);

@@ -23,7 +23,7 @@ public class Pen extends Geometry {
     }
 
     @Override
-    public void setupDraw() {
+    public void draw() {
         // TODO: Thuật toán vẽ PEN lỗi, rảnh fix sau
 
         if (listDraw.size() >= 1) {

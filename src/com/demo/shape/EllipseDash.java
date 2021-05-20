@@ -23,7 +23,7 @@ public class EllipseDash extends Geometry {
     }
 
     @Override
-    public void setupDraw() {
+    public void draw() {
 
     }
 

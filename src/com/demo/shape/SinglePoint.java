@@ -21,7 +21,7 @@ public class SinglePoint extends Geometry {
     }
 
     @Override
-    public void setupDraw() {
+    public void draw() {
         if(startPoint != null){
             listDraw.add(startPoint);
             drawNewPoints();

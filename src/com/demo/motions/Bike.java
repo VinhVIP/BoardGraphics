@@ -20,7 +20,7 @@ public class Bike {
     public Bike(DrawCanvas canvas) {
         this.canvas = canvas;
 
-        wheel = new Circle(canvas, DrawMode.DEFAULT, DrawCanvas.currentColor);
+        wheel = new Circle(canvas, null, null, DrawMode.DEFAULT, 0xffff00, 0xff00ff, true, true);
         rim1 = new Line(canvas, DrawMode.DEFAULT, DrawCanvas.currentColor);
         rim2 = new Line(canvas, DrawMode.DEFAULT, DrawCanvas.currentColor);
 
@@ -45,9 +45,12 @@ public class Bike {
         canvas.clearDraw(rim2.getListDraw());
 
         // Thiết lập những điểm vẽ mới
-        wheel.processDraw();
-        rim1.processDraw();
-        rim2.processDraw();
+//        wheel.processDraw();
+//        rim1.processDraw();
+//        rim2.processDraw();
+        wheel.draw();
+        rim1.draw();
+        rim2.draw();
 
         // Vẽ những điểm vẽ mới
         canvas.applyDraw(wheel.getListDraw());

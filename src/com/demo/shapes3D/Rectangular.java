@@ -32,8 +32,8 @@ public class Rectangular extends Geometry {
         init();
     }
 
-    public Rectangular(DrawCanvas canvas, DrawMode drawMode) {
-        super(canvas, drawMode);
+    public Rectangular(DrawCanvas canvas, DrawMode drawMode, boolean isFillColor) {
+        super(canvas, drawMode, isFillColor);
         init();
     }
 

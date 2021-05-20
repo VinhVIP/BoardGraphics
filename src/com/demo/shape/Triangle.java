@@ -32,8 +32,8 @@ public class Triangle extends Geometry {
         initPointsAndLines();
     }
 
-    public Triangle(DrawCanvas canvas, DrawMode drawMode) {
-        super(canvas, drawMode);
+    public Triangle(DrawCanvas canvas, DrawMode drawMode, boolean isFillColor) {
+        super(canvas, drawMode, isFillColor);
         initPointsAndLines();
     }
 
@@ -45,7 +45,7 @@ public class Triangle extends Geometry {
 
     @Override
     public Geometry copy() {
-        Triangle g = new Triangle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color);
+        Triangle g = new Triangle(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color, colorFill, isFillColor, is2DShape);
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);

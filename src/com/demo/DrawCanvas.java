@@ -46,16 +46,16 @@ public class DrawCanvas extends Canvas {
     private DrawMode drawMode;
     private Mode mode; // Chế độ hình vẽ
 
-    private int[][] board = new int[rowSize][colSize];      // Bảng màu canvas chính
-    private int[][] tempBoard = new int[rowSize][colSize];  // Bảng màu phụ cho việc preview hình, sau khi `merge()` thì board và tempBoard sẽ hợp lại thành 1
+    private final int[][] board = new int[rowSize][colSize];      // Bảng màu canvas chính
+    private final int[][] tempBoard = new int[rowSize][colSize];  // Bảng màu phụ cho việc preview hình, sau khi `merge()` thì board và tempBoard sẽ hợp lại thành 1
 
-    private CanvasListener listener; // Sự kiện cập nhập tọa độ con chuột
+    private final CanvasListener listener; // Sự kiện cập nhập tọa độ con chuột
     private Geometry geometry;  // Hình vẽ
 
-    private Set<Point2D> coordinatePoints = new HashSet<>();
+    private final Set<Point2D> coordinatePoints = new HashSet<>();
     private List listShapes = new ArrayList<>();
-    private List<int[][]> boardStates = new ArrayList<>();
-    private List<List> shapesStates = new ArrayList<>();
+    private final List<int[][]> boardStates = new ArrayList<>();
+    private final List<List> shapesStates = new ArrayList<>();
 
     private int curState = 0;
     private boolean isFillColor = false;
@@ -103,7 +103,7 @@ public class DrawCanvas extends Canvas {
 
         // Mode mặc định là vẽ PEN
         drawMode = DrawMode.DEFAULT;
-        setMode(mode.LINE);
+        setMode(Mode.LINE);
 //        setShowPointCoord(false);
         Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(c);
@@ -146,7 +146,7 @@ public class DrawCanvas extends Canvas {
     public void setMode(Mode MODE) {
         this.mode = MODE;
         listener.notifyShapeModeChanged(MODE);
-        if (MODE == MODE.NONE) return;
+        if (MODE == Mode.NONE) return;
 
         switch (MODE) {
             case POINT -> {
@@ -156,22 +156,22 @@ public class DrawCanvas extends Canvas {
                 geometry = new Pen(this);
             }
             case LINE -> {
-                geometry = new Line(this, drawMode);
+                geometry = new Line(this, drawMode, isFillColor);
             }
             case RECTANGLE -> {
-                geometry = new Rectangle(this, drawMode);
+                geometry = new Rectangle(this, drawMode, isFillColor);
             }
             case CIRCLE -> {
-                geometry = new Circle(this, drawMode);
+                geometry = new Circle(this, drawMode, isFillColor);
             }
             case ELLIPSE -> {
-                geometry = new Ellipse(this, drawMode);
+                geometry = new Ellipse(this, drawMode, isFillColor);
             }
             case ELLIPSE_DASH -> {
                 geometry = new EllipseDash(this);
             }
             case TRIANGLE -> {
-                geometry = new Triangle(this, drawMode);
+                geometry = new Triangle(this, drawMode, isFillColor);
             }
             case RECTANGULAR -> {
                 geometry = new Rectangular(this);
@@ -969,7 +969,7 @@ public class DrawCanvas extends Canvas {
                     geometry.setStartPoint(point);
                 } else {
                     geometry.setEndPoint(point);
-                    geometry.setupDraw(); // Xem trước nét vẽ
+                    geometry.draw(); // Xem trước nét vẽ
                 }
             }
 
@@ -1007,7 +1007,7 @@ public class DrawCanvas extends Canvas {
             }
             g.setPoints(points);
 
-            g.setupDraw();
+            g.draw();
             listener.notifyShapeChanged(index, g.toString());
         }
 
@@ -1034,7 +1034,7 @@ public class DrawCanvas extends Canvas {
             g.setPoints(points);
 
 
-            g.setupDraw();
+            g.draw();
             listener.notifyShapeChanged(index, g.toString());
         }
 
@@ -1114,7 +1114,7 @@ public class DrawCanvas extends Canvas {
                 mapNewPoints.get(index).set(i, points[i]);
             }
 
-            g.setupDraw();
+            g.draw();
             listener.notifyShapeChanged(index, g.toString());
         }
 
@@ -1163,7 +1163,7 @@ public class DrawCanvas extends Canvas {
             if (g instanceof Ellipse) {
                 ((Ellipse) g).setRotate(rootPoint, angle);
             }
-            g.setupDraw();
+            g.draw();
 
             listener.notifyShapeChanged(index, g.toString());
         }
@@ -1184,7 +1184,7 @@ public class DrawCanvas extends Canvas {
             Geometry g = ((Geometry) listShapes.get(index)).copy();
 
             listShapes.add(g);
-            g.setupDraw();
+            g.draw();
 
             listener.notifyShapeInserted(g.toString());
         }

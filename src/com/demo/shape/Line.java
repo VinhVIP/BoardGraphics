@@ -29,8 +29,8 @@ public class Line extends Geometry {
         initSizePoints(totalPoints);
     }
 
-    public Line(DrawCanvas canvas, DrawMode drawMode) {
-        super(canvas, drawMode);
+    public Line(DrawCanvas canvas, DrawMode drawMode,boolean isFillColor) {
+        super(canvas, drawMode, isFillColor);
         initSizePoints(totalPoints);
     }
 
@@ -41,7 +41,7 @@ public class Line extends Geometry {
 
 
     @Override
-    public void setupDraw() {
+    public void draw() {
         processDraw();
         clearOldPoints();
         drawNewPoints();
