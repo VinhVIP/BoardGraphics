@@ -4,8 +4,6 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
-import java.util.List;
-
 /**
  * Create by VinhIT
  * On 10/05/2021
@@ -57,6 +55,7 @@ public class Triangle extends Geometry {
         return g;
     }
 
+
     private void initPointsAndLines() {
         initSizePoints(totalPoints);
         for (int i = 0; i < lines.length; i++) {
@@ -64,31 +63,23 @@ public class Triangle extends Geometry {
         }
     }
 
+
     @Override
     public void processDraw() {
-        if (startPoint != null && endPoint != null) {
 
-            swapList();
+        swapList();
 
-            for (int i = 0; i < lines.length; i++) {
-                lines[i].setStartPoint(points[i % lines.length]);
-                lines[i].setEndPoint(points[(i + 1) % lines.length]);
-            }
-
-            for (int i = 0; i < lines.length; i++) {
-                lines[i].processDraw();
-            }
-
-            for (int i = 0; i < lines.length; i++) {
-                listDraw.addAll(lines[i].getListDraw());
-            }
+        for (int i = 0; i < lines.length; i++) {
+            lines[i].setStartPoint(points[i % lines.length]);
+            lines[i].setEndPoint(points[(i + 1) % lines.length]);
         }
-    }
 
-    @Override
-    public void setDrawMode(DrawMode drawMode) {
-        for (Line line : lines) {
-            line.setDrawMode(drawMode);
+        for (int i = 0; i < lines.length; i++) {
+            lines[i].processDraw();
+        }
+
+        for (int i = 0; i < lines.length; i++) {
+            listDraw.addAll(lines[i].getListDraw());
         }
     }
 
@@ -100,33 +91,20 @@ public class Triangle extends Geometry {
     }
 
     @Override
-    public List<Point2D> getListDraw() {
-        listDraw.clear();
-        for (int i = 0; i < lines.length; i++) {
-            listDraw.addAll(lines[i].getListDraw());
+    public void setDrawMode(DrawMode drawMode) {
+        for (Line line : lines) {
+            line.setDrawMode(drawMode);
         }
-        return listDraw;
     }
 
-    @Override
-    public void setStartPoint(Point2D startPoint) {
-        super.setStartPoint(startPoint);
-    }
 
     @Override
     public void setEndPoint(Point2D endPoint) {
         super.setEndPoint(endPoint);
+
         points[0] = startPoint;
         points[1] = endPoint;
-        points[2] = new Point2D(endPoint);
-        points[2].setX(points[0].getX() - (points[1].getX() - points[0].getX()));
-    }
-
-    @Override
-    public void setPoints(Point2D[] points) {
-        super.setPoints(points);
-        startPoint = points[0];
-        endPoint = points[1];
+        points[2] = new Point2D(points[0].getX() - (points[1].getX() - points[0].getX()), points[1].getY());
     }
 
     @Override
@@ -143,7 +121,7 @@ public class Triangle extends Geometry {
 
     @Override
     public Point2D getCenterPoint() {
-        return new Point2D((points[1].getX() + points[2].getX()) / 2, (points[0].getY() + points[1].getY()) / 2, points[0].getColor());
+        return new Point2D((points[1].getX() + points[2].getX() + points[0].getX()) / 3, (points[0].getY() + points[1].getY() + points[2].getY()) / 3, points[0].getColor());
     }
 
 }

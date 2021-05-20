@@ -42,22 +42,22 @@ public class Bike {
 
     public void run() {
         // Di chuyển sang phải 1 đơn vị
-//        wheel.move(1, 0);
-//        rim1.move(1, 0);
-//        rim2.move(1, 0);
+        wheel.move(1, 0);
+        rim1.move(1, 0);
+        rim2.move(1, 0);
 
         // Quay quanh tâm đường thẳng
-//        rim1.rotate(rim1.getCenterPoint(), -Math.PI / 12);
-//        rim2.rotate(rim2.getCenterPoint(), -Math.PI / 12);
+        rim1.rotate(rim1.getCenterPoint(), -Math.PI / 12);
+        rim2.rotate(rim2.getCenterPoint(), -Math.PI / 12);
 
         // Tạo 1 bản copy rồi mới scale trên bản copy đó
         rim1Temp = (Line) rim1.copy();
         scale += dv;
         if (scale > 2.5 || scale < 0.5) dv = -dv;
         // Lấy gốc scale là tâm của bánh xe
-        rim1Temp.scale(wheel.getCenterPoint(), scale, scale);
+        rim1Temp.scale(rim1Temp.getCenterPoint(), scale, scale);
 
-        System.out.println(rim1Temp.getCenterPoint());
+//        System.out.println(rim1Temp.getCenterPoint());
 
         wheelTemp = (Circle) wheel.copy();
         wheelTemp.scale(scale, scale);

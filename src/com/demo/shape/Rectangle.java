@@ -67,22 +67,20 @@ public class Rectangle extends Geometry {
 
     @Override
     public void processDraw() {
-        if (points[0] != null && points[2] != null) {
 
-            swapList();
+        swapList();
 
-            for (int i = 0; i < lines.length; i++) {
-                lines[i].setStartPoint(points[i % lines.length]);
-                lines[i].setEndPoint(points[(i + 1) % lines.length]);
-            }
+        for (int i = 0; i < lines.length; i++) {
+            lines[i].setStartPoint(points[i % lines.length]);
+            lines[i].setEndPoint(points[(i + 1) % lines.length]);
+        }
 
-            for (int i = 0; i < lines.length; i++) {
-                lines[i].processDraw();
-            }
+        for (int i = 0; i < lines.length; i++) {
+            lines[i].processDraw();
+        }
 
-            for (int i = 0; i < lines.length; i++) {
-                listDraw.addAll(lines[i].getListDraw());
-            }
+        for (int i = 0; i < lines.length; i++) {
+            listDraw.addAll(lines[i].getListDraw());
         }
     }
 
