@@ -4,10 +4,7 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Create by VinhIT
@@ -25,9 +22,11 @@ public abstract class Geometry {
     protected int defaultColorFill = 0xffffff;
 
     protected int color, colorFill = defaultColorFill;
-    protected int[][] board = DrawCanvas.newDefaultBoard();
+    HashMap<PointKey, Integer> mapPoints = new HashMap<>();
 
     protected DrawMode drawMode;
+
+    protected boolean is2DShape = true;
 
     int[] spillX = new int[]{0, 1, 0, -1};
     int[] spillY = new int[]{-1, 0, 1, 0};
@@ -58,38 +57,72 @@ public abstract class Geometry {
         points = new Point2D[size];
     }
 
-    public void setupDraw() {
-        processDraw();
-        clearOldPoints();
-        drawNewPoints();
-
-        fillColor();
-    }
-
     public abstract void processDraw();
 
-    protected void fillColor() {
-        if (listDraw.isEmpty()) return;
-        int[][] tempBoardOutline = DrawCanvas.newDefaultBoard();
-        int[][] tempBoard = DrawCanvas.newDefaultBoard();
+    public void setupDraw() {
+        processDraw();
 
+        // Chỉ tô màu với hình 2D
+        if(is2DShape) fillColor();
+
+        clearOldPoints();
+
+        drawNewPoints();
+
+    }
+
+
+
+    /*
+     * Key sử dụng cho mapPoints
+     * Dùng trong thuật toán loang để tô màu
+     */
+    private class PointKey {
+        int x, y;
+
+        public PointKey(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public PointKey(Point2D p) {
+            this.x = p.getX();
+            this.y = p.getY();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PointKey pointKey = (PointKey) o;
+            return x == pointKey.x &&
+                    y == pointKey.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return x ^ y;
+        }
+    }
+
+    public void fillColor() {
+        if (listDraw.isEmpty()) return;
+        mapPoints.clear();
         int outlineColor = color;
 
         for (Point2D p : listDraw) {
-            if (p.insideScreen()) tempBoardOutline[p.getComputerX()][p.getComputerY()] = outlineColor;
+            mapPoints.put(new PointKey(p), outlineColor);
         }
 
         Queue<Point2D> queue = new ArrayDeque<>();
         Queue<Point2D> tempQueue = new ArrayDeque<>();
         Queue<Point2D> tempQueue2 = new ArrayDeque<>();
 
-        int bgColor = defaultColorFill;
-
         Point2D pt = getCenterPoint();
 
-        if (pt.insideScreen() && tempBoardOutline[pt.getComputerX()][pt.getComputerY()] == defaultColorFill) {
+        if (!mapPoints.containsKey(new PointKey(pt))) {
             tempQueue.add(pt);
-            tempBoard[pt.getComputerX()][pt.getComputerY()] = colorFill;
+            mapPoints.put(new PointKey(pt.getX(), pt.getY()), colorFill);
         }
 
         while (!tempQueue.isEmpty()) {
@@ -98,15 +131,13 @@ public abstract class Geometry {
             for (int i = 0; i < spillX.length; i++) {
                 Point2D p = new Point2D(point.getX() + spillX[i], point.getY() + spillY[i], colorFill);
 
-                if (p.insideScreen()) {
-                    if (tempBoard[p.getComputerX()][p.getComputerY()] == bgColor && tempBoardOutline[p.getComputerX()][p.getComputerY()] != outlineColor) {
-                        tempBoard[p.getComputerX()][p.getComputerY()] = colorFill;
-                        tempQueue2.add(new Point2D(p));
-                        queue.add(new Point2D(p));
-                    }
+                if (!mapPoints.containsKey(new PointKey(p))) {
+                    mapPoints.put(new PointKey(p), colorFill);
+                    tempQueue2.add(new Point2D(p));
+                    queue.add(new Point2D(p));
                 }
-
             }
+
             if (tempQueue.isEmpty()) {
                 while (!tempQueue2.isEmpty()) {
                     tempQueue.add(new Point2D(tempQueue2.remove()));
@@ -115,14 +146,11 @@ public abstract class Geometry {
         }
 
         Point2D point2D;
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                if (board[i][j] != tempBoard[i][j]) {
-                    board[i][j] = tempBoard[i][j];
-                    point2D = Point2D.fromComputerCoordinate(i, j);
-                    point2D.setColor(board[i][j]);
-                    if (point2D.insideScreen()) canvas.putPixel(point2D);
-                }
+        for (PointKey pk : mapPoints.keySet()) {
+            point2D = new Point2D(pk.x, pk.y, colorFill);
+            if (point2D.insideScreen() && mapPoints.get(pk) == colorFill) {
+//                canvas.putPixel(point2D);
+                listDraw.add(point2D);
             }
         }
 

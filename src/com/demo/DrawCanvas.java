@@ -7,7 +7,6 @@ import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
 import com.demo.shapes3D.Rectangular;
-import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -35,9 +34,9 @@ public class DrawCanvas extends Canvas {
     }
 
     public void setIs2DCoordinates(boolean is2DCoordinates) {
-        if(isShowAxis) clearAxis();
+        if (isShowAxis) clearAxis();
         this.is2DCoordinates = is2DCoordinates;
-        if(isShowAxis) drawAxis();
+        if (isShowAxis) drawAxis();
     }
 
     private boolean is2DCoordinates = true;
@@ -121,7 +120,6 @@ public class DrawCanvas extends Canvas {
     public boolean isShowMotions() {
         return isShowMotions;
     }
-
 
 
     public void setDrawMode(DrawMode drawMode) {
@@ -226,15 +224,14 @@ public class DrawCanvas extends Canvas {
      */
     public void clearDraw(List<Point2D> point2DS) {
         for (Point2D p : point2DS) {
-            if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= rowSize || p.getComputerY() >= colSize)
-                continue;
+            if (p.insideScreen()) {
+                if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
+                    p.setColor(board[p.getComputerX()][p.getComputerY()]);
+                    tempBoard[p.getComputerX()][p.getComputerY()] = board[p.getComputerX()][p.getComputerY()];
 
-            if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
-                p.setColor(board[p.getComputerX()][p.getComputerY()]);
-                tempBoard[p.getComputerX()][p.getComputerY()] = board[p.getComputerX()][p.getComputerY()];
-
-                putPixel(p);
-                if (isShowAxis) drawAxis();
+                    putPixel(p);
+//                    if (isShowAxis) drawAxis();
+                }
             }
         }
     }
@@ -244,18 +241,15 @@ public class DrawCanvas extends Canvas {
      */
     public void applyDraw(List<Point2D> point2DList) {
         for (Point2D p : point2DList) {
-            if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= rowSize || p.getComputerY() >= colSize)
-                continue;
-
-            if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
-                tempBoard[p.getComputerX()][p.getComputerY()] = p.getColor();
-                putPixel(p);
-
-                if (isShowAxis) drawAxis();
+            if (p.insideScreen()) {
+                if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
+                    tempBoard[p.getComputerX()][p.getComputerY()] = p.getColor();
+                    putPixel(p);
+//                    if (isShowAxis) drawAxis();
+                }
             }
+
         }
-
-
 
         drawAllPoints();
     }
@@ -482,10 +476,14 @@ public class DrawCanvas extends Canvas {
             g.drawLine(canvasWidth / 2, canvasHeight / 2, canvasWidth, canvasHeight / 2);
             g.drawLine(canvasWidth / 2, canvasHeight / 2 + 1, canvasWidth, canvasHeight / 2 + 1);
 
-            g.drawLine(canvasWidth / 2, canvasHeight / 2, canvasWidth / 2 - canvasHeight / 2, canvasHeight);
-            g.drawLine(canvasWidth / 2 + 2, canvasHeight / 2, canvasWidth / 2 - canvasHeight / 2 + 2, canvasHeight);
-            g.drawLine(canvasWidth / 2 + 1, canvasHeight / 2, canvasWidth / 2 - canvasHeight / 2 + 1, canvasHeight);
+            Point2D point = new Point2D(0, 0);
+            for (int z = 0; ; z--) {
+                point.set(z, z);
+                if (point.getComputerY() > rowSize) break;
+                drawAxisAt(point, g);
+            }
         }
+        g.dispose();
     }
 
     /*
@@ -533,8 +531,8 @@ public class DrawCanvas extends Canvas {
                 p = Point2D.fromComputerCoordinate(i, j);
                 p.setColor(board[i][j]);
                 putPixel(p);
-                p = Point2D.fromComputerCoordinate(i+1, j);
-                p.setColor(board[i+1][j]);
+                p = Point2D.fromComputerCoordinate(i + 1, j);
+                p.setColor(board[i + 1][j]);
                 putPixel(p);
                 i--;
             }
@@ -626,9 +624,55 @@ public class DrawCanvas extends Canvas {
         else
             g.fillRect(point.getComputerX() * pixelSize, point.getComputerY() * pixelSize, pixelSize, pixelSize);
 
+        // Vẽ lại axis tại từng điểm cho tối ưu
+        drawAxisAt(point, g);
+
         g.dispose();
     }
 
+    private void drawAxisAt(Point2D point, Graphics g) {
+        if (isShowAxis) {
+            g.setColor(Color.BLACK);
+            if (isIs2DCoordinates()) {
+                if (point.getX() == 0) {
+                    g.drawLine(canvasWidth / 2, point.getComputerY() * 5, canvasWidth / 2, (point.getComputerY() + 1) * 5);
+                    g.drawLine(canvasWidth / 2 + 1, point.getComputerY() * 5, canvasWidth / 2 + 1, (point.getComputerY() + 1) * 5);
+                }
+                if (point.getY() == 0) {
+                    g.drawLine(point.getComputerX() * 5, canvasHeight / 2, (point.getComputerX() + 1) * 5, canvasHeight / 2);
+                    g.drawLine(point.getComputerX() * 5, canvasHeight / 2 + 1, (point.getComputerX() + 1) * 5, canvasHeight / 2 + 1);
+                }
+            } else {
+                if (point.getX() == 0 && point.getY() >= 0) {
+                    if (point.getY() == 0) {
+                        g.drawLine(canvasWidth / 2, point.getComputerY() * 5, canvasWidth / 2, point.getComputerY() * 5 + 3);
+                        g.drawLine(canvasWidth / 2 + 1, point.getComputerY() * 5, canvasWidth / 2 + 1, point.getComputerY() * 5 + 3);
+                    } else {
+                        g.drawLine(canvasWidth / 2, point.getComputerY() * 5, canvasWidth / 2, (point.getComputerY() + 1) * 5);
+                        g.drawLine(canvasWidth / 2 + 1, point.getComputerY() * 5, canvasWidth / 2 + 1, (point.getComputerY() + 1) * 5);
+                    }
+                }
+                if (point.getY() == 0 && point.getX() >= 0) {
+                    if (point.getX() == 0) {
+                        g.drawLine(point.getComputerX() * 5 + 2, canvasHeight / 2, (point.getComputerX() + 1) * 5, canvasHeight / 2);
+                        g.drawLine(point.getComputerX() * 5 + 2, canvasHeight / 2 + 1, (point.getComputerX() + 1) * 5, canvasHeight / 2 + 1);
+                    } else {
+                        g.drawLine(point.getComputerX() * 5, canvasHeight / 2, (point.getComputerX() + 1) * 5, canvasHeight / 2);
+                        g.drawLine(point.getComputerX() * 5, canvasHeight / 2 + 1, (point.getComputerX() + 1) * 5, canvasHeight / 2 + 1);
+                    }
+                }
+                if (point.getX() <= 0 && point.getX() == point.getY()) {
+                    if (point.getX() == 0) {
+                        g.drawLine(point.getComputerX() * 5 + 3, point.getComputerY() * 5 + 2, point.getComputerX() * 5, point.getComputerY() * 5 + 5);
+                        g.drawLine(point.getComputerX() * 5 + 4, point.getComputerY() * 5 + 2, point.getComputerX() * 5 + 1, point.getComputerY() * 5 + 5);
+                    } else {
+                        g.drawLine(point.getComputerX() * 5 + 5, point.getComputerY() * 5, point.getComputerX() * 5, point.getComputerY() * 5 + 5);
+                        g.drawLine(point.getComputerX() * 5 + 5, point.getComputerY() * 5 + 1, point.getComputerX() * 5 + 1, point.getComputerY() * 5 + 5);
+                    }
+                }
+            }
+        }
+    }
 
     /*
      * Xóa toàn bộ màn hình, mặc định màn hình sẽ quay về màu trắng

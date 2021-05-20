@@ -60,15 +60,6 @@ public class Triangle extends Geometry{
     }
 
     @Override
-    public void setupDraw() {
-        processDraw();
-        for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
-        for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
-
-        fillColor();
-    }
-
-    @Override
     public void processDraw() {
         if (startPoint != null && endPoint != null) {
 

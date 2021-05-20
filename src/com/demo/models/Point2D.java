@@ -209,8 +209,9 @@ public class Point2D {
         this.y = y;
     }
 
-    public boolean insideScreen(){
-        if(getComputerX() < 0 || getComputerX() >= DrawCanvas.rowSize || getComputerY() < 0 || getComputerY() >= DrawCanvas.colSize) return false;
+    public boolean insideScreen() {
+        if (getComputerX() < 0 || getComputerX() >= DrawCanvas.rowSize || getComputerY() < 0 || getComputerY() >= DrawCanvas.colSize)
+            return false;
         return true;
     }
 
@@ -221,5 +222,10 @@ public class Point2D {
                 ", y=" + y +
                 ", color=" + color +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return x ^ y ^ color;
     }
 }

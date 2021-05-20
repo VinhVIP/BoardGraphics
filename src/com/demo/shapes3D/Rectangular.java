@@ -3,7 +3,6 @@ package com.demo.shapes3D;
 import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
-import com.demo.models.Point3D;
 import com.demo.shape.Geometry;
 import com.demo.shape.Line;
 
@@ -17,7 +16,6 @@ public class Rectangular extends Geometry {
     private int totalPoints = 8;
 
     private Line[] lines;
-    private int x, y, z, cd, cr, cc;
 
     public Rectangular(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, int color, DrawMode drawMode) {
         super(canvas, startPoint, endPoint, color, drawMode);
@@ -40,36 +38,25 @@ public class Rectangular extends Geometry {
     }
 
     private void init() {
+        // Đây là hình 3D
+        is2DShape = false;
+
         initSizePoints(totalPoints);
         lines = new Line[12];
 
-        x = y = z = 50;
-        cd = 40;
-        cr = 25;
-        cc = 30;
+        lines[0] = new Line(canvas, color, DrawMode.DASH);
+        lines[1] = new Line(canvas, color, DrawMode.DASH);
+        lines[2] = new Line(canvas, color, DrawMode.DASH);
 
-        points[0] = Point3D.to2DPoint(x, y, z);
-        points[1] = Point3D.to2DPoint(x, y - cr, z);
-        points[2] = Point3D.to2DPoint(x + cd, y - cr, z);
-        points[3] = Point3D.to2DPoint(x + cd, y, z);
-        points[4] = Point3D.to2DPoint(x, y, z - cc);
-        points[5] = Point3D.to2DPoint(x, y - cr, z - cc);
-        points[6] = Point3D.to2DPoint(x + cd, y - cr, z - cc);
-        points[7] = Point3D.to2DPoint(x + cd, y, z - cc);
-
-        lines[0] = new Line(canvas, points[5], points[4], color, DrawMode.DASH);
-        lines[1] = new Line(canvas, points[5], points[6], color, DrawMode.DASH);
-        lines[2] = new Line(canvas, points[5], points[1], color, DrawMode.DASH);
-
-        lines[3] = new Line(canvas, points[0], points[1], color, DrawMode.DEFAULT);
-        lines[4] = new Line(canvas, points[1], points[2], color, DrawMode.DEFAULT);
-        lines[5] = new Line(canvas, points[2], points[3], color, DrawMode.DEFAULT);
-        lines[6] = new Line(canvas, points[0], points[3], color, DrawMode.DEFAULT);
-        lines[7] = new Line(canvas, points[0], points[4], color, DrawMode.DEFAULT);
-        lines[8] = new Line(canvas, points[4], points[7], color, DrawMode.DEFAULT);
-        lines[9] = new Line(canvas, points[3], points[7], color, DrawMode.DEFAULT);
-        lines[10] = new Line(canvas, points[2], points[6], color, DrawMode.DEFAULT);
-        lines[11] = new Line(canvas, points[6], points[7], color, DrawMode.DEFAULT);
+        lines[3] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[4] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[5] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[6] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[7] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[8] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[9] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[10] = new Line(canvas, color, DrawMode.DEFAULT);
+        lines[11] = new Line(canvas, color, DrawMode.DEFAULT);
 
     }
 
@@ -77,13 +64,6 @@ public class Rectangular extends Geometry {
     public Geometry copy() {
         return null;
     }
-
-//    @Override
-//    public void setupDraw() {
-//        processDraw();
-//        for (int i = 0; i < lines.length; i++) lines[i].clearOldPoints();
-//        for (int i = 0; i < lines.length; i++) lines[i].drawNewPoints();
-//    }
 
     @Override
     public void processDraw() {
@@ -125,8 +105,8 @@ public class Rectangular extends Geometry {
         points[0] = new Point2D(Math.min(startPoint.getX(), endPoint.getX()), Math.max(startPoint.getY(), endPoint.getY()));
         points[7] = new Point2D(Math.max(startPoint.getX(), endPoint.getX()), Math.min(startPoint.getY(), endPoint.getY()));
 
-        cd = Math.abs(points[7].getX() - points[0].getX());
-        cc = Math.abs(points[7].getY() - points[0].getY());
+//        cd = Math.abs(points[7].getX() - points[0].getX());
+        int cc = Math.abs(points[7].getY() - points[0].getY());
 
         points[3] = new Point2D(points[7].getX(), points[0].getY());
         points[4] = new Point2D(points[0].getX(), points[7].getY());
