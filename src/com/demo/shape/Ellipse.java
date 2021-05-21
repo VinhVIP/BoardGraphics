@@ -78,7 +78,7 @@ public class Ellipse extends Geometry {
          -         -
            -------
     */
-    private void process(double angle) {
+    protected void process(double angle) {
 
         if (points[1].getY() > points[0].getY()) angle = -angle;
 
@@ -91,6 +91,7 @@ public class Ellipse extends Geometry {
 
         radiusA = points[0].distance(points[1]) + 1;
         radiusB = points[0].distance(points[2]);
+
         midEllipse(points[0].getX(), points[0].getY(), radiusA, radiusB, color);
 
         // Xoay trở về vị trí cũ
@@ -101,14 +102,15 @@ public class Ellipse extends Geometry {
             points[2] = points[2].rotate(points[0], angle);
         }
 
-        choosePoints();
+        genPoints();
 
-        for (int i = 0; i < listDraw.size(); i++) {
-            Point2D p = listDraw.get(i);
-            p = p.rotate(points[0], angle);
-            listDraw.set(i, p);
+        if (angle != 0) {
+            for (int i = 0; i < listDraw.size(); i++) {
+                Point2D p = listDraw.get(i);
+                p = p.rotate(points[0], angle);
+                listDraw.set(i, p);
+            }
         }
-
     }
 
     private void connect() {
@@ -133,7 +135,7 @@ public class Ellipse extends Geometry {
         list.clear();
     }
 
-    private void choosePoints() {
+    protected void genPoints() {
         int n = listDraw.size();
         List<Point2D> listTmp = new ArrayList<>();
         Point2D point;
@@ -163,6 +165,11 @@ public class Ellipse extends Geometry {
             listTmp.clear();
         }
 
+        choosePoints(n);
+    }
+
+    protected void choosePoints(int n) {
+        List<Point2D> listTmp = new ArrayList<>();
         for (int i = 0; i < listDraw.size(); i++) {
             if (isShowPoint(i)) listTmp.add(listDraw.get(i));
         }
@@ -172,12 +179,12 @@ public class Ellipse extends Geometry {
         listTmp.clear();
     }
 
-    void plot(int xc, int yc, int x, int y, int color) {
+    protected void plot(int xc, int yc, int x, int y, int color) {
         Point2D p = new Point2D(xc + x, yc + y, color);
         if (!isListDrawContain(p)) listDraw.add(p);
     }
 
-    void midEllipse(int xc, int yc, int a, int b, int color) {
+    protected void midEllipse(int xc, int yc, int a, int b, int color) {
         int x, y, fx, fy, a2, b2, p;
         x = 0;
         y = b;

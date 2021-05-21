@@ -4,6 +4,7 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.shape.Ellipse;
+import com.demo.shape.EllipseDash;
 import com.demo.shape.Geometry;
 import com.demo.shape.Line;
 
@@ -33,7 +34,7 @@ public class Cylinder extends Geometry {
         lines[1] = new Line(canvas, DrawMode.DEFAULT, color);
 
         ellipseTop = new Ellipse(canvas, DrawMode.DEFAULT, color);
-        ellipseBottom = new Ellipse(canvas, DrawMode.DEFAULT, 0xffff00);
+        ellipseBottom = new EllipseDash(canvas, DrawMode.DEFAULT, color);
     }
 
     @Override
