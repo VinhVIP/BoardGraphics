@@ -6,6 +6,8 @@ package com.demo.models;
  */
 
 public class Point3D {
+
+
     private int x, y, z;
 
     public Point3D(int x, int y, int z) {
@@ -30,4 +32,20 @@ public class Point3D {
         return point3D.to2DPoint();
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%d, %d, %d)", x, y, z);
+    }
 }

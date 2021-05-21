@@ -3,6 +3,7 @@ package com.demo.shapes3D;
 import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
+import com.demo.models.Point3D;
 import com.demo.shape.Geometry;
 import com.demo.shape.Line;
 
@@ -14,6 +15,8 @@ import com.demo.shape.Line;
 public class Rectangular extends Geometry {
 
     private int totalPoints = 8;
+    private int length, width, height;
+    private Point3D[] point3Ds;
 
     private Line[] lines;
 
@@ -48,6 +51,8 @@ public class Rectangular extends Geometry {
         is2DShape = false;
 
         initSizePoints(totalPoints);
+        point3Ds = new Point3D[totalPoints];
+
         lines = new Line[12];
 
         lines[0] = new Line(canvas, DrawMode.DASH, color);
@@ -100,6 +105,32 @@ public class Rectangular extends Geometry {
     }
 
     @Override
+    public void showPointsCoordinate() {
+        for (Point3D p : point3Ds) {
+            canvas.drawPointsCoordinate(p);
+        }
+    }
+
+    public void set(Point3D root, int x, int y, int z) {
+        length = x;
+        width = y;
+        height = z;
+        point3Ds[5] = root;
+        point3Ds[6] = new Point3D(point3Ds[5].getX() + x, point3Ds[5].getY(), point3Ds[5].getZ());
+        point3Ds[4] = new Point3D(point3Ds[5].getX(), point3Ds[5].getY() + y, point3Ds[5].getZ());
+        point3Ds[7] = new Point3D(point3Ds[5].getX() + x, point3Ds[5].getY() + y, point3Ds[5].getZ());
+
+        point3Ds[1] = new Point3D(point3Ds[5].getX(), point3Ds[5].getY(), point3Ds[5].getZ() + z);
+        point3Ds[0] = new Point3D(point3Ds[5].getX(), point3Ds[5].getY() + y, point3Ds[5].getZ() + z);
+        point3Ds[2] = new Point3D(point3Ds[5].getX() + x, point3Ds[5].getY(), point3Ds[5].getZ() + z);
+        point3Ds[3] = new Point3D(point3Ds[5].getX() + x, point3Ds[5].getY() + y, point3Ds[5].getZ() + z);
+
+        for (int i = 0; i < totalPoints; i++) {
+            points[i] = point3Ds[i].to2DPoint();
+        }
+    }
+
+    @Override
     public void setStartPoint(Point2D startPoint) {
         super.setStartPoint(startPoint);
         points[0] = startPoint;
@@ -127,4 +158,12 @@ public class Rectangular extends Geometry {
     public Point2D getCenterPoint() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        if (point3Ds[5] != null)
+            return String.format("Rectangular: %s L=%d ; W=%d ; H=%d", point3Ds[5].toString(), length, width, height);
+        return "Rectangular: preview";
+    }
+
 }

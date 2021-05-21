@@ -490,6 +490,14 @@
               <text value="Outline color"/>
             </properties>
           </component>
+          <component id="a383" class="javax.swing.JButton" binding="btnCustom3D">
+            <constraints>
+              <grid row="3" column="14" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Custom"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="53820" binding="mainPanel" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">

@@ -75,7 +75,7 @@ public class ReflectionDialog extends JDialog implements ActionListener{
             dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Tọa độ nhập không hợp lệ", "Thông báo", JOptionPane.WARNING_MESSAGE);
-        e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

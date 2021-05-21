@@ -2,6 +2,7 @@ package com.demo;
 
 import com.demo.listeners.CanvasListener;
 import com.demo.models.Point2D;
+import com.demo.models.Point3D;
 import com.demo.models.Vector2D;
 import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
@@ -226,6 +227,15 @@ public class DrawCanvas extends Canvas {
         Graphics g = getGraphics();
         g.setColor(Color.BLACK);
         g.drawString(String.format("(%d, %d)", p.getX(), p.getY()), p.getComputerX() * 5 - 5, p.getComputerY() * 5 - 5);
+        g.dispose();
+    }
+
+    public void drawPointsCoordinate(Point3D p) {
+        if (p == null) return;
+        Point2D p2 = p.to2DPoint();
+        Graphics g = getGraphics();
+        g.setColor(Color.BLACK);
+        g.drawString(p.toString(), p2.getComputerX() * 5 - 5, p2.getComputerY() * 5 - 5);
         g.dispose();
     }
 
@@ -1146,7 +1156,7 @@ public class DrawCanvas extends Canvas {
         Vector2D v2 = new Vector2D(endMove, rootPoint);
         double angle = v.angleRadian(v2);
 
-        if(Double.isNaN(angle)) return;
+        if (Double.isNaN(angle)) return;
 
         int cur = pointLine(startMove, rootPoint, point);
 
@@ -1196,4 +1206,24 @@ public class DrawCanvas extends Canvas {
         saveStates();
     }
 
+    public void drawRectangular(Point3D root, int length, int width, int height) {
+        geometry = new Rectangular(this);
+        ((Rectangular) geometry).set(root, length, width, height);
+        geometry.draw();
+        merge();
+    }
+
+    public void drawCylinder(Point3D root, int a, int b, int h) {
+        geometry = new Cylinder(this);
+        ((Cylinder) geometry).set(root, a, b, h);
+        geometry.draw();
+        merge();
+    }
+
+    public void drawCone(Point3D root, int a, int b, int h) {
+        geometry = new Cone(this);
+        ((Cone) geometry).set(root, a, b, h);
+        geometry.draw();
+        merge();
+    }
 }

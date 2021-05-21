@@ -3,6 +3,7 @@ package com.demo;
 import com.demo.listeners.CanvasListener;
 import com.demo.listeners.DialogListener;
 import com.demo.models.Point2D;
+import com.demo.models.Point3D;
 import com.demo.shape.Geometry;
 
 import javax.swing.*;
@@ -52,6 +53,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private JRadioButton radio2D;
     private JRadioButton radio3D;
     private JCheckBox checkBoxColorFill;
+    private JButton btnCustom3D;
 
     private ButtonGroup radioGroup;
 
@@ -268,6 +270,10 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
         btnCone.addActionListener(e -> canvas.setMode(Mode.CONE));
 
+        btnCustom3D.addActionListener(e -> {
+            CustomShape3D dialog = new CustomShape3D(this);
+        });
+
         // Important
         add(rootPanel);
 
@@ -343,6 +349,21 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     }
 
     @Override
+    public void onDrawRectangular(Point3D root, int length, int width, int height) {
+        canvas.drawRectangular(root, length, width, height);
+    }
+
+    @Override
+    public void onDrawCylinder(Point3D root, int a, int b, int h) {
+        canvas.drawCylinder(root, a, b, h);
+    }
+
+    @Override
+    public void onDrawCone(Point3D root, int a, int b, int h) {
+        canvas.drawCone(root, a, b, h);
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (canvas.isIs2DCoordinates() != radio2D.isSelected()) {
             stateButtons();
@@ -365,8 +386,12 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         btnMove.setEnabled(radio2D.isSelected());
         btnScale.setEnabled(radio2D.isSelected());
 
+        btnCopy.setEnabled(radio2D.isSelected());
+
         btnRectangular.setEnabled(radio3D.isSelected());
         btnCone.setEnabled(radio3D.isSelected());
         btnCylinder.setEnabled(radio3D.isSelected());
+        btnCustom3D.setEnabled(radio3D.isSelected());
+
     }
 }
