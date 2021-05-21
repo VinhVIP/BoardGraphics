@@ -64,16 +64,6 @@ public class Cylinder extends Geometry {
                 lines[1].getListDraw());
     }
 
-    private void addToListDraw(List<Point2D>... lists) {
-        for (List<Point2D> list : lists) {
-            listDraw.addAll(list);
-        }
-    }
-
-    @Override
-    public void setStartPoint(Point2D startPoint) {
-        super.setStartPoint(startPoint);
-    }
 
     @Override
     public void setEndPoint(Point2D endPoint) {

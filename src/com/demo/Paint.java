@@ -239,7 +239,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
             }
         });
 
-        checkBoxColorFill.addActionListener(e->{
+        checkBoxColorFill.addActionListener(e -> {
             canvas.setFillColor(checkBoxColorFill.isSelected());
         });
 
@@ -264,7 +264,9 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
             canvas.setMode(Mode.RECTANGULAR);
         });
 
-        btnCylinder.addActionListener(e->canvas.setMode(Mode.CYLINDER));
+        btnCylinder.addActionListener(e -> canvas.setMode(Mode.CYLINDER));
+
+        btnCone.addActionListener(e -> canvas.setMode(Mode.CONE));
 
         // Important
         add(rootPanel);

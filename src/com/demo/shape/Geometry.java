@@ -80,6 +80,12 @@ public abstract class Geometry {
 
     }
 
+    protected final void addToListDraw(List<Point2D>... lists) {
+        for (List<Point2D> list : lists) {
+            listDraw.addAll(list);
+        }
+    }
+
 
     /*
      * Key sử dụng cho mapPoints

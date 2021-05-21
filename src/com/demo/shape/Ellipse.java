@@ -89,8 +89,8 @@ public class Ellipse extends Geometry {
             points[2] = points[2].rotate(points[0], angle);
         }
 
-        radiusA = points[0].distance(points[1]) + 1;
-        radiusB = points[0].distance(points[2]);
+        radiusA = Math.max(1, points[0].distance(points[1]));
+        radiusB = Math.max(1, points[0].distance(points[2]));
 
         midEllipse(points[0].getX(), points[0].getY(), radiusA, radiusB, color);
 
@@ -184,42 +184,53 @@ public class Ellipse extends Geometry {
         if (!isListDrawContain(p)) listDraw.add(p);
     }
 
-    protected void midEllipse(int xc, int yc, int a, int b, int color) {
-        int x, y, fx, fy, a2, b2, p;
+    void midEllipse(float xc, float yc, float rx, float ry, int color) {
+
+        float dx, dy, d1, d2, x, y;
         x = 0;
-        y = b;
-        a2 = a * a; //a2
-        b2 = b * b; // b2
-        fx = 0;
-        fy = 2 * a2 * y; // 2a2y
-        plot(xc, yc, x, y, color);
-        p = (int) Math.round(b2 - (a2 * b) + (0.25 * a2)); // p=b2 - a2b + a2/4
-        while (fx < fy) {
-            x++;
-            fx += 2 * b2; //2b2
-            if (p < 0)
-                p += b2 * (2 * x + 3); // p=p + b2 (2x +3)
-            else {
-                y--;
-                p += b2 * (2 * x + 3) + a2 * (-2 * y + 2); // p = p + b2(2x +3) + a2 (-2y +2)
-                fy -= 2 * a2; // 2a2
-            }
-            plot(xc, yc, x, y, color);
-        }
-        p = (int) Math.round(b2 * (x + 0.5) * (x + 0.5) + a2 * (y - 1) * (y - 1) - a2 * b2);
-        while (y > 0) {
-            y--;
-            fy -= 2 * a2; // 2a2
-            if (p >= 0)
-                p += a2 * (3 - 2 * y); //p =p + a2(3-2y)
-            else {
+        y = ry;
+
+        d1 = (ry * ry) - (rx * rx * ry) +
+                (0.25f * rx * rx);
+        dx = 2 * ry * ry * x;
+        dy = 2 * rx * rx * y;
+
+        while (dx < dy) {
+
+            plot((int) xc, (int) yc, (int) x, (int) y, color);
+
+            if (d1 < 0) {
                 x++;
-                fx += 2 * b2; // 2b2
-                p += b2 * (2 * x + 2) + a2 * (-2 * y + 3); //p=p + b2(2x +2) +a2(-2y +3)
+                dx = dx + (2 * ry * ry);
+                d1 = d1 + dx + (ry * ry);
+            } else {
+                x++;
+                y--;
+                dx = dx + (2 * ry * ry);
+                dy = dy - (2 * rx * rx);
+                d1 = d1 + dx - dy + (ry * ry);
             }
-            plot(xc, yc, x, y, color);
         }
 
+        d2 = ((ry * ry) * ((x + 0.5f) * (x + 0.5f)))
+                + ((rx * rx) * ((y - 1) * (y - 1)))
+                - (rx * rx * ry * ry);
+
+        while (y >= 0) {
+
+            plot((int) xc, (int) yc, (int) x, (int) y, color);
+
+            y--;
+            if (d2 > 0) {
+                dy = dy - (2 * rx * rx);
+                d2 = d2 + (rx * rx) - dy;
+            } else {
+                x++;
+                dx = dx + (2 * ry * ry);
+                dy = dy - (2 * rx * rx);
+                d2 = d2 + dx - dy + (rx * rx);
+            }
+        }
     }
 
     @Override

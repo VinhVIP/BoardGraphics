@@ -62,7 +62,6 @@ public class Circle extends Geometry {
             swapList();
             circleMidPoint(radius);
             choosePoints();
-            System.out.println(radius);
         }
     }
 

@@ -6,6 +6,7 @@ import com.demo.models.Vector2D;
 import com.demo.motions.MotionManager;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
+import com.demo.shapes3D.Cone;
 import com.demo.shapes3D.Cylinder;
 import com.demo.shapes3D.Rectangular;
 
@@ -179,6 +180,9 @@ public class DrawCanvas extends Canvas {
             }
             case CYLINDER -> {
                 geometry = new Cylinder(this);
+            }
+            case CONE -> {
+                geometry = new Cone(this);
             }
         }
     }
