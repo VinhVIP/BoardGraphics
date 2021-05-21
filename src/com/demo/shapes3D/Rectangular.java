@@ -68,7 +68,14 @@ public class Rectangular extends Geometry {
         lines[9] = new Line(canvas, DrawMode.DEFAULT, color);
         lines[10] = new Line(canvas, DrawMode.DEFAULT, color);
         lines[11] = new Line(canvas, DrawMode.DEFAULT, color);
+    }
 
+    @Override
+    public void setColor(int color) {
+        super.setColor(color);
+        for (int i = 0; i < lines.length; i++) {
+            lines[i].setColor(color);
+        }
     }
 
     @Override

@@ -29,8 +29,10 @@ public class DrawCanvas extends Canvas {
     public static final int canvasWidth = 1005, canvasHeight = 605;
     public static final int rowSize = canvasWidth / 5, colSize = canvasHeight / 5;
     public static final int pixelSize = 5;  // Kích thước 1 đơn vị
-    public static int currentColor = 0xff0000;  // Màu vẽ đang chọn hiện tại
+    public static int currentColor = 0x0000ff;  // Màu vẽ đang chọn hiện tại
     public static int currentFillColor = 0xffffff;  // Màu vẽ đang chọn hiện tại
+
+    private final int gridColor = 0xEEE9E9;
 
 
     public boolean isIs2DCoordinates() {
@@ -340,9 +342,9 @@ public class DrawCanvas extends Canvas {
             }
         }
 
-        if (isShowAxis) {
+        if (isShowGrid) {
             Graphics g = getGraphics();
-            g.setColor(new Color(0xFFD9C7C7));
+            g.setColor(new Color(gridColor));
 
             for (int i = startX; i <= endX; i++) {
                 g.drawLine(i * pixelSize, startY * pixelSize, i * pixelSize, endY * pixelSize);
@@ -569,7 +571,7 @@ public class DrawCanvas extends Canvas {
 
         if (isShowGrid) {
             Graphics g = getGraphics();
-            g.setColor(new Color(0xFFD9C7C7));
+            g.setColor(new Color(gridColor));
 
             for (int i = 0; i <= rowSize; i++) {
                 g.drawLine(i * pixelSize, 0, i * pixelSize, canvasHeight);
@@ -588,7 +590,7 @@ public class DrawCanvas extends Canvas {
     private void drawGrid() {
 
         Graphics g = getGraphics();
-        g.setColor(new Color(0xFFD9C7C7));
+        g.setColor(new Color(gridColor));
 
         for (int i = 0; i <= rowSize; i++) {
             g.drawLine(i * pixelSize, 0, i * pixelSize, canvasHeight);

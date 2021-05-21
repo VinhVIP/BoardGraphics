@@ -43,6 +43,15 @@ public class Cylinder extends Geometry {
     }
 
     @Override
+    public void setColor(int color) {
+        super.setColor(color);
+        lines[0].setColor(color);
+        lines[1].setColor(color);
+        ellipseTop.setColor(color);
+        ellipseBottom.setColor(color);
+    }
+
+    @Override
     public Geometry copy() {
         return null;
     }
@@ -67,6 +76,13 @@ public class Cylinder extends Geometry {
                 ellipseTop.getListDraw(),
                 lines[0].getListDraw(),
                 lines[1].getListDraw());
+    }
+
+    @Override
+    public void showPointsCoordinate() {
+        for (Point3D p : point3Ds) {
+            canvas.drawPointsCoordinate(p);
+        }
     }
 
     public void set(Point3D root, int a, int b, int h) {

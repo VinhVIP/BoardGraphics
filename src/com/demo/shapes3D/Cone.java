@@ -40,6 +40,13 @@ public class Cone extends Geometry {
     }
 
     @Override
+    public void setColor(int color) {
+        super.setColor(color);
+        lines[0].setColor(color);
+        lines[1].setColor(color);
+    }
+
+    @Override
     public Geometry copy() {
         return null;
     }
@@ -65,6 +72,13 @@ public class Cone extends Geometry {
         addToListDraw(ellipse.getListDraw(), lines[0].getListDraw(), lines[1].getListDraw());
     }
 
+    @Override
+    public void showPointsCoordinate() {
+        for (Point3D p : point3Ds) {
+            canvas.drawPointsCoordinate(p);
+        }
+    }
+
     public void set(Point3D root, int a, int b, int h) {
         radiusA = a;
         radiusB = b;
@@ -78,6 +92,7 @@ public class Cone extends Geometry {
 
         for (int i = 0; i < totalPoints; i++) {
             points[i] = point3Ds[i].to2DPoint();
+            System.out.println(point3Ds[i] + " $$ " + points[i]);
         }
     }
 

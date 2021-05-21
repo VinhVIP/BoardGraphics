@@ -72,7 +72,7 @@ public abstract class Geometry {
         processDraw();
 
         // Chỉ tô màu với hình 2D
-        if (isFillColor && is2DShape) fillColor();
+        if (isFillColor && is2DShape && drawMode == DrawMode.DEFAULT) fillColor();
 
         clearOldPoints();
 
