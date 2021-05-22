@@ -349,18 +349,18 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     }
 
     @Override
-    public void onDrawRectangular(Point3D root, int length, int width, int height) {
-        canvas.drawRectangular(root, length, width, height);
+    public void onDrawRectangular(Point3D root, int dx, int dy, int dz) {
+        canvas.drawRectangular(root, dx, dy, dz);
     }
 
     @Override
-    public void onDrawCylinder(Point3D root, int a, int b, int h) {
-        canvas.drawCylinder(root, a, b, h);
+    public void onDrawCylinder(Point3D root, int dx, int dy, int dz) {
+        canvas.drawCylinder(root, dx, dy, dz);
     }
 
     @Override
-    public void onDrawCone(Point3D root, int a, int b, int h) {
-        canvas.drawCone(root, a, b, h);
+    public void onDrawCone(Point3D root, int dx, int dy, int dz) {
+        canvas.drawCone(root, dx, dy, dz);
     }
 
     @Override

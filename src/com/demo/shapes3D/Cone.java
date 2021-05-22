@@ -22,7 +22,7 @@ public class Cone extends Geometry {
     private int totalPoints = 5;
     private Point3D[] point3Ds;
 
-    private int radiusA, radiusB, height;
+    private int dx, dy, dz;
 
     public Cone(DrawCanvas canvas) {
         super(canvas);
@@ -79,20 +79,19 @@ public class Cone extends Geometry {
         }
     }
 
-    public void set(Point3D root, int a, int b, int h) {
-        radiusA = a;
-        radiusB = b;
-        height = h;
+    public void set(Point3D root, int dx, int dy, int dz) {
+        this.dx = dx;
+        this.dy = dy;
+        this.dz = dz;
 
         point3Ds[1] = root;
-        point3Ds[2] = new Point3D(point3Ds[1].getX() - a, point3Ds[1].getY(), point3Ds[1].getZ());
-        point3Ds[3] = new Point3D(point3Ds[1].getX(), point3Ds[1].getY(), point3Ds[1].getZ() - b);
-        point3Ds[4] = new Point3D(point3Ds[1].getX() + a, point3Ds[1].getY(), point3Ds[1].getZ());
-        point3Ds[0] = new Point3D(point3Ds[1].getX(), point3Ds[1].getY() + h, point3Ds[1].getZ());
+        point3Ds[2] = new Point3D(point3Ds[1].getX() - dx, point3Ds[1].getY(), point3Ds[1].getZ());
+        point3Ds[3] = new Point3D(point3Ds[1].getX(), point3Ds[1].getY(), point3Ds[1].getZ() - dz);
+        point3Ds[4] = new Point3D(point3Ds[1].getX() + dx, point3Ds[1].getY(), point3Ds[1].getZ());
+        point3Ds[0] = new Point3D(point3Ds[1].getX(), point3Ds[1].getY() + dy, point3Ds[1].getZ());
 
         for (int i = 0; i < totalPoints; i++) {
             points[i] = point3Ds[i].to2DPoint();
-            System.out.println(point3Ds[i] + " $$ " + points[i]);
         }
     }
 
@@ -120,7 +119,7 @@ public class Cone extends Geometry {
     @Override
     public String toString() {
         if (point3Ds[1] != null)
-            return String.format("Rectangular: %s L=%d ; W=%d ; H=%d", point3Ds[1].toString(), radiusA, radiusB, height);
+            return String.format("Cone: %s dX=%d ; dY=%d ; dZ=%d", point3Ds[1].toString(), dx, dy, dz);
         return "Rectangular: preview";
     }
 }

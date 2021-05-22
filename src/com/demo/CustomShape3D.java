@@ -13,9 +13,9 @@ public class CustomShape3D extends JDialog {
     private JTextField tfX;
     private JTextField tfY;
     private JTextField tfZ;
-    private JTextField tfLength;
-    private JTextField tfWidth;
-    private JTextField tfHeight;
+    private JTextField tfDX;
+    private JTextField tfDY;
+    private JTextField tfDZ;
     private JButton btnImage;
     private JButton btnChooseRectangular;
     private JButton btnChooseCone;
@@ -23,6 +23,7 @@ public class CustomShape3D extends JDialog {
     private JPanel panel;
     private JPanel panelInput;
 
+    private Mode shape3DMode;
     private DialogListener listener;
 
     public CustomShape3D(DialogListener listener) {
@@ -59,20 +60,26 @@ public class CustomShape3D extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        btnImage.setIcon(btnChooseRectangular.getIcon());
+        shape3DMode = Mode.RECTANGULAR;
 
         btnChooseRectangular.addActionListener(e -> {
-            btnImage.setIcon(btnChooseRectangular.getIcon());
+            ImageIcon icon = new ImageIcon(getClass().getResource("/com/demo/icons/preview_rectangular.jpg"));
+            btnImage.setIcon(icon);
+            shape3DMode = Mode.RECTANGULAR;
         });
         btnChooseCylinder.addActionListener(e -> {
-            btnImage.setIcon(btnChooseCylinder.getIcon());
+            ImageIcon icon = new ImageIcon(getClass().getResource("/com/demo/icons/preview_cylinder.jpg"));
+            btnImage.setIcon(icon);
+            shape3DMode = Mode.CYLINDER;
         });
         btnChooseCone.addActionListener(e -> {
-            btnImage.setIcon(btnChooseCone.getIcon());
+            ImageIcon icon = new ImageIcon(getClass().getResource("/com/demo/icons/preview_cone.jpg"));
+            btnImage.setIcon(icon);
+            shape3DMode = Mode.CONE;
         });
 
 
-        this.setLocation(600, 400);
+        this.setLocation(600, 250);
         this.pack();
         this.setVisible(true);
     }
@@ -83,19 +90,14 @@ public class CustomShape3D extends JDialog {
             int y = Integer.parseInt(tfY.getText().trim());
             int z = Integer.parseInt(tfZ.getText().trim());
 
-            int a = Integer.parseInt(tfLength.getText().trim());
-            int b = Integer.parseInt(tfWidth.getText().trim());
-            int h = Integer.parseInt(tfHeight.getText().trim());
+            int dx = Integer.parseInt(tfDX.getText().trim());
+            int dy = Integer.parseInt(tfDY.getText().trim());
+            int dz = Integer.parseInt(tfDZ.getText().trim());
 
-            if (btnImage.getIcon() == btnChooseRectangular.getIcon()) {
-                System.out.println("rect");
-                listener.onDrawRectangular(new Point3D(x, y, z), a, b, h);
-            } else if (btnImage.getIcon() == btnChooseCylinder.getIcon()) {
-                System.out.println("cylinder");
-                listener.onDrawCylinder(new Point3D(x, y, z), a, b, h);
-            } else if (btnImage.getIcon() == btnChooseCone.getIcon()) {
-                System.out.println("cone");
-                listener.onDrawCone(new Point3D(x, y, z), a, b, h);
+            switch (shape3DMode) {
+                case RECTANGULAR -> listener.onDrawRectangular(new Point3D(x, y, z), dx, dy, dz);
+                case CYLINDER -> listener.onDrawCylinder(new Point3D(x, y, z), dx, dy, dz);
+                case CONE -> listener.onDrawCone(new Point3D(x, y, z), dx, dy, dz);
             }
 
             dispose();

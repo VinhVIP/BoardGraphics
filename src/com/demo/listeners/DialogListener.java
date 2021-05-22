@@ -17,9 +17,9 @@ public interface DialogListener {
 
     void onScale(Point2D root, double scaleX, double scaleY);
 
-    void onDrawRectangular(Point3D root, int length, int width, int height);
+    void onDrawRectangular(Point3D root, int dx, int dy, int dz);
 
-    void onDrawCylinder(Point3D root, int a, int b, int h);
+    void onDrawCylinder(Point3D root, int dx, int dy, int dz);
 
-    void onDrawCone(Point3D root, int a, int b, int h);
+    void onDrawCone(Point3D root, int dx, int dy, int dz);
 }
