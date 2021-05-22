@@ -40,9 +40,13 @@ public class DrawCanvas extends Canvas {
     }
 
     public void setIs2DCoordinates(boolean is2DCoordinates) {
-        if (isShowAxis) clearAxis();
-        this.is2DCoordinates = is2DCoordinates;
-        if (isShowAxis) drawAxis();
+        if (is2DCoordinates != this.is2DCoordinates) {
+            resetStates();
+
+            if (isShowAxis) clearAxis();
+            this.is2DCoordinates = is2DCoordinates;
+            if (isShowAxis) drawAxis();
+        }
     }
 
     private boolean is2DCoordinates = true;
@@ -65,14 +69,6 @@ public class DrawCanvas extends Canvas {
     private int curState = 0;
     private boolean isFillColor = false;
 
-    public boolean isFillColor() {
-        return isFillColor;
-    }
-
-    public void setFillColor(boolean fillColor) {
-        isFillColor = fillColor;
-        geometry.setFillColor(fillColor);
-    }
 
     private boolean isShowAxis = true;
     private boolean isShowGrid = true;
@@ -188,6 +184,16 @@ public class DrawCanvas extends Canvas {
                 geometry = new Cone(this);
             }
         }
+    }
+
+
+    public boolean isFillColor() {
+        return isFillColor;
+    }
+
+    public void setFillColor(boolean fillColor) {
+        isFillColor = fillColor;
+        geometry.setFillColor(fillColor);
     }
 
     public void setShowAxis(boolean showAxis) {
@@ -739,8 +745,12 @@ public class DrawCanvas extends Canvas {
     }
 
     private void resetStates() {
+        System.out.println("reset state");
+        listShapes.clear();
+        listener.clear();
         boardStates.clear();
-        boardStates.add(getCurrentBoard());
+//        boardStates.add(getCurrentBoard());
+
         curState = 0;
     }
 
@@ -1169,17 +1179,26 @@ public class DrawCanvas extends Canvas {
         for (int index : mapPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
-
             Point2D[] points = g.getPoints();
-            for (int i = 0; i < points.length; i++) {
 
-                points[i] = mapPoints.get(index).get(i).rotate(rootPoint, angle);
+            if (g instanceof Circle) {
+                // hình tròn chỉ xoay tâm
+                // Bán kính giữ nguyên để tránh sai số
+                points[0] = mapPoints.get(index).get(0).rotate(rootPoint, angle);
+                points[1] = new Point2D(points[0].getX() + ((Circle) g).getRadius(), points[0].getY());
 
-                mapNewPoints.get(index).set(i, new Point2D(points[i]));
+                mapNewPoints.get(index).set(0, new Point2D(points[0]));
+                mapNewPoints.get(index).set(1, new Point2D(points[1]));
+            } else {
+                for (int i = 0; i < points.length; i++) {
+
+                    points[i] = mapPoints.get(index).get(i).rotate(rootPoint, angle);
+
+                    mapNewPoints.get(index).set(i, new Point2D(points[i]));
+                }
             }
+
             g.setPoints(points);
-
-
             g.draw();
 
             listener.notifyShapeChanged(index, g.toString());

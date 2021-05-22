@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Circle extends Geometry {
 
     private int totalPoints = 2;
+
     private int radius;
 
     public Circle(DrawCanvas canvas, Point2D startPoint, Point2D endPoint, DrawMode drawMode, int color, int colorFill, boolean isFillColor, boolean is2DShape) {
@@ -52,6 +53,8 @@ public class Circle extends Geometry {
         for (Point2D p : listDraw) {
             g.listDraw.add(new Point2D(p));
         }
+
+        g.radius = radius;
 
         return g;
     }
@@ -164,6 +167,10 @@ public class Circle extends Geometry {
         super.setEndPoint(endPoint);
         radius = points[0].distance(endPoint);
         points[1] = new Point2D(points[0].getX() + radius, points[0].getY());
+    }
+
+    public int getRadius() {
+        return radius;
     }
 
     @Override

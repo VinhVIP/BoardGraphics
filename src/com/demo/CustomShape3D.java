@@ -30,6 +30,7 @@ public class CustomShape3D extends JDialog {
         this.listener = listener;
 
         setContentPane(contentPane);
+        setTitle("Custom 3D Shape");
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
