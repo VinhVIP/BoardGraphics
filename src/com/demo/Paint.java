@@ -274,6 +274,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
             CustomShape3D dialog = new CustomShape3D(this);
         });
 
+
+        btnPolygon.addActionListener(e->{
+            PolygonCustom polygon = new PolygonCustom(this);
+        });
+
         // Important
         add(rootPanel);
 
@@ -364,6 +369,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     }
 
     @Override
+    public void onDrawPolygon(Point2D[] points) {
+        canvas.drawPolygon(points);
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (canvas.isIs2DCoordinates() != radio2D.isSelected()) {
             stateButtons();
@@ -387,6 +397,8 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         btnScale.setEnabled(radio2D.isSelected());
 
         btnCopy.setEnabled(radio2D.isSelected());
+        btnUndo.setEnabled(radio2D.isSelected());
+        btnRedo.setEnabled(radio2D.isSelected());
 
         btnRectangular.setEnabled(radio3D.isSelected());
         btnCone.setEnabled(radio3D.isSelected());

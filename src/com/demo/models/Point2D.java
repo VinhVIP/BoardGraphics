@@ -230,11 +230,7 @@ public class Point2D {
 
     @Override
     public String toString() {
-        return "Point2D{" +
-                "x=" + x +
-                ", y=" + y +
-                ", color=" + color +
-                '}';
+        return String.format("Point: %d, %d  -  %d", x, y, color);
     }
 
     @Override

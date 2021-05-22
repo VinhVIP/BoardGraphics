@@ -5,6 +5,7 @@ import com.demo.models.Point2D;
 import com.demo.models.Point3D;
 import com.demo.models.Vector2D;
 import com.demo.motions.MotionManager;
+import com.demo.shape.Polygon;
 import com.demo.shape.Rectangle;
 import com.demo.shape.*;
 import com.demo.shapes3D.Cone;
@@ -749,7 +750,8 @@ public class DrawCanvas extends Canvas {
         listShapes.clear();
         listener.clear();
         boardStates.clear();
-//        boardStates.add(getCurrentBoard());
+        boardStates.add(getCurrentBoard());
+        shapesStates.add(new ArrayList());
 
         curState = 0;
     }
@@ -1244,6 +1246,14 @@ public class DrawCanvas extends Canvas {
     public void drawCone(Point3D root, int a, int b, int h) {
         geometry = new Cone(this);
         ((Cone) geometry).set(root, a, b, h);
+        geometry.draw();
+        merge();
+    }
+
+
+    public void drawPolygon(Point2D[] points){
+        geometry = new Polygon(this);
+        geometry.setPoints(points);
         geometry.draw();
         merge();
     }

@@ -22,4 +22,6 @@ public interface DialogListener {
     void onDrawCylinder(Point3D root, int dx, int dy, int dz);
 
     void onDrawCone(Point3D root, int dx, int dy, int dz);
+
+    void onDrawPolygon(Point2D[] points);
 }
