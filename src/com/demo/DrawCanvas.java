@@ -30,61 +30,42 @@ public class DrawCanvas extends Canvas {
 
     public static final int canvasWidth = 1005, canvasHeight = 605;
     public static final int rowSize = canvasWidth / 5, colSize = canvasHeight / 5;
-    public static final int pixelSize = 5;  // Kích thước 1 đơn vị
-    public static int currentColor = 0x0000ff;  // Màu vẽ đang chọn hiện tại
+    public static final int pixelSize = 5;          // Kích thước 1 đơn vị
+    public static int currentColor = 0x0000ff;      // Màu vẽ đang chọn hiện tại
     public static int currentFillColor = 0xffffff;  // Màu vẽ đang chọn hiện tại
 
-    private final int gridColor = 0xEEE9E9;
+    private final int gridColor = 0xEEE9E9;         // Màu của lưới
 
+    private boolean is2DCoordinates = true;         // Chọn hệ trục tọa độ 3D hay 2D
+    private boolean isShowMotions = false;          // Show Animation
 
-    public boolean isIs2DCoordinates() {
-        return is2DCoordinates;
-    }
-
-    public void setIs2DCoordinates(boolean is2DCoordinates) {
-        if (is2DCoordinates != this.is2DCoordinates) {
-            resetStates();
-
-            if (isShowAxis) clearAxis();
-            this.is2DCoordinates = is2DCoordinates;
-            if (isShowAxis) drawAxis();
-        }
-    }
-
-    private boolean is2DCoordinates = true;
-    private boolean isShowMotions = false;
-
-    private DrawMode drawMode;
-    private Mode mode; // Chế độ hình vẽ
+    private DrawMode drawMode;                      // Chế độ đường vẽ (nét liền, đứt, gạch nối,...)
+    private Mode mode;                              // Chế độ hình vẽ (hình chữ nhật, tròn, elip,...)
 
     private final int[][] board = new int[rowSize][colSize];      // Bảng màu canvas chính
     private final int[][] tempBoard = new int[rowSize][colSize];  // Bảng màu phụ cho việc preview hình, sau khi `merge()` thì board và tempBoard sẽ hợp lại thành 1
 
-    private final CanvasListener listener; // Sự kiện cập nhập tọa độ con chuột
-    private Geometry geometry;  // Hình vẽ
+    private final CanvasListener listener;          // Sự kiện cập nhập tọa độ con chuột
+    private Geometry geometry;                      // Hình vẽ hiện tại
 
-    private List listShapes = new ArrayList<>();
+    private List listShapes = new ArrayList<>();    // Danh sách các shape đang làm việc trên màn hình
     private final List<int[][]> boardStates = new ArrayList<>();
     private final List<List> shapesStates = new ArrayList<>();
 
-    private int curState = 0;
-    private boolean isFillColor = false;
+    private int curState = 0;                       // Trạng thái hiện tại (sử dụng với undo/redo)
 
+    private boolean isFillColor = false;            // Chế độ tô màu shape
 
-    private boolean isShowAxis = true;
-    private boolean isShowGrid = true;
-    private boolean isShowPointCoord = false;
+    private boolean isShowAxis = true;              // Show trục tọa độ 2D hoặc 3D tùy theo `is2DCoordinates`
+    private boolean isShowGrid = true;              // Show lưới tọa độ
+    private boolean isShowPointCoord = false;       // Show các điểm thuộc mỗi shape
 
-    private final int MAX_UNDO = 10;
-
-    int[] spillX = new int[]{0, 1, 0, -1};
-    int[] spillY = new int[]{-1, 0, 1, 0};
+    private final int MAX_UNDO = 10;                // Số lượt undo/redo tối đa
 
     //------------------------------------------------------------------------//
 
     public DrawCanvas(CanvasListener listener) {
         this.listener = listener;
-
         setPreferredSize(new Dimension(canvasWidth, canvasHeight));
 
         // mặc định nền màu trắng
@@ -99,20 +80,23 @@ public class DrawCanvas extends Canvas {
             }
         }
 
+        // Thiết lập trạng thái ban đầu
+        boardStates.add(getCurrentBoard());     // Ban đầu bảng vẽ là màu trắng
+        shapesStates.add(new ArrayList());      // Chưa có hình vẽ nào
 
-        boardStates.add(getCurrentBoard());
-        shapesStates.add(new ArrayList());
-
-        // Mode mặc định là vẽ PEN
+        // Chế độ đường vẽ mặc định là: Vẽ nét liền - DEFAULT
         drawMode = DrawMode.DEFAULT;
+
+        // Chế độ hình vẽ là vẽ đường thẳng
         setMode(Mode.LINE);
-//        setShowPointCoord(false);
+
+        // Thiết lập con trỏ chuột mặc định
         Cursor c = new Cursor(Cursor.DEFAULT_CURSOR);
         setCursor(c);
-
     }
 
-    Thread motionThread;
+
+    Thread motionThread;        // Thread sử dụng để trình chiếu hoạt ảnh: Animation
 
     public void setShowMotions(boolean showMotions) {
         isShowMotions = showMotions;
@@ -134,7 +118,26 @@ public class DrawCanvas extends Canvas {
         return isShowMotions;
     }
 
+    public boolean isIs2DCoordinates() {
+        return is2DCoordinates;
+    }
 
+    /*
+     * Chọn chế độ vẽ 3D hoặc 2D
+     */
+    public void setIs2DCoordinates(boolean is2DCoordinates) {
+        if (is2DCoordinates != this.is2DCoordinates) {
+            resetStates();
+
+            if (isShowAxis) clearAxis();
+            this.is2DCoordinates = is2DCoordinates;
+            if (isShowAxis) drawAxis();
+        }
+    }
+
+    /*
+     * Thiết lập chế đọ vẽ hình
+     */
     public void setDrawMode(DrawMode drawMode) {
         this.drawMode = drawMode;
         if (geometry != null) {
@@ -143,7 +146,7 @@ public class DrawCanvas extends Canvas {
     }
 
     /*
-     * Cài đặt hình muốn vẽ
+     * Khởi tạo đối tượng hình muốn vẽ
      */
     public void setMode(Mode MODE) {
         this.mode = MODE;
@@ -188,10 +191,9 @@ public class DrawCanvas extends Canvas {
     }
 
 
-    public boolean isFillColor() {
-        return isFillColor;
-    }
-
+    /*
+     * Thiết lập chế độ tô màu cho hình vẽ
+     */
     public void setFillColor(boolean fillColor) {
         isFillColor = fillColor;
         geometry.setFillColor(fillColor);
@@ -209,6 +211,9 @@ public class DrawCanvas extends Canvas {
         else clearGrid();
     }
 
+    /*
+     * Hiển thị tọa độ các điểm thuộc mỗi hình vẽ khác nhau
+     */
     public void setShowPointCoord(boolean showPointCoord) {
         isShowPointCoord = showPointCoord;
         if (isShowPointCoord) {
@@ -225,6 +230,10 @@ public class DrawCanvas extends Canvas {
         }
     }
 
+    /*
+     * Vẽ tọa độ của điểm 2D lên màn hình
+     * @param   p   điểm muốn hiển thị tọa độ
+     */
     public void drawPointsCoordinate(Point2D p) {
         Graphics g = getGraphics();
         g.setColor(Color.BLACK);
@@ -232,6 +241,10 @@ public class DrawCanvas extends Canvas {
         g.dispose();
     }
 
+    /*
+     * Vẽ tọa độ của điểm 3D lên màn hình
+     * @param   p   điểm muốn hiển thị tọa độ
+     */
     public void drawPointsCoordinate(Point3D p) {
         if (p == null) return;
         Point2D p2 = p.to2DPoint();
@@ -245,6 +258,7 @@ public class DrawCanvas extends Canvas {
     /*
      * Xóa những điểm đã cũ mà không thuộc hình vẽ preview
      * Bằng cách lấy màu nền vẽ đè lên
+     * @param   point2Ds    danh sách những điểm cần xóa
      */
     public void clearDraw(List<Point2D> point2DS) {
         for (Point2D p : point2DS) {
@@ -260,9 +274,10 @@ public class DrawCanvas extends Canvas {
 
     /*
      * Vẽ bản preview của hình
+     * @param   point2DS    danh sách những điểm cần vẽ
      */
-    public void applyDraw(List<Point2D> point2DList) {
-        for (Point2D p : point2DList) {
+    public void applyDraw(List<Point2D> point2DS) {
+        for (Point2D p : point2DS) {
             if (p.insideScreen()) {
                 if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
                     tempBoard[p.getComputerX()][p.getComputerY()] = p.getColor();
@@ -272,13 +287,16 @@ public class DrawCanvas extends Canvas {
 
         }
 
+        // Hiển thị tọa độ các điểm cơ bản của các hình vẽ khác
+        // Vì khi putpixel thì chữ sẽ bị mất đi
         if (isShowPointCoord) showFixedShapesCoordinate();
 
     }
 
     /*
      * Vẽ lại 1 vùng hình chữ nhật
-     * params đều là tọa độ máy tính
+     * Dùng để vẽ lại vùng hiển thị tọa độ các điểm
+     * @param startX, startY, endX, endY    đều là tọa độ máy tính
      */
     public void reDrawPoints(int startX, int startY, int endX, int endY) {
         for (int i = startX; i <= endX; i++) {
@@ -292,6 +310,9 @@ public class DrawCanvas extends Canvas {
         }
 
         if (isShowGrid) {
+            // Vẽ lại lưới pixel tại vùng bị thay đổi
+            // Không vẽ lại toàn bộ màn hình vì tốn nhiều thời gian xử lý
+
             Graphics g = getGraphics();
             g.setColor(new Color(gridColor));
 
@@ -305,11 +326,18 @@ public class DrawCanvas extends Canvas {
         }
     }
 
+    /*
+     * Ngay lập tức vẽ lên màn hình bảng màu mới
+     * @param   newBoard    bảng màu mới
+     */
     public void applyBoard(int[][] newBoard) {
         Point2D p;
         int i;
         for (int u = 0; u <= rowSize / 2; u++) {
             for (int j = 0; j < colSize; j++) {
+
+                // Vẽ từ giữa ra 2 bên màn hình
+
                 i = rowSize / 2 + u;
                 if (newBoard[i][j] != board[i][j]) {
                     board[i][j] = tempBoard[i][j] = newBoard[i][j];
@@ -331,11 +359,10 @@ public class DrawCanvas extends Canvas {
     }
 
     /*
-     * Hợp nhất nét vẽ preview của hình lên canvas
+     * Hợp nhất nét vẽ preview của hình lên bảng màu chính
+     * Sau khi hoàn thành, hình vẽ được cố định trên màn hình
      */
     public void merge() {
-        // Thêm hình vừa vẽ vào danh sách undo
-
         for (int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
                 if (board[i][j] != tempBoard[i][j]) {
@@ -344,18 +371,28 @@ public class DrawCanvas extends Canvas {
             }
         }
 
+        // Xóa những trạng thái phía sau
+        // tức sau khi thêm hình vẽ mới thì đây là trạng thái mới nhất
+        // không thể REDO đến các trạng thái khác
         if (curState < boardStates.size() - 1) {
             clearStatesFrom(curState + 1);
         }
 
+        // Thêm hình vừa vẽ vào danh sách
         listShapes.add(geometry);
+        // Cập nhật lại danh sách các hình được vẽ lên bảng thông báo bên phải màn hình
         listener.notifyDataSetChanged(listShapes);
 
+        // Lưu lại trạng thái hiện tại
         saveStates();
 
+        // Hiển thị tọa độ các điểm của hình vừa vẽ
         if (isShowPointCoord) geometry.showPointsCoordinate();
     }
 
+    /*
+     * @return bản sao bảng màu hiện tại
+     */
     int[][] getCurrentBoard() {
         int[][] a = new int[rowSize][colSize];
         for (int i = 0; i < rowSize; i++) {
@@ -364,6 +401,9 @@ public class DrawCanvas extends Canvas {
         return a;
     }
 
+    /*
+     * @return bản sao danh sách các hình vẽ hiện tại
+     */
     List getCurrentShapes() {
         List list = new ArrayList();
         for (int i = 0; i < listShapes.size(); i++) {
@@ -374,6 +414,11 @@ public class DrawCanvas extends Canvas {
         return list;
     }
 
+    /*
+     * Lấy danh sách các hình vẽ thuộc 1 trạng thái nhất định
+     * @param   state   trạng thái muốn lấy
+     * @return      List copy các hình thuộc trạng thái đó
+     */
     List getListShapesAt(int state) {
         List list = new ArrayList();
         for (int i = 0; i < shapesStates.get(state).size(); i++) {
@@ -383,6 +428,9 @@ public class DrawCanvas extends Canvas {
         return list;
     }
 
+    /*
+     * Xóa các trạng thái từ `startIndex` trở về sau
+     */
     private void clearStatesFrom(int startIndex) {
         int i = boardStates.size() - 1;
         while (i >= startIndex) {
@@ -394,8 +442,10 @@ public class DrawCanvas extends Canvas {
         listShapes = getListShapesAt(curState);
     }
 
+    /*
+     * Lưu lại trạng thái hiện tại
+     */
     private void saveStates() {
-
         boardStates.add(getCurrentBoard());
         shapesStates.add(getCurrentShapes());
 
@@ -406,36 +456,20 @@ public class DrawCanvas extends Canvas {
             shapesStates.remove(0);
             curState--;
         }
-
-//        listShapes = getListShapesAt(curState);
-//        listener.notifyDataSetChanged(listShapes);
-
         System.out.println("saved state: " + curState);
-
     }
 
 
+    /*
+     * Áp dụng trạng thái xác định lên màn hình
+     * @param   state   trạng thái muốn áp dụng
+     */
     private void applyState(int state) {
         listShapes = getListShapesAt(state);
-
         listener.notifyDataSetChanged(listShapes);
 
         int[][] stateBoard = boardStates.get(state);
-        Point2D p;
-
-        for (int i = 0; i < rowSize; i++) {
-            for (int j = 0; j < colSize; j++) {
-                if (stateBoard[i][j] != board[i][j]) {
-                    board[i][j] = tempBoard[i][j] = stateBoard[i][j];
-
-                    p = Point2D.fromComputerCoordinate(i, j);
-                    p.setColor(board[i][j]);
-                    putPixel(p);
-                }
-            }
-        }
-
-        if (isShowAxis) drawAxis();
+        applyBoard(stateBoard);
 
         System.out.println("apply state " + state + " done: " + listShapes.size());
     }
@@ -450,7 +484,8 @@ public class DrawCanvas extends Canvas {
     }
 
     /*
-     * Vẽ trục tọa độ
+     * Vẽ trục tọa độ 2D hoặc 3D
+     * Dựa vào giá trị `is2DCoordinates`
      */
     private void drawAxis() {
         Graphics g = getGraphics();
@@ -603,6 +638,8 @@ public class DrawCanvas extends Canvas {
         if (isShowAxis) drawAxis();
         if (isShowGrid) drawGrid(); // Vẽ ô lưới
 
+        // Cần đoạn code này vì khi app bị ẩn xuống
+        // Khi mở lại thì hàm paint sẽ được gọi lại
         Point2D p;
         for (int i = 0; i < rowSize; i++) {
             for (int j = 0; j < colSize; j++) {
@@ -616,6 +653,10 @@ public class DrawCanvas extends Canvas {
 
     }
 
+    /*
+     * Vẽ màu cho từng điểm
+     * @param   point   điểm cần vẽ, bao gồm cả tọa độ và màu vẽ
+     */
     public void putPixel(Point2D point) {
         Graphics g = getGraphics();
         g.setColor(new Color(point.getColor()));
@@ -631,6 +672,10 @@ public class DrawCanvas extends Canvas {
         g.dispose();
     }
 
+    /*
+     * Vẽ đường trục tọa độ tại 1 điểm xác định
+     * Dùng phương thức này trong trường hợp 1 vài điểm thuộc trục tọa độ bị thay đổi nhằm tối ưu thời gian vẽ
+     */
     private void drawAxisAt(Point2D point, Graphics g) {
         if (isShowAxis) {
             g.setColor(Color.BLACK);
@@ -697,7 +742,6 @@ public class DrawCanvas extends Canvas {
 
         if (isShowGrid) drawGrid(); // Xóa xong thì vẽ lại lưới tọa độ
 
-//        resetStates();
         setMode(Mode.NONE);
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
@@ -717,6 +761,9 @@ public class DrawCanvas extends Canvas {
         curState = 0;
     }
 
+    /*
+     * @return 1 bảng màu mới có màu trắng
+     */
     public static int[][] newDefaultBoard() {
         int[][] a = new int[rowSize][colSize];
         for (int i = 0; i < rowSize; i++)
@@ -725,6 +772,10 @@ public class DrawCanvas extends Canvas {
         return a;
     }
 
+    /*
+     * Xóa các hình được chỉ định khỏi màn hình
+     * @param   removeIndex     các index hình vẽ muốn xóa
+     */
     public void clearShapes(int[] removeIndex) {
         int[][] temp = newDefaultBoard();
         for (int i = 0; i < listShapes.size(); i++) {
@@ -749,17 +800,21 @@ public class DrawCanvas extends Canvas {
         }
 
         listener.notifyDataSetChanged(listShapes);
-
         applyBoard(temp);
 
         saveStates();
     }
 
-    public void move(int[] indexMove) {
-        listIndexMove.clear();
-        for (int i : indexMove) listIndexMove.add(i);
 
-        if (indexMove.length > 0) {
+    /*
+     * tính năng di chuyển hình vẽ
+     * @param   indexShapesSelected     index các hình vẽ muốn di chuyển
+     */
+    public void move(int[] indexShapesSelected) {
+        listShapesSelected.clear();
+        for (int i : indexShapesSelected) listShapesSelected.add(i);
+
+        if (indexShapesSelected.length > 0) {
             setMode(Mode.MOVE);
             setCursor(new Cursor(Cursor.MOVE_CURSOR));
             mapPoints.clear();
@@ -770,12 +825,17 @@ public class DrawCanvas extends Canvas {
 
     }
 
-    public void rotate(int[] indexMove, Point2D root) {
+    /*
+     * Quay hình vẽ quanh 1 tâm xác định
+     * @param   indexShapesSelected     index các hình vẽ muốn quay
+     * @param   root    tâm quay
+     */
+    public void rotate(int[] indexShapesSelected, Point2D root) {
         this.rootPoint = root;
-        listIndexMove.clear();
-        for (int i : indexMove) listIndexMove.add(i);
+        listShapesSelected.clear();
+        for (int i : indexShapesSelected) listShapesSelected.add(i);
 
-        if (indexMove.length > 0) {
+        if (indexShapesSelected.length > 0) {
             setMode(Mode.ROTATE);
             setCursor(new Cursor(Cursor.MOVE_CURSOR));
             mapPoints.clear();
@@ -786,27 +846,39 @@ public class DrawCanvas extends Canvas {
 
     }
 
-    public void reflect(int[] indexMove, Point2D root, Point2D root2) {
+    /*
+     * Lấy đối xứng hình vẽ qua 1 điểm hoặc 1 đường thẳng
+     * @param   indexShapesSelected     index các hình vẽ
+     * @param   root    điểm thứ nhất
+     * @param   root2   điểm thứ 2
+     * Nếu root2 là null thì là phép đỗi xứng qua điểm, ngược lại là đỗi xứng qua đường thẳng đi qua 2 điểm root, root2
+     */
+    public void reflect(int[] indexShapesSelected, Point2D root, Point2D root2) {
         this.rootPoint = root;
         this.rootPoint2 = root2;
 
-        listIndexMove.clear();
-        for (int i : indexMove) listIndexMove.add(i);
+        listShapesSelected.clear();
+        for (int i : indexShapesSelected) listShapesSelected.add(i);
 
-        if (indexMove.length > 0) {
+        if (indexShapesSelected.length > 0) {
             reflectShapes(rootPoint2 == null);
         }
         setMode(Mode.NONE);
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-
     }
 
-    public void scale(int[] indexMove, Point2D root, double scaleX, double scaleY) {
-        listIndexMove.clear();
-        for (int i : indexMove) listIndexMove.add(i);
+    /*
+     * Thu phóng hình vẽ theo tỉ lệ
+     * @param   indexShapesSelected     index các hình vẽ muốn quay
+     * @param   root    điểm tâm thu phóng
+     * @param   scaleX  tỉ lệ thu phóng theo chiều X
+     * @param   scaleY  tỉ lệ thu phóng theo chiều Y
+     */
+    public void scale(int[] indexShapesSelected, Point2D root, double scaleX, double scaleY) {
+        listShapesSelected.clear();
+        for (int i : indexShapesSelected) listShapesSelected.add(i);
 
-        if (indexMove.length > 0) {
+        if (indexShapesSelected.length > 0) {
             scaleShapes(root, scaleX, scaleY);
         }
 
@@ -873,6 +945,10 @@ public class DrawCanvas extends Canvas {
         }
     }
 
+    /*
+     * Sau khi các hình vẽ thực hiện cấc phép biến đổi như tịnh tiến, quay,..
+     * Thì sẽ hợp nhất nó với bảng vẽ (cố định hình vẽ)
+     */
     public void applyShapesChange() {
         setMode(Mode.NONE);
         startMove = null;
@@ -903,7 +979,6 @@ public class DrawCanvas extends Canvas {
         mapPoints.clear();
         mapNewPoints.clear();
 
-
         if (isShowAxis) drawAxis();
 
         setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -915,10 +990,10 @@ public class DrawCanvas extends Canvas {
 
     Point2D rootPoint = null, rootPoint2 = null;
     Point2D startMove = null, endMove = null;
-    List<Integer> listIndexMove = new ArrayList<>();
+    List<Integer> listShapesSelected = new ArrayList<>();
 
-    HashMap<Integer, ArrayList<Point2D>> mapPoints = new HashMap<>();
-    HashMap<Integer, ArrayList<Point2D>> mapNewPoints = new HashMap<>();
+    HashMap<Integer, ArrayList<Point2D>> mapPoints = new HashMap<>();       // Tạo độ các điểm ban đầu của hình vẽ
+    HashMap<Integer, ArrayList<Point2D>> mapNewPoints = new HashMap<>();    // Tạo độ các điểm mới, khi đang áp dụng các phép biến đổi của hình vẽ
 
     public class MyMouseMotionAdapter extends MouseMotionAdapter {
 
@@ -942,15 +1017,15 @@ public class DrawCanvas extends Canvas {
 
 
             // --------- Move ---------
-            if (mode == Mode.MOVE && listIndexMove.size() > 0) {
+            if (mode == Mode.MOVE && listShapesSelected.size() > 0) {
 
                 moveShapes(point);
 
-            } else if (mode == Mode.ROTATE && listIndexMove.size() > 0) {
+            } else if (mode == Mode.ROTATE && listShapesSelected.size() > 0) {
 
                 rotateShapes(point);
 
-            } else if (mode == Mode.REFLECT && listIndexMove.size() > 0) {
+            } else if (mode == Mode.REFLECT && listShapesSelected.size() > 0) {
 
 
             } else {
@@ -982,6 +1057,9 @@ public class DrawCanvas extends Canvas {
 
     }
 
+    /*
+     * Xử lý thu phóng hình vẽ
+     */
     public void scaleShapes(Point2D root, double scaleX, double scaleY) {
         System.out.println("Scale");
 
@@ -1004,6 +1082,11 @@ public class DrawCanvas extends Canvas {
         applyShapesChange();
     }
 
+    /*
+     * Xử lý đối xứng hình vẽ
+     * @param   isReflectByPoint   true: đối xứng qua điểm
+     *                              false: đối xứng qua đoạn thẳng
+     */
     public void reflectShapes(boolean isReflectByPoint) {
         System.out.println("Reflect");
 
@@ -1031,11 +1114,15 @@ public class DrawCanvas extends Canvas {
         applyShapesChange();
     }
 
+    /*
+     * Chuyển các hình vẽ được chọn thuộc `listShapesSelected` sang chế độ preview - tức là nó không còn cố định trên màn hình vẽ nữa
+     * Mà có thể áp dụng các phép dịch chuyển
+     */
     public void convertShapeToPreview() {
         if (mapPoints.size() == 0) {
             mapNewPoints.clear();
 
-            for (int index : listIndexMove) {
+            for (int index : listShapesSelected) {
                 Geometry g = (Geometry) listShapes.get(index);
 
                 g.clearPointsCoordinate();
@@ -1055,7 +1142,7 @@ public class DrawCanvas extends Canvas {
 
             for (int i = 0; i < listShapes.size(); i++) {
                 boolean skip = false;
-                for (int j : listIndexMove) {
+                for (int j : listShapesSelected) {
                     if (i == j) {
                         skip = true;
                         break;
@@ -1076,6 +1163,10 @@ public class DrawCanvas extends Canvas {
 
     }
 
+    /*
+     * Di chuyển các hình vẽ
+     * @param   point   vị trí con chuột hiện tại
+     */
     public void moveShapes(Point2D point) {
 
         convertShapeToPreview();
@@ -1112,10 +1203,13 @@ public class DrawCanvas extends Canvas {
         showFixedShapesCoordinate();
     }
 
+    /*
+     * Hiển thị tọa độ các điểm thuộc mỗi hình vẽ
+     */
     private void showFixedShapesCoordinate() {
         for (int i = 0; i < listShapes.size(); i++) {
             boolean inSelectedIndex = false;
-            for (int index : listIndexMove) {
+            for (int index : listShapesSelected) {
                 if (index == i) {
                     inSelectedIndex = true;
                     break;
@@ -1128,6 +1222,10 @@ public class DrawCanvas extends Canvas {
         }
     }
 
+    /*
+     * Quay hình các hình vẽ
+     * @param   point   vị trí con chuột hiện tại
+     */
     public void rotateShapes(Point2D point) {
         if (rootPoint == null) {
             System.out.println("root point null");
@@ -1196,6 +1294,10 @@ public class DrawCanvas extends Canvas {
                 + (p2.getX() - p1.getX()) * p.getY() - (p2.getX() - p1.getX()) * p1.getY();
     }
 
+
+    /*
+     * Tính năng copy các hình vẽ có sẵn
+     */
     public void copyShapes(int[] indexCopy) {
         for (int index : indexCopy) {
             // Tạo bản sao
@@ -1209,6 +1311,9 @@ public class DrawCanvas extends Canvas {
         saveStates();
     }
 
+    /*
+     * Vẽ hình hộp chữ nhật trong 3D
+     */
     public void drawRectangular(Point3D root, int length, int width, int height) {
         geometry = new Rectangular(this);
         ((Rectangular) geometry).set(root, length, width, height);
@@ -1216,6 +1321,9 @@ public class DrawCanvas extends Canvas {
         merge();
     }
 
+    /*
+     * Vẽ hình trụ trong 3D
+     */
     public void drawCylinder(Point3D root, int a, int b, int h) {
         geometry = new Cylinder(this);
         ((Cylinder) geometry).set(root, a, b, h);
@@ -1223,6 +1331,9 @@ public class DrawCanvas extends Canvas {
         merge();
     }
 
+    /*
+     * Vẽ hình nón trong 3D
+     */
     public void drawCone(Point3D root, int a, int b, int h) {
         geometry = new Cone(this);
         ((Cone) geometry).set(root, a, b, h);
@@ -1230,7 +1341,9 @@ public class DrawCanvas extends Canvas {
         merge();
     }
 
-
+    /*
+     * Vẽ hình đa giác trong 2D
+     */
     public void drawPolygon(Point2D[] points) {
         geometry = new Polygon(this);
         geometry.setPoints(points);
