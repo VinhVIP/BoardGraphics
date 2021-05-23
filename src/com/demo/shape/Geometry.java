@@ -360,4 +360,15 @@ public abstract class Geometry {
             points[i] = points[i].scale(root, sx, sy);
         }
     }
+
+    public void refect(Point2D root){
+        for (int i = 0; i < points.length; i++) {
+            points[i] = points[i].reflect(root);
+        }
+    }
+    public void refect(Point2D p1, Point2D p2){
+        for (int i = 0; i < points.length; i++) {
+            points[i] = points[i].reflect(p1, p2);
+        }
+    }
 }
