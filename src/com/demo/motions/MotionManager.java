@@ -8,20 +8,23 @@ import com.demo.DrawCanvas;
  */
 
 public class MotionManager extends Thread {
+    private Motion motion;
     private Bike bike;
     private DrawCanvas canvas;
 
     public MotionManager(DrawCanvas canvas) {
         this.canvas = canvas;
         bike = new Bike(canvas);
+        motion = new Motion(canvas);
     }
 
     @Override
     public void run() {
         while (true) {
-            bike.run();
+//            bike.run();
+            motion.run();
             try {
-                Thread.sleep(80);
+                Thread.sleep(10);
             } catch (Exception e) {
                 e.printStackTrace();
             }

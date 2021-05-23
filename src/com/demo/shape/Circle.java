@@ -63,6 +63,7 @@ public class Circle extends Geometry {
     public void processDraw() {
         if (points[0] != null && points[1] != null) {
             swapList();
+            radius = points[0].distance(points[1]);
             circleMidPoint(radius);
             choosePoints();
         }
