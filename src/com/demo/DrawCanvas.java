@@ -12,10 +12,14 @@ import com.demo.shapes3D.Cone;
 import com.demo.shapes3D.Cylinder;
 import com.demo.shapes3D.Rectangular;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -610,7 +614,7 @@ public class DrawCanvas extends Canvas {
         Point2D p;
 
         int i;
-        for (int u = 0; u < rowSize / 2; u++) {
+        for (int u = 0; u <= rowSize / 2; u++) {
             for (int j = 0; j < colSize; j++) {
                 i = rowSize / 2 + u;
                 p = Point2D.fromComputerCoordinate(i, j);
@@ -651,6 +655,36 @@ public class DrawCanvas extends Canvas {
             }
         }
 
+//        demoOpenImageFile();
+    }
+
+    public void openFile(){
+        JFileChooser fc = new JFileChooser();
+        int result = fc.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            String sname = file.getAbsolutePath(); //THIS WAS THE PROBLEM
+            System.out.println(sname);
+            demoOpenImageFile(file);
+        }
+    }
+
+    private void demoOpenImageFile(File file) {
+        try {
+            BufferedImage image = ImageIO.read(file);
+            int[][] b = newDefaultBoard();
+            for (int i = 2; i < image.getWidth(); i += 5) {
+                if (i >= canvasWidth) break;
+                for (int j = 2; j < image.getHeight(); j += 5) {
+                    if (j >= canvasHeight) break;
+                    b[i/5][j/5] = image.getRGB(i, j);
+                }
+            }
+            applyBoard(b);
+            saveStates();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -1200,7 +1234,6 @@ public class DrawCanvas extends Canvas {
         }
 
 
-        showFixedShapesCoordinate();
     }
 
     /*
@@ -1282,7 +1315,6 @@ public class DrawCanvas extends Canvas {
             listener.notifyShapeChanged(index, g.toString());
         }
 
-        showFixedShapesCoordinate();
     }
 
     /*

@@ -54,6 +54,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private JRadioButton radio3D;
     private JCheckBox checkBoxColorFill;
     private JButton btnCustom3D;
+    private JButton btnOpenFile;
 
     private ButtonGroup radioGroup;
 
@@ -277,6 +278,10 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
         btnPolygon.addActionListener(e->{
             PolygonCustom polygon = new PolygonCustom(this);
+        });
+
+        btnOpenFile.addActionListener(e->{
+            canvas.openFile();
         });
 
         // Important

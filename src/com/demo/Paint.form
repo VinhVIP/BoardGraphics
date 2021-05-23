@@ -498,6 +498,14 @@
               <text value="Custom"/>
             </properties>
           </component>
+          <component id="d3e16" class="javax.swing.JButton" binding="btnOpenFile">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Open"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="53820" binding="mainPanel" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">
