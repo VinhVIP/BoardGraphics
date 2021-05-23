@@ -21,18 +21,19 @@ public class Sun {
     private int mx, my;
 
     private DrawCanvas canvas;
-    public Sun(DrawCanvas canvas, Ellipse cycle){
+
+    public Sun(DrawCanvas canvas, Ellipse cycle) {
         this.canvas = canvas;
         this.cycle = cycle;
 
 
-        sun = new Circle(canvas,null, null, DrawMode.DEFAULT, 0xffcc00, 0xffff00, true, true);
+        sun = new Circle(canvas, null, null, DrawMode.DEFAULT, 0xffcc00, 0xffff00, true, true);
         sun.setPoints(new Point2D[]{new Point2D(0, 39), new Point2D(10, 39)});
         sunshines = new ArrayList<>();
         listDraw = new ArrayList<>();
 
-        Line sunshine1 = new Line(canvas,null, null,DrawMode.DEFAULT, 0xffff00, 0xffcc00, true, true);
-        Line sunshine2 = new Line(canvas,null, null,DrawMode.DEFAULT, 0xffff00, 0xffcc00, true, true);
+        Line sunshine1 = new Line(canvas, null, null, DrawMode.DEFAULT, 0xffff00, 0xffcc00, true, true);
+        Line sunshine2 = new Line(canvas, null, null, DrawMode.DEFAULT, 0xffff00, 0xffcc00, true, true);
         Line sunshine3;
         Line sunshine4;
 
@@ -40,20 +41,20 @@ public class Sun {
         sunshine2.setPoints(new Point2D[]{new Point2D(10, 29), new Point2D(15, 24)});
         sunshine3 = (Line) sunshine1.copy();
         sunshine4 = (Line) sunshine2.copy();
-        sunshine3.rotate(sun.getCenterPoint(), -Math.PI/2);
-        sunshine4.rotate(sun.getCenterPoint(), -Math.PI/2);
+        sunshine3.rotate(sun.getCenterPoint(), -Math.PI / 2);
+        sunshine4.rotate(sun.getCenterPoint(), -Math.PI / 2);
         sunshines.add(sunshine1);
         sunshines.add(sunshine2);
         sunshines.add(sunshine3);
         sunshines.add(sunshine4);
     }
 
-    public void run(){
+    public void run() {
 
-        mx = cycle.getListDraw().get(Motion.cycleIndex).getX()-sun.getCenterPoint().getX();
-        my = cycle.getListDraw().get(Motion.cycleIndex).getY()-sun.getCenterPoint().getY();
-        for(Line l : sunshines){
-            l.rotate(sun.getCenterPoint(), -Math.PI/12);
+        mx = cycle.getListDraw().get(Motion.cycleIndex).getX() - sun.getCenterPoint().getX();
+        my = cycle.getListDraw().get(Motion.cycleIndex).getY() - sun.getCenterPoint().getY();
+        for (Line l : sunshines) {
+            l.rotate(sun.getCenterPoint(), -Math.PI / 12);
             l.move(mx, my);
         }
         sun.move(mx, my);
@@ -65,26 +66,27 @@ public class Sun {
 
         sun.processDraw();
         sunTemp.processDraw();
-        for (Line l : sunshines){
+        for (Line l : sunshines) {
             l.processDraw();
         }
         sunTemp.fillColor();
+
         setListDraw();
     }
 
-    public void setListDraw(){
+    public void setListDraw() {
         listDraw.clear();
         listDraw.addAll(sunTemp.getListDraw());
-        for(Line l : sunshines){
+        for (Line l : sunshines) {
             listDraw.addAll(l.getListDraw());
             Line refLine = (Line) l.copy();
-            refLine.refect(sun.getCenterPoint());
+            refLine.reflect(sun.getCenterPoint());
             refLine.processDraw();
             listDraw.addAll(refLine.getListDraw());
         }
     }
 
-    public List<Point2D> getListDraw(){
+    public List<Point2D> getListDraw() {
         return listDraw;
     }
 }

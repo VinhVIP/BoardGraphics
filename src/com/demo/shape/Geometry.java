@@ -163,7 +163,6 @@ public abstract class Geometry {
         for (PointKey pk : mapPoints.keySet()) {
             point2D = new Point2D(pk.x, pk.y, colorFill);
             if (point2D.insideScreen() && mapPoints.get(pk) == colorFill) {
-//                canvas.putPixel(point2D);
                 listDraw.add(point2D);
             }
         }
@@ -361,12 +360,12 @@ public abstract class Geometry {
         }
     }
 
-    public void refect(Point2D root){
+    public void reflect(Point2D root){
         for (int i = 0; i < points.length; i++) {
             points[i] = points[i].reflect(root);
         }
     }
-    public void refect(Point2D p1, Point2D p2){
+    public void reflect(Point2D p1, Point2D p2){
         for (int i = 0; i < points.length; i++) {
             points[i] = points[i].reflect(p1, p2);
         }

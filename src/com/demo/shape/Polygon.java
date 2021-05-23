@@ -38,7 +38,9 @@ public class Polygon extends Geometry{
 
     @Override
     public Geometry copy() {
-        Polygon g = new Polygon(canvas, new Point2D(startPoint), new Point2D(endPoint), drawMode, color, colorFill, isFillColor, is2DShape);
+        Polygon g = new Polygon(canvas, null, null, drawMode, color, colorFill, isFillColor, is2DShape);
+
+        g.points = new Point2D[points.length];
 
         for (int i = 0; i < totalPoints; i++)
             g.points[i] = new Point2D(points[i]);

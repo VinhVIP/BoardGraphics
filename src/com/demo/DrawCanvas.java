@@ -365,14 +365,25 @@ public class DrawCanvas extends Canvas {
 
     public void applyBoard(int[][] newBoard) {
         Point2D p;
-        for (int i = 0; i < rowSize; i++) {
+        int i;
+        for (int u = 0; u <= rowSize / 2; u++) {
             for (int j = 0; j < colSize; j++) {
+                i = rowSize / 2 + u;
                 if (newBoard[i][j] != board[i][j]) {
                     board[i][j] = tempBoard[i][j] = newBoard[i][j];
                     p = Point2D.fromComputerCoordinate(i, j);
                     p.setColor(board[i][j]);
                     putPixel(p);
                 }
+
+                i = rowSize / 2 - u;
+                if (newBoard[i][j] != board[i][j]) {
+                    board[i][j] = tempBoard[i][j] = newBoard[i][j];
+                    p = Point2D.fromComputerCoordinate(i, j);
+                    p.setColor(board[i][j]);
+                    putPixel(p);
+                }
+
             }
         }
     }
@@ -1251,7 +1262,7 @@ public class DrawCanvas extends Canvas {
     }
 
 
-    public void drawPolygon(Point2D[] points){
+    public void drawPolygon(Point2D[] points) {
         geometry = new Polygon(this);
         geometry.setPoints(points);
         geometry.draw();

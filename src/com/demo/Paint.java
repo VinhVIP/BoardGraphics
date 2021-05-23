@@ -281,7 +281,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
         // Important
         add(rootPanel);
-
+        setLocation(250, 0);
 
     }
 

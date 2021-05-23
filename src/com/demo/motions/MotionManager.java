@@ -24,7 +24,7 @@ public class MotionManager extends Thread {
 //            bike.run();
             motion.run();
             try {
-                Thread.sleep(10);
+                Thread.sleep(60);
             } catch (Exception e) {
                 e.printStackTrace();
             }
