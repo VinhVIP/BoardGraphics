@@ -16,9 +16,10 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
-import java.util.*;
 
 /**
  * Create by VinhIT
@@ -62,7 +63,6 @@ public class DrawCanvas extends Canvas {
     private final CanvasListener listener; // Sự kiện cập nhập tọa độ con chuột
     private Geometry geometry;  // Hình vẽ
 
-    private final Set<Point2D> coordinatePoints = new HashSet<>();
     private List listShapes = new ArrayList<>();
     private final List<int[][]> boardStates = new ArrayList<>();
     private final List<List> shapesStates = new ArrayList<>();
@@ -207,8 +207,6 @@ public class DrawCanvas extends Canvas {
         isShowGrid = showGrid;
         if (isShowGrid) drawGrid();
         else clearGrid();
-
-        if (isShowPointCoord) drawAllPoints();
     }
 
     public void setShowPointCoord(boolean showPointCoord) {
@@ -227,11 +225,6 @@ public class DrawCanvas extends Canvas {
         }
     }
 
-
-    public void addPointsToDrawCoord(Point2D p) {
-        coordinatePoints.add(p);
-    }
-
     public void drawPointsCoordinate(Point2D p) {
         Graphics g = getGraphics();
         g.setColor(Color.BLACK);
@@ -248,13 +241,6 @@ public class DrawCanvas extends Canvas {
         g.dispose();
     }
 
-    public void drawAllPoints() {
-        if (!isShowPointCoord) return;
-
-        for (Point2D p : coordinatePoints) {
-            drawPointsCoordinate(p);
-        }
-    }
 
     /*
      * Xóa những điểm đã cũ mà không thuộc hình vẽ preview
@@ -266,9 +252,7 @@ public class DrawCanvas extends Canvas {
                 if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
                     p.setColor(board[p.getComputerX()][p.getComputerY()]);
                     tempBoard[p.getComputerX()][p.getComputerY()] = board[p.getComputerX()][p.getComputerY()];
-
                     putPixel(p);
-//                    if (isShowAxis) drawAxis();
                 }
             }
         }
@@ -283,55 +267,13 @@ public class DrawCanvas extends Canvas {
                 if (p.getColor() != board[p.getComputerX()][p.getComputerY()]) {
                     tempBoard[p.getComputerX()][p.getComputerY()] = p.getColor();
                     putPixel(p);
-//                    if (isShowAxis) drawAxis();
                 }
             }
 
         }
 
-        drawAllPoints();
-    }
+        if (isShowPointCoord) showFixedShapesCoordinate();
 
-    private void fillColor(Point2D startPoint) {
-        Queue<Point2D> queue = new ArrayDeque<>();
-        Queue<Point2D> tempQueue = new ArrayDeque<>();
-        Queue<Point2D> tempQueue2 = new ArrayDeque<>();
-
-        int colorBg = tempBoard[startPoint.getComputerX()][startPoint.getComputerY()];
-        int colorFill = DrawCanvas.currentColor;
-
-        tempQueue.add(startPoint);
-        while (!tempQueue.isEmpty()) {
-            Point2D point = tempQueue.remove();
-
-            for (int i = 0; i < spillX.length; i++) {
-                Point2D p = new Point2D(point.getX() + spillX[i], point.getY() + spillY[i], point.getColor());
-                if (p.getComputerX() < 0 || p.getComputerY() < 0 || p.getComputerX() >= DrawCanvas.rowSize || p.getComputerY() >= DrawCanvas.colSize)
-                    continue;
-                if (tempBoard[p.getComputerX()][p.getComputerY()] == colorFill) continue;
-                if (tempBoard[p.getComputerX()][p.getComputerY()] == colorBg) {
-//                    board[p.getComputerX()][p.getComputerY()] = tempBoard[p.getComputerX()][p.getComputerY()] = colorFill;
-                    tempBoard[p.getComputerX()][p.getComputerY()] = colorFill;
-                    tempQueue2.add(new Point2D(p));
-                    queue.add(new Point2D(p));
-                }
-
-            }
-            if (tempQueue.isEmpty()) {
-                while (!tempQueue2.isEmpty()) {
-                    tempQueue.add(new Point2D(tempQueue2.remove()));
-                }
-            }
-        }
-
-        int cnt = 0;
-        while (!queue.isEmpty()) {
-            Point2D p = queue.remove();
-            putPixel(p);
-            cnt++;
-        }
-
-        System.out.println("Done fill color: " + cnt);
     }
 
     /*
@@ -533,6 +475,8 @@ public class DrawCanvas extends Canvas {
             }
         }
         g.dispose();
+
+        if (isShowPointCoord) showFixedShapesCoordinate();
     }
 
     /*
@@ -600,6 +544,8 @@ public class DrawCanvas extends Canvas {
             g.dispose();
         }
 
+        if (isShowPointCoord) showFixedShapesCoordinate();
+
     }
 
     /*
@@ -617,7 +563,9 @@ public class DrawCanvas extends Canvas {
             g.drawLine(0, i * pixelSize, canvasWidth, i * pixelSize);
         }
         g.dispose();
+
         if (isShowAxis) drawAxis();
+        if (isShowPointCoord) showFixedShapesCoordinate();
     }
 
     /*
@@ -626,8 +574,15 @@ public class DrawCanvas extends Canvas {
     private void clearGrid() {
         Point2D p;
 
-        for (int i = 0; i < rowSize; i++) {
+        int i;
+        for (int u = 0; u < rowSize / 2; u++) {
             for (int j = 0; j < colSize; j++) {
+                i = rowSize / 2 + u;
+                p = Point2D.fromComputerCoordinate(i, j);
+                p.setColor(board[i][j]);
+                putPixel(p);
+
+                i = rowSize / 2 - u;
                 p = Point2D.fromComputerCoordinate(i, j);
                 p.setColor(board[i][j]);
                 putPixel(p);
@@ -635,6 +590,7 @@ public class DrawCanvas extends Canvas {
         }
 
         if (isShowAxis) drawAxis();
+        if (isShowPointCoord) showFixedShapesCoordinate();
     }
 
     /*
@@ -658,10 +614,6 @@ public class DrawCanvas extends Canvas {
             }
         }
 
-        drawAllPoints();
-
-//        Geometry rec = new Rectangular(this);
-//        rec.setupDraw();
     }
 
     public void putPixel(Point2D point) {
@@ -728,8 +680,6 @@ public class DrawCanvas extends Canvas {
      */
     public void clearScreen() {
         System.out.println("Clear screen");
-
-        coordinatePoints.clear();
 
         geometry.clearAll();
 
@@ -882,20 +832,20 @@ public class DrawCanvas extends Canvas {
             super.mouseClicked(e);
 
             // Set màu cho điểm vẽ là màu đang chọn
-            Point2D point = Point2D.fromComputerCoordinate(e.getX() / DrawCanvas.pixelSize, e.getY() / DrawCanvas.pixelSize);
-            point.setColor(DrawCanvas.currentColor);
-
-//            if (geometry instanceof SinglePoint) {
-//                geometry.setStartPoint(point);
-//                geometry.setupDraw();
+//            Point2D point = Point2D.fromComputerCoordinate(e.getX() / DrawCanvas.pixelSize, e.getY() / DrawCanvas.pixelSize);
+//            point.setColor(DrawCanvas.currentColor);
 //
-//                mouseReleased(e);
+////            if (geometry instanceof SinglePoint) {
+////                geometry.setStartPoint(point);
+////                geometry.setupDraw();
+////
+////                mouseReleased(e);
+////            }
+//
+//            if (mode == Mode.FILL_COLOR) {
+//                fillColor(point);
+//                saveStates();
 //            }
-
-            if (mode == Mode.FILL_COLOR) {
-                fillColor(point);
-                saveStates();
-            }
 
         }
 
@@ -1158,8 +1108,25 @@ public class DrawCanvas extends Canvas {
             listener.notifyShapeChanged(index, g.toString());
         }
 
+
+        showFixedShapesCoordinate();
     }
 
+    private void showFixedShapesCoordinate() {
+        for (int i = 0; i < listShapes.size(); i++) {
+            boolean inSelectedIndex = false;
+            for (int index : listIndexMove) {
+                if (index == i) {
+                    inSelectedIndex = true;
+                    break;
+                }
+            }
+            if (!inSelectedIndex) {
+                Geometry geometry = (Geometry) listShapes.get(i);
+                geometry.showPointsCoordinate();
+            }
+        }
+    }
 
     public void rotateShapes(Point2D point) {
         if (rootPoint == null) {
@@ -1216,6 +1183,8 @@ public class DrawCanvas extends Canvas {
 
             listener.notifyShapeChanged(index, g.toString());
         }
+
+        showFixedShapesCoordinate();
     }
 
     /*

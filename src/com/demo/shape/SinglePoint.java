@@ -36,7 +36,6 @@ public class SinglePoint extends Geometry {
 
     @Override
     public void showPointsCoordinate() {
-        canvas.addPointsToDrawCoord(startPoint);
     }
 
     @Override
