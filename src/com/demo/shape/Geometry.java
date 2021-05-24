@@ -326,6 +326,11 @@ public abstract class Geometry {
 
     public void setPoints(Point2D[] points) {
         this.points = points;
+        if(points.length==4){
+            this.startPoint = points[0];
+            this.endPoint = points[2];
+        }
+
     }
 
     public abstract Point2D getCenterPoint();
