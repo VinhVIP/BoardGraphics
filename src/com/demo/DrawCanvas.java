@@ -692,37 +692,6 @@ public class DrawCanvas extends Canvas {
         return isShowFilm;
     }
 
-//    public void playFilm() {
-//        int maxFrames = 500;
-//        File file;
-//        String path = "C:\\Users\\Admin\\Documents\\film\\";
-//        int[][] b = newDefaultBoard();
-//        BufferedImage image = null;
-//
-//        for (int frame = 1; frame <= maxFrames; frame++) {
-//            String imagePath = path + String.format("%04d", frame) + ".jpg";
-//            file = new File(imagePath);
-//
-//            try {
-//                image = ImageIO.read(file);
-//
-//                for (int i = 2; i < image.getWidth(); i += 5) {
-//                    if (i >= canvasWidth) break;
-//                    for (int j = 2; j < image.getHeight(); j += 5) {
-//                        if (j >= canvasHeight) break;
-//                        b[i / 5][j / 5] = image.getRGB(i, j);
-//                    }
-//                }
-//
-//                applyBoard(b);
-//                Thread.sleep(200);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//
-//        }
-//    }
-
     public void saveFile() {
         BufferedImage image = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics g = image.getGraphics();
@@ -791,8 +760,8 @@ public class DrawCanvas extends Canvas {
 
             merge();
 
-//            applyBoard(b);
-//            saveStates();
+            applyBoard(b);
+            saveStates();
         } catch (IOException e) {
             e.printStackTrace();
         }
