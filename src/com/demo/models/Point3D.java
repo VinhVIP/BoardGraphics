@@ -16,6 +16,10 @@ public class Point3D {
         this.z = z;
     }
 
+    public Point3D(Point3D p) {
+        this(p.x, p.y, p.z);
+    }
+
     public Point2D to2DPoint() {
         int xP = (int) (x - z * Math.sqrt(2) / 2);
         int yP = (int) (y - z * Math.sqrt(2) / 2);

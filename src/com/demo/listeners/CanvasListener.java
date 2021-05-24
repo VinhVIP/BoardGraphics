@@ -17,4 +17,6 @@ public interface CanvasListener {
     void notifyDeselectedAllItems();
     void notifyShapeModeChanged(Mode MODE);
     void clear();
+    void onUndoState(boolean isEnable);
+    void onRedoState(boolean isEnable);
 }

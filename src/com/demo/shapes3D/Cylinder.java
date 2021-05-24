@@ -30,6 +30,11 @@ public class Cylinder extends Geometry {
         init();
     }
 
+    public Cylinder(DrawCanvas canvas, DrawMode drawMode, int color) {
+        super(canvas, drawMode, color);
+        init();
+    }
+
     private void init() {
         is2DShape = false;
         initSizePoints(totalPoints);
@@ -53,7 +58,24 @@ public class Cylinder extends Geometry {
 
     @Override
     public Geometry copy() {
-        return null;
+        Cylinder g = new Cylinder(canvas, drawMode, color);
+        g.is2DShape = false;
+
+        for (int i = 0; i < totalPoints; i++) {
+            g.points[i] = new Point2D(points[i]);
+            if (point3Ds[i] != null)
+                g.point3Ds[i] = new Point3D(point3Ds[i]);
+        }
+
+        for (Point2D p : listDraw) {
+            g.listDraw.add(new Point2D(p));
+        }
+
+        g.dx = dx;
+        g.dy = dy;
+        g.dz = dz;
+
+        return g;
     }
 
     @Override

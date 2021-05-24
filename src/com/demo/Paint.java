@@ -59,8 +59,8 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private ButtonGroup radioGroup;
 
 
-    private DrawCanvas canvas;
-    DefaultListModel listModel = new DefaultListModel();
+    private final DrawCanvas canvas;
+    private DefaultListModel listModel = new DefaultListModel();
 
     public Paint() {
         setTitle("Paint");
@@ -91,12 +91,10 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
         btnLine.addActionListener(e -> {
             canvas.setMode(Mode.LINE);
-            labelDrawMode.setText("MODE: LINE");
         });
         btnRect.addActionListener(e ->
         {
             canvas.setMode(Mode.RECTANGLE);
-            labelDrawMode.setText("MODE: RECT");
         });
 
 //        btnPen.addActionListener(e ->
@@ -108,12 +106,10 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         btnCircle.addActionListener(e ->
         {
             canvas.setMode(Mode.CIRCLE);
-            labelDrawMode.setText("MODE: CIRCLE");
         });
 
         btnEllipse.addActionListener(e -> {
             canvas.setMode(Mode.ELLIPSE);
-            labelDrawMode.setText("MODE: ELLIPSE");
         });
 
         btnTriangle.addActionListener(e -> {
@@ -276,13 +272,16 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         });
 
 
-        btnPolygon.addActionListener(e->{
+        btnPolygon.addActionListener(e -> {
             PolygonCustom polygon = new PolygonCustom(this);
         });
 
-        btnOpenFile.addActionListener(e->{
+        btnOpenFile.addActionListener(e -> {
             canvas.openFile();
         });
+
+        onRedoState(false);
+        onUndoState(false);
 
         // Important
         add(rootPanel);
@@ -328,6 +327,16 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     @Override
     public void clear() {
         listModel.clear();
+    }
+
+    @Override
+    public void onUndoState(boolean isEnable) {
+        btnUndo.setEnabled(isEnable);
+    }
+
+    @Override
+    public void onRedoState(boolean isEnable) {
+        btnRedo.setEnabled(isEnable);
     }
 
     @Override
@@ -384,7 +393,6 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
             stateButtons();
             canvas.setIs2DCoordinates(radio2D.isSelected());
             canvas.setMode(Mode.NONE);
-            canvas.clearScreen();
         }
     }
 
@@ -402,8 +410,8 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         btnScale.setEnabled(radio2D.isSelected());
 
         btnCopy.setEnabled(radio2D.isSelected());
-        btnUndo.setEnabled(radio2D.isSelected());
-        btnRedo.setEnabled(radio2D.isSelected());
+//        btnUndo.setEnabled(radio2D.isSelected());
+//        btnRedo.setEnabled(radio2D.isSelected());
 
         btnRectangular.setEnabled(radio3D.isSelected());
         btnCone.setEnabled(radio3D.isSelected());

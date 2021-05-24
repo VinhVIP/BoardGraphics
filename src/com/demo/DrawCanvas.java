@@ -15,11 +15,12 @@ import com.demo.shapes3D.Rectangular;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -136,6 +137,9 @@ public class DrawCanvas extends Canvas {
             if (isShowAxis) clearAxis();
             this.is2DCoordinates = is2DCoordinates;
             if (isShowAxis) drawAxis();
+
+            clearScreen();
+
         }
     }
 
@@ -460,6 +464,10 @@ public class DrawCanvas extends Canvas {
             shapesStates.remove(0);
             curState--;
         }
+
+        listener.onUndoState(curState != 0);
+        listener.onRedoState(curState != boardStates.size() - 1);
+
         System.out.println("saved state: " + curState);
     }
 
@@ -476,6 +484,9 @@ public class DrawCanvas extends Canvas {
         applyBoard(stateBoard);
 
         System.out.println("apply state " + state + " done: " + listShapes.size());
+
+        listener.onUndoState(curState != 0);
+        listener.onRedoState(curState != boardStates.size() - 1);
     }
 
 
@@ -658,7 +669,7 @@ public class DrawCanvas extends Canvas {
 //        demoOpenImageFile();
     }
 
-    public void openFile(){
+    public void openFile() {
         JFileChooser fc = new JFileChooser();
         int result = fc.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -677,7 +688,7 @@ public class DrawCanvas extends Canvas {
                 if (i >= canvasWidth) break;
                 for (int j = 2; j < image.getHeight(); j += 5) {
                     if (j >= canvasHeight) break;
-                    b[i/5][j/5] = image.getRGB(i, j);
+                    b[i / 5][j / 5] = image.getRGB(i, j);
                 }
             }
             applyBoard(b);
@@ -761,6 +772,11 @@ public class DrawCanvas extends Canvas {
         System.out.println("Clear screen");
 
         geometry.clearAll();
+        listShapes.clear();
+        listener.clear();
+
+        setMode(Mode.NONE);
+        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
         Graphics g = getGraphics();
         g.setColor(Color.WHITE);
@@ -772,27 +788,22 @@ public class DrawCanvas extends Canvas {
             }
         }
 
-        if (isShowAxis) drawAxis();
-
-        if (isShowGrid) drawGrid(); // Xóa xong thì vẽ lại lưới tọa độ
-
-        setMode(Mode.NONE);
-        setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-        listShapes.clear();
-        listener.clear();
         saveStates();
+
+        if (isShowAxis) drawAxis();
+        if (isShowGrid) drawGrid(); // Xóa xong thì vẽ lại lưới tọa độ
     }
 
     private void resetStates() {
         System.out.println("reset state");
+
         listShapes.clear();
         listener.clear();
-        boardStates.clear();
-        boardStates.add(getCurrentBoard());
-        shapesStates.add(new ArrayList());
 
-        curState = 0;
+        boardStates.clear();
+        shapesStates.clear();
+
+        curState = -1;
     }
 
     /*
@@ -830,6 +841,9 @@ public class DrawCanvas extends Canvas {
         }
         Arrays.sort(removeIndex);
         for (int i = removeIndex.length - 1; i >= 0; i--) {
+            if (isShowPointCoord) {
+                ((Geometry) listShapes.get(removeIndex[i])).clearPointsCoordinate();
+            }
             listShapes.remove(removeIndex[i]);
         }
 
