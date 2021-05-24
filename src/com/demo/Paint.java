@@ -56,6 +56,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private JButton btnCustom3D;
     private JButton btnOpenFile;
     private JButton btnPen;
+    private JButton btnSaveFile;
 
     private ButtonGroup radioGroup;
 
@@ -65,7 +66,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
     public Paint() {
         setTitle("Paint");
-        setSize(1400, 900);
+        setSize(1500, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -188,7 +189,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
                 return;
             }
 
-            RotationDialog dialog = new RotationDialog(this);
+            new RotationDialog(this);
             canvas.setMode(Mode.ROTATE);
         });
 
@@ -199,7 +200,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
                 return;
             }
 
-            ReflectionDialog dialog = new ReflectionDialog(this);
+            new ReflectionDialog(this);
             canvas.setMode(Mode.REFLECT);
         });
 
@@ -261,17 +262,17 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         btnCone.addActionListener(e -> canvas.setMode(Mode.CONE));
 
         btnCustom3D.addActionListener(e -> {
-            CustomShape3D dialog = new CustomShape3D(this);
+            new CustomShape3D(this);
         });
 
 
         btnPolygon.addActionListener(e -> {
-            PolygonCustom polygon = new PolygonCustom(this);
+            new PolygonCustom(this);
         });
 
-        btnOpenFile.addActionListener(e -> {
-            canvas.openFile();
-        });
+        btnOpenFile.addActionListener(e -> canvas.openFile());
+
+        btnSaveFile.addActionListener(e -> canvas.saveFile());
 
         onRedoState(false);
         onUndoState(false);

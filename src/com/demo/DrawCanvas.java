@@ -670,9 +670,37 @@ public class DrawCanvas extends Canvas {
 
     }
 
+    public void saveFile() {
+        BufferedImage image = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+        Point2D p;
+        for (int i = 0; i < rowSize; i++) {
+            for (int j = 0; j < colSize; j++) {
+                g.setColor(new Color(board[i][j]));
+                p = Point2D.fromComputerCoordinate(i, j);
+                g.fillRect(p.getComputerX() * pixelSize, p.getComputerY() * pixelSize, pixelSize, pixelSize);
+            }
+        }
+
+        try {
+            JFileChooser fc = new JFileChooser();
+            fc.setPreferredSize(new Dimension(650, 500));
+            int result = fc.showSaveDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                System.out.println(file.getAbsolutePath());
+                ImageIO.write(image, "png", new File(file.getAbsolutePath() + ".png"));
+                JOptionPane.showMessageDialog(null, "Save file successfully");
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void openFile() {
         JFileChooser fc = new JFileChooser();
-        fc.setSize(450, 450);
+        fc.setPreferredSize(new Dimension(650, 500));
         FileFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
         fc.setFileFilter(imageFilter);
 
