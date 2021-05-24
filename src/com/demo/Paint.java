@@ -57,6 +57,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private JButton btnOpenFile;
     private JButton btnPen;
     private JButton btnSaveFile;
+    private JButton btnFilm;
 
     private ButtonGroup radioGroup;
 
@@ -65,7 +66,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private DefaultListModel listModel = new DefaultListModel();
 
     public Paint() {
-        setTitle("Paint");
+        setTitle("Pro Paint");
         setSize(1500, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
@@ -273,6 +274,8 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         btnOpenFile.addActionListener(e -> canvas.openFile());
 
         btnSaveFile.addActionListener(e -> canvas.saveFile());
+
+        btnFilm.addActionListener(e -> canvas.setShowFilm(!canvas.isShowFilm()));
 
         onRedoState(false);
         onUndoState(false);

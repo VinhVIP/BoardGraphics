@@ -4,6 +4,7 @@ import com.demo.listeners.CanvasListener;
 import com.demo.models.Point2D;
 import com.demo.models.Point3D;
 import com.demo.models.Vector2D;
+import com.demo.motions.Film;
 import com.demo.motions.MotionManager;
 import com.demo.shape.Polygon;
 import com.demo.shape.Rectangle;
@@ -669,6 +670,58 @@ public class DrawCanvas extends Canvas {
         }
 
     }
+
+    Thread filmThread;        // Thread sử dụng để play film
+    private boolean isShowFilm;
+    public void setShowFilm(boolean isShowFilm) {
+        this.isShowFilm = isShowFilm;
+
+        if (isShowFilm) {
+            if (filmThread == null) {
+                clearScreen();
+                filmThread = new Film(this);
+                filmThread.start();
+            }
+        } else {
+            filmThread.stop();
+            filmThread = null;
+            clearScreen();
+        }
+    }
+    public boolean isShowFilm(){
+        return isShowFilm;
+    }
+
+//    public void playFilm() {
+//        int maxFrames = 500;
+//        File file;
+//        String path = "C:\\Users\\Admin\\Documents\\film\\";
+//        int[][] b = newDefaultBoard();
+//        BufferedImage image = null;
+//
+//        for (int frame = 1; frame <= maxFrames; frame++) {
+//            String imagePath = path + String.format("%04d", frame) + ".jpg";
+//            file = new File(imagePath);
+//
+//            try {
+//                image = ImageIO.read(file);
+//
+//                for (int i = 2; i < image.getWidth(); i += 5) {
+//                    if (i >= canvasWidth) break;
+//                    for (int j = 2; j < image.getHeight(); j += 5) {
+//                        if (j >= canvasHeight) break;
+//                        b[i / 5][j / 5] = image.getRGB(i, j);
+//                    }
+//                }
+//
+//                applyBoard(b);
+//                Thread.sleep(200);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     public void saveFile() {
         BufferedImage image = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_ARGB);
