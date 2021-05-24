@@ -55,6 +55,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private JCheckBox checkBoxColorFill;
     private JButton btnCustom3D;
     private JButton btnOpenFile;
+    private JButton btnPen;
 
     private ButtonGroup radioGroup;
 
@@ -77,13 +78,6 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
             int[] indexes = listShape.getSelectedIndices();
             if (indexes.length > 0) {
                 canvas.clearShapes(indexes);
-//                Arrays.sort(indexes);
-//                for (int i = indexes.length - 1; i >= 0; i--) {
-//                    System.out.print(indexes[i] + " ");
-//                    listModel.remove(indexes[i]);
-//                }
-//                System.out.println();
-
             } else {
                 canvas.clearScreen();
             }
@@ -97,11 +91,10 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
             canvas.setMode(Mode.RECTANGLE);
         });
 
-//        btnPen.addActionListener(e ->
-//        {
-//            canvas.setShapeMode(ShapeMode.PEN);
-//            labelDrawMode.setText("MODE: PEN");
-//        });
+        btnPen.addActionListener(e ->
+        {
+            canvas.setMode(Mode.PEN);
+        });
 
         btnCircle.addActionListener(e ->
         {

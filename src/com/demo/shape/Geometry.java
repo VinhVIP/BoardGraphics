@@ -91,7 +91,7 @@ public abstract class Geometry {
      * Key sử dụng cho mapPoints
      * Dùng trong thuật toán loang để tô màu
      */
-    private class PointKey {
+    public class PointKey {
         int x, y;
 
         public PointKey(int x, int y) {

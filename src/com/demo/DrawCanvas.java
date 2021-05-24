@@ -14,6 +14,8 @@ import com.demo.shapes3D.Rectangular;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -666,16 +668,18 @@ public class DrawCanvas extends Canvas {
             }
         }
 
-//        demoOpenImageFile();
     }
 
     public void openFile() {
         JFileChooser fc = new JFileChooser();
+        fc.setSize(450, 450);
+        FileFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
+        fc.setFileFilter(imageFilter);
+
         int result = fc.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            String sname = file.getAbsolutePath(); //THIS WAS THE PROBLEM
-            System.out.println(sname);
+            System.out.println("Open file: " + file.getAbsolutePath());
             demoOpenImageFile(file);
         }
     }
@@ -684,15 +688,30 @@ public class DrawCanvas extends Canvas {
         try {
             BufferedImage image = ImageIO.read(file);
             int[][] b = newDefaultBoard();
+            int color;
+            Point2D p;
+            List<Point2D> listPoints = new ArrayList<>();
+
             for (int i = 2; i < image.getWidth(); i += 5) {
                 if (i >= canvasWidth) break;
                 for (int j = 2; j < image.getHeight(); j += 5) {
                     if (j >= canvasHeight) break;
-                    b[i / 5][j / 5] = image.getRGB(i, j);
+                    color = image.getRGB(i, j);
+                    b[i / 5][j / 5] = color;
+                    p = Point2D.fromComputerCoordinate(i / 5, j / 5);
+                    p.setColor(color);
+                    listPoints.add(p);
                 }
             }
-            applyBoard(b);
-            saveStates();
+
+            geometry = new Pen(this);
+            ((Pen) geometry).setListDraw(listPoints);
+            geometry.drawNewPoints();
+
+            merge();
+
+//            applyBoard(b);
+//            saveStates();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1013,6 +1032,8 @@ public class DrawCanvas extends Canvas {
         for (int index : mapNewPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
 
+            if (g instanceof Pen) continue;
+
             Point2D[] points = g.getPoints();
             for (int i = 0; i < points.length; i++) {
                 points[i] = mapNewPoints.get(index).get(i);
@@ -1173,6 +1194,8 @@ public class DrawCanvas extends Canvas {
             for (int index : listShapesSelected) {
                 Geometry g = (Geometry) listShapes.get(index);
 
+                if (g instanceof Pen) continue;
+
                 g.clearPointsCoordinate();
 
                 mapPoints.put(index, new ArrayList<>());
@@ -1190,14 +1213,18 @@ public class DrawCanvas extends Canvas {
 
             for (int i = 0; i < listShapes.size(); i++) {
                 boolean skip = false;
-                for (int j : listShapesSelected) {
-                    if (i == j) {
-                        skip = true;
-                        break;
+                Geometry g = (Geometry) listShapes.get(i);
+                if (!(g instanceof Pen)) {
+                    for (int j : listShapesSelected) {
+                        if (i == j) {
+                            skip = true;
+                            break;
+                        }
                     }
                 }
                 if (!skip) {
                     Geometry geo = (Geometry) listShapes.get(i);
+
                     for (Point2D p : geo.getListDraw()) {
                         if (p.getComputerX() < 0 || p.getComputerX() >= rowSize || p.getComputerY() < 0 || p.getComputerY() >= colSize)
                             continue;
@@ -1231,6 +1258,9 @@ public class DrawCanvas extends Canvas {
 
         for (int index : mapPoints.keySet()) {
             Geometry g = (Geometry) listShapes.get(index);
+
+            // Pen không cho phép move
+            if (g instanceof Pen) continue;
 
             Point2D[] points = g.getPoints();
             for (int i = 0; i < points.length; i++) {
