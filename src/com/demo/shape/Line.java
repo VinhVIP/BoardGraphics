@@ -29,7 +29,7 @@ public class Line extends Geometry {
         initSizePoints(totalPoints);
     }
 
-    public Line(DrawCanvas canvas, DrawMode drawMode,boolean isFillColor) {
+    public Line(DrawCanvas canvas, DrawMode drawMode, boolean isFillColor) {
         super(canvas, drawMode, isFillColor);
         initSizePoints(totalPoints);
     }

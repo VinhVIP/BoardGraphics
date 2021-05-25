@@ -7,7 +7,7 @@ package com.demo.models;
 
 public class Vector2D {
 
-    public static Vector2D oX = new Vector2D(1,0);
+    public static Vector2D oX = new Vector2D(1, 0);
 
 
     private int a, b;

@@ -5,7 +5,6 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.shape.Circle;
 import com.demo.shape.Line;
-import com.demo.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +26,9 @@ public class Enemy {
         rim1 = new Line(canvas, DrawMode.DEFAULT, 0x000);
         rim2 = new Line(canvas, DrawMode.DEFAULT, 0x000);
 
-        wheel.setPoints(new Point2D[]{initPoint, new Point2D(initPoint.getX()+5, initPoint.getY())});
-        rim1.setPoints(new Point2D[]{new Point2D(initPoint.getX(), initPoint.getY()-5), new Point2D(initPoint.getX(), initPoint.getY()+5)});
-        rim2.setPoints(new Point2D[]{new Point2D(initPoint.getX()-5, initPoint.getY()), new Point2D(initPoint.getX()+5, initPoint.getY())});
+        wheel.setPoints(new Point2D[]{initPoint, new Point2D(initPoint.getX() + 5, initPoint.getY())});
+        rim1.setPoints(new Point2D[]{new Point2D(initPoint.getX(), initPoint.getY() - 5), new Point2D(initPoint.getX(), initPoint.getY() + 5)});
+        rim2.setPoints(new Point2D[]{new Point2D(initPoint.getX() - 5, initPoint.getY()), new Point2D(initPoint.getX() + 5, initPoint.getY())});
     }
 
     public void run() {
@@ -49,13 +48,15 @@ public class Enemy {
         setListDraw();
 
     }
-    public void setListDraw(){
+
+    public void setListDraw() {
         listDraw.clear();
         listDraw.addAll(wheel.getListDraw());
         listDraw.addAll(rim1.getListDraw());
         listDraw.addAll(rim2.getListDraw());
     }
-    public List<Point2D> getListDraw(){
+
+    public List<Point2D> getListDraw() {
         return listDraw;
     }
 

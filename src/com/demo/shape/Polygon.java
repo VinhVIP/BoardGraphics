@@ -9,7 +9,7 @@ import com.demo.models.Point2D;
  * On 22/05/2021
  */
 
-public class Polygon extends Geometry{
+public class Polygon extends Geometry {
 
     private int totalPoints;
 
@@ -65,7 +65,7 @@ public class Polygon extends Geometry{
 
     @Override
     public void processDraw() {
-        if(totalPoints > 0) {
+        if (totalPoints > 0) {
             swapList();
 
             for (int i = 0; i < lines.length; i++) {
@@ -105,7 +105,7 @@ public class Polygon extends Geometry{
     @Override
     public String toString() {
         String s = "Polygon: ";
-        for(Point2D p:points){
+        for (Point2D p : points) {
             s += String.format("(%d, %d) ", p.getX(), p.getY());
         }
         return s;

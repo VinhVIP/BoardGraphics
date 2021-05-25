@@ -5,7 +5,7 @@ import com.demo.listeners.DialogListener;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class ReflectionDialog extends JDialog implements ActionListener{
+public class ReflectionDialog extends JDialog implements ActionListener {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -58,12 +58,12 @@ public class ReflectionDialog extends JDialog implements ActionListener{
 
     private void onOK() {
         try {
-            if(radioPoint.isSelected()){
+            if (radioPoint.isSelected()) {
                 System.out.println("dm1");
                 int x = Integer.parseInt(tfX.getText().trim());
                 int y = Integer.parseInt(tfY.getText().trim());
                 listener.onPointReflect(x, y);
-            }else{
+            } else {
                 System.out.println("dm2");
                 int x1 = Integer.parseInt(tfX1.getText().trim());
                 int y1 = Integer.parseInt(tfY1.getText().trim());
@@ -86,7 +86,7 @@ public class ReflectionDialog extends JDialog implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(radioPoint.isSelected()){
+        if (radioPoint.isSelected()) {
             tfX.setEnabled(true);
             tfY.setEnabled(true);
 
@@ -94,7 +94,7 @@ public class ReflectionDialog extends JDialog implements ActionListener{
             tfX2.setEnabled(false);
             tfY1.setEnabled(false);
             tfY2.setEnabled(false);
-        }else{
+        } else {
             tfX.setEnabled(false);
             tfY.setEnabled(false);
 

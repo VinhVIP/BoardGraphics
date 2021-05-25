@@ -125,7 +125,7 @@ public class PolygonCustom extends JDialog {
                             break;
                         }
                     }
-                    if(isSame) break;
+                    if (isSame) break;
                 }
                 if (isSame) {
                     JOptionPane.showMessageDialog(null, "Điểm " + u + " và " + v + " trùng nhau!", "Thông báo", JOptionPane.WARNING_MESSAGE);

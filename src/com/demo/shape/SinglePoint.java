@@ -2,7 +2,6 @@ package com.demo.shape;
 
 import com.demo.DrawCanvas;
 import com.demo.models.Point2D;
-import com.demo.shape.Geometry;
 
 /**
  * Create by VinhIT
@@ -22,7 +21,7 @@ public class SinglePoint extends Geometry {
 
     @Override
     public void draw() {
-        if(startPoint != null){
+        if (startPoint != null) {
             listDraw.add(startPoint);
             drawNewPoints();
             showPointsCoordinate();

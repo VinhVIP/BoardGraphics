@@ -57,7 +57,7 @@ public class Motion {
 
         explosion.run();
 
-        if(cycleIndex<cycle.getListDraw().size()-1 && cycle.getListDraw().get(cycleIndex).getX()!=cycle.getListDraw().get(cycleIndex+1).getX()){
+        if (cycleIndex < cycle.getListDraw().size() - 1 && cycle.getListDraw().get(cycleIndex).getX() != cycle.getListDraw().get(cycleIndex + 1).getX()) {
             skyMove();
         }
 
@@ -93,20 +93,20 @@ public class Motion {
 
     private void setColorSky() {
         for (int i = 0; i < sky.getListDraw().size(); i++) {
-            sky.getListDraw().get(i).setColor(colorSky[Math.abs(sky.getListDraw().get(i).getX()/10)]);
-            colorSkyMove[sky.getListDraw().get(i).getX()+260] = sky.getListDraw().get(i).getColor();
+            sky.getListDraw().get(i).setColor(colorSky[Math.abs(sky.getListDraw().get(i).getX() / 10)]);
+            colorSkyMove[sky.getListDraw().get(i).getX() + 260] = sky.getListDraw().get(i).getColor();
         }
     }
 
-    private void skyMove(){
+    private void skyMove() {
         int[] colorSkyMoveTemp = colorSkyMove.clone();
         int colorTemp = colorSkyMove[0];
         for (int i = 0; i < sky.getListDraw().size(); i++) {
-            sky.getListDraw().get(i).setColor(colorSkyMove[sky.getListDraw().get(i).getX()+261]);
+            sky.getListDraw().get(i).setColor(colorSkyMove[sky.getListDraw().get(i).getX() + 261]);
         }
-        for (int i=0; i<colorSkyMove.length-1; i++){
-            colorSkyMove[i] = colorSkyMoveTemp[i+1];
+        for (int i = 0; i < colorSkyMove.length - 1; i++) {
+            colorSkyMove[i] = colorSkyMoveTemp[i + 1];
         }
-        colorSkyMove[colorSkyMove.length-1] = colorTemp;
+        colorSkyMove[colorSkyMove.length - 1] = colorTemp;
     }
 }

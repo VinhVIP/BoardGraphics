@@ -326,7 +326,7 @@ public abstract class Geometry {
 
     public void setPoints(Point2D[] points) {
         this.points = points;
-        if(points.length==4){
+        if (points.length == 4) {
             this.startPoint = points[0];
             this.endPoint = points[2];
         }
@@ -353,24 +353,25 @@ public abstract class Geometry {
         }
     }
 
-    public void scale(double sx, double sy){
+    public void scale(double sx, double sy) {
         for (int i = 0; i < points.length; i++) {
             points[i] = points[i].scale(getCenterPoint(), sx, sy);
         }
     }
 
-    public void scale(Point2D root, double sx, double sy){
+    public void scale(Point2D root, double sx, double sy) {
         for (int i = 0; i < points.length; i++) {
             points[i] = points[i].scale(root, sx, sy);
         }
     }
 
-    public void reflect(Point2D root){
+    public void reflect(Point2D root) {
         for (int i = 0; i < points.length; i++) {
             points[i] = points[i].reflect(root);
         }
     }
-    public void reflect(Point2D p1, Point2D p2){
+
+    public void reflect(Point2D p1, Point2D p2) {
         for (int i = 0; i < points.length; i++) {
             points[i] = points[i].reflect(p1, p2);
         }

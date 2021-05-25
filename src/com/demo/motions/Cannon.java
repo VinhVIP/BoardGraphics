@@ -5,7 +5,6 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.shape.Circle;
 import com.demo.shape.Ellipse;
-import com.demo.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +28,9 @@ public class Cannon {
     }
 
     public void run(Point2D aimPoint) {
-        if (aimPoint != null){
+        if (aimPoint != null) {
 
-        }else{
+        } else {
 
         }
     }

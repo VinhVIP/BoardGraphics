@@ -673,6 +673,7 @@ public class DrawCanvas extends Canvas {
 
     Thread filmThread;        // Thread sử dụng để play film
     private boolean isShowFilm;
+
     public void setShowFilm(boolean isShowFilm) {
         this.isShowFilm = isShowFilm;
 
@@ -688,7 +689,8 @@ public class DrawCanvas extends Canvas {
             clearScreen();
         }
     }
-    public boolean isShowFilm(){
+
+    public boolean isShowFilm() {
         return isShowFilm;
     }
 
@@ -714,7 +716,6 @@ public class DrawCanvas extends Canvas {
                 ImageIO.write(image, "png", new File(file.getAbsolutePath() + ".png"));
                 JOptionPane.showMessageDialog(null, "Save file successfully");
             }
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }

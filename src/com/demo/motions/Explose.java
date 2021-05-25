@@ -5,8 +5,6 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.shape.Circle;
 
-import java.util.List;
-
 public class Explose extends Circle {
     private Circle exTemp;
     private double scale = 1, dv = 0.5;
@@ -42,7 +40,7 @@ public class Explose extends Circle {
         exTemp.fillColor();
         this.listDraw = exTemp.getListDraw();
 
-        if (scale > 4){
+        if (scale > 4) {
             scale = 1;
             isExplose = false;
         }
@@ -51,7 +49,8 @@ public class Explose extends Circle {
     public boolean isExplose() {
         return isExplose;
     }
-    public void setExplose(){
+
+    public void setExplose() {
         this.isExplose = !isExplose;
     }
 }

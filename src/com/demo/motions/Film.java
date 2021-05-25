@@ -35,7 +35,7 @@ public class Film extends Thread {
     public void playFilm() {
         int maxFrames = 1000;
         File file;
-        String path = "C:\\Users\\Admin\\Documents\\film2\\";
+        String path = "assets/";
         BufferedImage image = null;
 
         for (int frame = 1; frame <= maxFrames; frame++) {
@@ -55,7 +55,7 @@ public class Film extends Thread {
             }
 
         }
-        System.out.println("done");
+        System.out.println("----end film----");
     }
 
     public void tools() {
@@ -68,7 +68,7 @@ public class Film extends Thread {
 
         for (int frame = 1; frame <= maxFrames; frame++) {
             String imagePath = path + String.format("%04d", frame) + ".jpg";
-            String imagePath2 = path2 + String.format("%04d", frame+500) + ".png";
+            String imagePath2 = path2 + String.format("%04d", frame + 500) + ".png";
             file = new File(imagePath);
 
             try {
