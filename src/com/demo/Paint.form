@@ -540,6 +540,7 @@
               <background color="-1"/>
               <icon value="com/demo/icons/save.png"/>
               <text value=""/>
+              <toolTipText value="Save"/>
             </properties>
           </component>
           <component id="470e0" class="javax.swing.JButton" binding="btnFilm">

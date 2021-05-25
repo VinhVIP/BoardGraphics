@@ -64,17 +64,17 @@ public class CustomShape3D extends JDialog {
         shape3DMode = Mode.RECTANGULAR;
 
         btnChooseRectangular.addActionListener(e -> {
-            ImageIcon icon = new ImageIcon(getClass().getResource("/com/demo/icons/preview_rectangular.jpg"));
+            ImageIcon icon = new ImageIcon(getClass().getResource("/assets/icons/preview_rectangular.jpg"));
             btnImage.setIcon(icon);
             shape3DMode = Mode.RECTANGULAR;
         });
         btnChooseCylinder.addActionListener(e -> {
-            ImageIcon icon = new ImageIcon(getClass().getResource("/com/demo/icons/preview_cylinder.jpg"));
+            ImageIcon icon = new ImageIcon(getClass().getResource("/assets/icons/preview_cylinder.jpg"));
             btnImage.setIcon(icon);
             shape3DMode = Mode.CYLINDER;
         });
         btnChooseCone.addActionListener(e -> {
-            ImageIcon icon = new ImageIcon(getClass().getResource("/com/demo/icons/preview_cone.jpg"));
+            ImageIcon icon = new ImageIcon(getClass().getResource("/assets/icons/preview_cone.jpg"));
             btnImage.setIcon(icon);
             shape3DMode = Mode.CONE;
         });

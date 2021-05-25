@@ -33,9 +33,11 @@ public class Film extends Thread {
     }
 
     public void playFilm() {
+        System.out.println("----start film----");
+
         int maxFrames = 1000;
         File file;
-        String path = "assets/";
+        String path = "assets/films/";
         BufferedImage image = null;
 
         for (int frame = 1; frame <= maxFrames; frame++) {

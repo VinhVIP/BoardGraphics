@@ -42,8 +42,10 @@ public class Polygon extends Geometry {
 
         g.points = new Point2D[points.length];
 
+        Point2D[] ps = new Point2D[totalPoints];
         for (int i = 0; i < totalPoints; i++)
-            g.points[i] = new Point2D(points[i]);
+            ps[i] = new Point2D(points[i]);
+        g.setPoints(ps);
 
         for (Point2D p : listDraw) {
             g.listDraw.add(new Point2D(p));
@@ -61,6 +63,13 @@ public class Polygon extends Geometry {
         for (int i = 0; i < lines.length; i++) {
             lines[i] = new Line(canvas, drawMode, color);
         }
+    }
+
+    @Override
+    public void draw() {
+        processDraw();
+        clearOldPoints();
+        drawNewPoints();
     }
 
     @Override
