@@ -110,6 +110,10 @@ public class DrawCanvas extends Canvas {
         isShowMotions = showMotions;
 
         if (isShowMotions) {
+            if (filmThread != null) {
+                isShowMotions = false;
+                return;
+            }
             if (motionThread == null) {
                 clearScreen();
                 motionThread = new MotionManager(this);
@@ -678,6 +682,10 @@ public class DrawCanvas extends Canvas {
         this.isShowFilm = isShowFilm;
 
         if (isShowFilm) {
+            if (motionThread != null) {
+                this.isShowFilm = false;
+                return;
+            }
             if (filmThread == null) {
                 clearScreen();
                 filmThread = new Film(this);
@@ -1119,7 +1127,7 @@ public class DrawCanvas extends Canvas {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            if (isShowMotions) return;
+            if (isShowMotions || isShowFilm) return;
 
             // Nhấn giữ chuột và kéo
 
