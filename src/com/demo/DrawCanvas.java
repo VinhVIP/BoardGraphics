@@ -484,11 +484,21 @@ public class DrawCanvas extends Canvas {
      * @param   state   trạng thái muốn áp dụng
      */
     private void applyState(int state) {
+        for (int i = 0; i < listShapes.size(); i++) {
+            Geometry g = (Geometry) listShapes.get(i);
+            g.clearPointsCoordinate();
+        }
+
         listShapes = getListShapesAt(state);
         listener.notifyDataSetChanged(listShapes);
 
         int[][] stateBoard = boardStates.get(state);
         applyBoard(stateBoard);
+
+        for (int i = 0; i < listShapes.size(); i++) {
+            Geometry g = (Geometry) listShapes.get(i);
+            g.showPointsCoordinate();
+        }
 
         System.out.println("apply state " + state + " done: " + listShapes.size());
 
