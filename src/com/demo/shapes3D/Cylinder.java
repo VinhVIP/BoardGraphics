@@ -111,6 +111,7 @@ public class Cylinder extends Geometry {
         this.dx = dx;
         this.dy = dy;
         this.dz = dz;
+        dz *= Math.sqrt(2) / 2.0;
 
         point3Ds[4] = root;
         point3Ds[5] = new Point3D(point3Ds[4].getX() - dx, point3Ds[4].getY(), point3Ds[4].getZ());

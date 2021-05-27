@@ -21,8 +21,8 @@ public class Point3D {
     }
 
     public Point2D to2DPoint() {
-        int xP = (int) (x - z * Math.sqrt(2) / 2);
-        int yP = (int) (y - z * Math.sqrt(2) / 2);
+        int xP = (int) (x - z * Math.sqrt(2) / 2.0);
+        int yP = (int) (y - z * Math.sqrt(2) / 2.0);
         return new Point2D(xP, yP);
     }
 

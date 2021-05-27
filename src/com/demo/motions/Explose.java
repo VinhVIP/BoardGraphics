@@ -53,4 +53,10 @@ public class Explose extends Circle {
     public void setExplose() {
         this.isExplose = !isExplose;
     }
+
+    @Override
+    public String toString() {
+        // TODO: toString Explose
+        return "Explose{}";
+    }
 }

@@ -4,9 +4,7 @@ import com.demo.DrawCanvas;
 import com.demo.DrawMode;
 import com.demo.models.Point2D;
 import com.demo.shape.Circle;
-import com.demo.shape.Ellipse;
 import com.demo.shape.Line;
-import com.demo.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +18,8 @@ public class Bomb {
     DrawCanvas canvas;
     private Point2D initPoint;
 
+    private int radius = 3;
+
     public Bomb(DrawCanvas canvas, Point2D initPoint) {
         this.canvas = canvas;
         this.initPoint = initPoint;
@@ -29,9 +29,10 @@ public class Bomb {
         bomb = new Circle(canvas, null, null, DrawMode.DEFAULT, 0x000000, 0x000000, true, true);
         line1 = new Line(canvas, DrawMode.DEFAULT, 0xffffff);
         line2 = new Line(canvas, DrawMode.DEFAULT, 0xffffff);
-        bomb.setPoints(new Point2D[]{initPoint, new Point2D(initPoint.getX()+3, initPoint.getY())});
-        line1.setPoints(new Point2D[]{new Point2D(initPoint.getX()-4, initPoint.getY()+1), new Point2D(initPoint.getX()-8, initPoint.getY()+1)});
-        line2.setPoints(new Point2D[]{new Point2D(initPoint.getX()-4, initPoint.getY()-2), new Point2D(initPoint.getX()-6, initPoint.getY()-2)});
+
+        bomb.setPoints(new Point2D[]{initPoint, new Point2D(initPoint.getX() + radius, initPoint.getY())});
+        line1.setPoints(new Point2D[]{new Point2D(initPoint.getX() - (radius + 1), initPoint.getY() + 1), new Point2D(initPoint.getX() - 2 * (radius + 1), initPoint.getY() + 1)});
+        line2.setPoints(new Point2D[]{new Point2D(initPoint.getX() - (radius + 1), initPoint.getY() - 2), new Point2D(initPoint.getX() - 2 * radius, initPoint.getY() - 2)});
     }
 
     public void run() {
@@ -67,4 +68,16 @@ public class Bomb {
         return listDraw;
     }
 
+    public void scale(double scale) {
+        radius *= scale;
+
+        bomb.setPoints(new Point2D[]{initPoint, new Point2D(initPoint.getX() + radius, initPoint.getY())});
+        line1.setPoints(new Point2D[]{new Point2D(initPoint.getX() - (radius + 1), initPoint.getY() + 1), new Point2D(initPoint.getX() - 2 * (radius + 1), initPoint.getY() + 1)});
+        line2.setPoints(new Point2D[]{new Point2D(initPoint.getX() - (radius + 1), initPoint.getY() - 2), new Point2D(initPoint.getX() - 2 * radius, initPoint.getY() - 2)});
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Bomb: (%d, %d) R=%d", bomb.getCenterPoint().getX(), bomb.getCenterPoint().getY(), radius);
+    }
 }

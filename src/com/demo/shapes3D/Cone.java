@@ -105,6 +105,7 @@ public class Cone extends Geometry {
         this.dx = dx;
         this.dy = dy;
         this.dz = dz;
+        dz *= Math.sqrt(2) / 2.0;
 
         point3Ds[1] = root;
         point3Ds[2] = new Point3D(point3Ds[1].getX() - dx, point3Ds[1].getY(), point3Ds[1].getZ());

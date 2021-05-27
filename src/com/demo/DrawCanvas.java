@@ -787,7 +787,6 @@ public class DrawCanvas extends Canvas {
             ((Pen) geometry).setListDraw(listPoints);
             geometry.drawNewPoints();
 
-            // TODO: Fix open file
             applyBoard(b);
             merge();
 

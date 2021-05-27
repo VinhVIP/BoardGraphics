@@ -58,6 +58,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     private JButton btnPen;
     private JButton btnSaveFile;
     private JButton btnFilm;
+    private JButton btnPropertiesAnimation;
 
     private ButtonGroup radioGroup;
 
@@ -279,6 +280,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
         onRedoState(false);
         onUndoState(false);
+
+
+        btnPropertiesAnimation.addActionListener(e->{
+            new AnimationDialog();
+        });
 
         // Important
         add(rootPanel);

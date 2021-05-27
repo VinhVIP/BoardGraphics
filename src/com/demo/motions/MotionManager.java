@@ -14,7 +14,7 @@ public class MotionManager extends Thread {
 
     public MotionManager(DrawCanvas canvas) {
         this.canvas = canvas;
-        bike = new Bike(canvas);
+//        bike = new Bike(canvas);
         motion = new Motion(canvas);
     }
 

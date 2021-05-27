@@ -61,12 +61,12 @@ public class Motion {
         listCannonsDraw = new ArrayList<>();
         listLandDraw = new ArrayList<>();
 
-        for(int i=0; i<yCoordinate.length; i++){
+        for (int i = 0; i < yCoordinate.length; i++) {
             Rectangle cannon = new Rectangle(canvas, null, null, DrawMode.DEFAULT, 0x666666, 0x666666, true, true);
             Circle wheel = new Circle(canvas, null, null, DrawMode.DEFAULT, 0x000000, 0x000000, true, true);
-            cannon.setPoints(new Point2D[]{new Point2D(-100, yCoordinate[i]-4), new Point2D(-90, yCoordinate[i]-4),
-                    new Point2D(-90, yCoordinate[i]+4), new Point2D(-100, yCoordinate[i]+4)});
-            wheel.setPoints(new Point2D[]{new Point2D(-96, yCoordinate[i]-4), new Point2D(-100, yCoordinate[i]-4)});
+            cannon.setPoints(new Point2D[]{new Point2D(-100, yCoordinate[i] - 4), new Point2D(-90, yCoordinate[i] - 4),
+                    new Point2D(-90, yCoordinate[i] + 4), new Point2D(-100, yCoordinate[i] + 4)});
+            wheel.setPoints(new Point2D[]{new Point2D(-96, yCoordinate[i] - 4), new Point2D(-100, yCoordinate[i] - 4)});
 
             cannon.processDraw();
             cannon.fillColor();
@@ -107,32 +107,43 @@ public class Motion {
         List<Point2D> listBombsDraw = new ArrayList<>();
         List<Point2D> listExplosionDraw = new ArrayList<>();
         int y = yCoordinate[random.nextInt(yCoordinate.length)];
-        if(cycleIndex%50==0){
-            enemies.add(new Enemy(canvas, new Point2D(100,y)));
-            bombs.add(new Bomb(canvas, new Point2D(-100, y)));
-            explosions.add(new Explosion(canvas, new Point2D(new Point2D(-90,y)), 1,
+        if (cycleIndex % 50 == 0) {
+            Enemy enemy = new Enemy(canvas, new Point2D(100, y));
+            // TODO: Thu phóng enemy
+            enemy.scale(Config.enemyScale);
+
+            int speedRanX = Math.abs(random.nextInt()) % Math.abs(Config.enemySpeedX - Config.enemySpeedX2) + Math.min(Config.enemySpeedX, Config.enemySpeedX2);
+            enemy.move(speedRanX, Config.enemySpeedY);
+
+            enemies.add(enemy);
+
+            Bomb bomb = new Bomb(canvas, new Point2D(-100, y));
+            // TODO: Thu phóng bomb
+            bomb.scale(Config.bombScale);
+            bombs.add(bomb);
+
+            explosions.add(new Explosion(canvas, new Point2D(new Point2D(-90, y)), 1,
                     0xffffff, 0xffffff, 10));
         }
 
-        for (int i=0; i<enemies.size(); i++){
+        for (int i = 0; i < enemies.size(); i++) {
             bombs.get(i).run();
-            if(boomboomboom(bombs.get(i), enemies.get(i))){
+            if (boomboomboom(bombs.get(i), enemies.get(i))) {
                 explosions.add(new Explosion(canvas, new Point2D(enemies.get(i).wheel.getCenterPoint()), 10,
                         0xff8000, 0xff9933, 100));
                 bombs.remove(i);
                 enemies.remove(i);
 
-            }else{
+            } else {
                 enemies.get(i).run();
                 listEnemyDraw.addAll(enemies.get(i).getListDraw());
                 listBombsDraw.addAll(bombs.get(i).getListDraw());
             }
         }
-        for (int i=0; i<explosions.size(); i++){
-            if(explosions.get(i).duration == 0){
+        for (int i = 0; i < explosions.size(); i++) {
+            if (explosions.get(i).duration == 0) {
                 explosions.remove(i);
-            }
-            else{
+            } else {
                 explosions.get(i).run();
                 listExplosionDraw.addAll(explosions.get(i).getListDraw());
             }
@@ -196,10 +207,10 @@ public class Motion {
         colorSkyMove[colorSkyMove.length - 1] = colorTemp;
     }
 
-    private boolean boomboomboom(Bomb bomb, Enemy enemy){
-        for(Point2D p : bomb.getListDraw()){
-            for(Point2D q : enemy.getListDraw()){
-                if(p.equals(q)) return true;
+    private boolean boomboomboom(Bomb bomb, Enemy enemy) {
+        for (Point2D p : bomb.getListDraw()) {
+            for (Point2D q : enemy.getListDraw()) {
+                if (p.equals(q)) return true;
             }
 //            if(p.equals(enemy.wheel.getCenterPoint())){
 //                return true;
