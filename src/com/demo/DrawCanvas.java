@@ -484,9 +484,11 @@ public class DrawCanvas extends Canvas {
      * @param   state   trạng thái muốn áp dụng
      */
     private void applyState(int state) {
-        for (int i = 0; i < listShapes.size(); i++) {
-            Geometry g = (Geometry) listShapes.get(i);
-            g.clearPointsCoordinate();
+        if (isShowPointCoord) {
+            for (int i = 0; i < listShapes.size(); i++) {
+                Geometry g = (Geometry) listShapes.get(i);
+                g.clearPointsCoordinate();
+            }
         }
 
         listShapes = getListShapesAt(state);
@@ -495,9 +497,11 @@ public class DrawCanvas extends Canvas {
         int[][] stateBoard = boardStates.get(state);
         applyBoard(stateBoard);
 
-        for (int i = 0; i < listShapes.size(); i++) {
-            Geometry g = (Geometry) listShapes.get(i);
-            g.showPointsCoordinate();
+        if (isShowPointCoord) {
+            for (int i = 0; i < listShapes.size(); i++) {
+                Geometry g = (Geometry) listShapes.get(i);
+                g.showPointsCoordinate();
+            }
         }
 
         System.out.println("apply state " + state + " done: " + listShapes.size());
@@ -748,7 +752,13 @@ public class DrawCanvas extends Canvas {
         int result = fc.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            System.out.println("Open file: " + file.getAbsolutePath());
+            System.out.println("Bugs: Demo Open file: " + file.getAbsolutePath());
+//            resetStates();
+//
+//            boardStates.add(newDefaultBoard());     // Ban đầu bảng vẽ là màu trắng
+//            shapesStates.add(new ArrayList());
+//            merge();
+
             demoOpenImageFile(file);
         }
     }
@@ -777,10 +787,11 @@ public class DrawCanvas extends Canvas {
             ((Pen) geometry).setListDraw(listPoints);
             geometry.drawNewPoints();
 
+            // TODO: Fix open file
+            applyBoard(b);
             merge();
 
-            applyBoard(b);
-            saveStates();
+//            saveStates();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -1036,7 +1047,6 @@ public class DrawCanvas extends Canvas {
 
             if (isShowMotions) return;
 
-            // TODO: Them ve diem
             super.mouseClicked(e);
 
             // Set màu cho điểm vẽ là màu đang chọn
