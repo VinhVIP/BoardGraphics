@@ -183,12 +183,12 @@
                   <color color="-4473925"/>
                 </border>
                 <children>
-                  <component id="5f4ba" class="javax.swing.JLabel">
+                  <component id="5f4ba" class="javax.swing.JLabel" binding="labelA">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="a ="/>
+                      <text value="A ="/>
                     </properties>
                   </component>
                   <component id="49036" class="javax.swing.JTextField" binding="tfDX">
@@ -199,12 +199,12 @@
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="21e81" class="javax.swing.JLabel">
+                  <component id="21e81" class="javax.swing.JLabel" binding="labelB">
                     <constraints>
                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="b ="/>
+                      <text value="B ="/>
                     </properties>
                   </component>
                   <component id="a14ee" class="javax.swing.JTextField" binding="tfDY">
@@ -220,7 +220,7 @@
                       <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <text value="c ="/>
+                      <text value=" C ="/>
                     </properties>
                   </component>
                   <component id="23a65" class="javax.swing.JTextField" binding="tfDZ">

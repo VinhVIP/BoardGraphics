@@ -23,6 +23,8 @@ public class CustomShape3D extends JDialog {
     private JPanel panel;
     private JPanel panelInput;
     private JLabel labelC;
+    private JLabel labelA;
+    private JLabel labelB;
 
     private Mode shape3DMode;
     private DialogListener listener;
@@ -70,6 +72,10 @@ public class CustomShape3D extends JDialog {
             btnImage.setIcon(btnChooseRectangular.getIcon());
             labelC.setVisible(true);
             tfDZ.setVisible(true);
+
+            labelA.setText("A =");
+            labelB.setText("B =");
+            labelC.setText("C =");
             shape3DMode = Mode.RECTANGULAR;
         });
         btnChooseCylinder.addActionListener(e -> {
@@ -77,6 +83,9 @@ public class CustomShape3D extends JDialog {
             btnImage.setIcon(btnChooseCylinder.getIcon());
             labelC.setVisible(false);
             tfDZ.setVisible(false);
+
+            labelA.setText("R =");
+            labelB.setText("H =");
             shape3DMode = Mode.CYLINDER;
         });
         btnChooseCone.addActionListener(e -> {
@@ -84,6 +93,9 @@ public class CustomShape3D extends JDialog {
             btnImage.setIcon(btnChooseCone.getIcon());
             labelC.setVisible(false);
             tfDZ.setVisible(false);
+
+            labelA.setText("R =");
+            labelB.setText("H =");
             shape3DMode = Mode.CONE;
         });
 
