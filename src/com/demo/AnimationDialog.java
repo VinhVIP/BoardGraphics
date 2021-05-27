@@ -14,6 +14,7 @@ public class AnimationDialog extends JDialog {
     private JTextField tfEnemySpeedX2;
     private JTextField tfBoomScale;
     private JTextField tfEnemyRotateAngle;
+    private JCheckBox cbReflectEnemyAndBomb;
 
     public AnimationDialog() {
         setContentPane(contentPane);
@@ -65,6 +66,7 @@ public class AnimationDialog extends JDialog {
         tfEnemyRotateAngle.setText(Config.enemyRotate+"");
 
         tfBoomScale.setText(Config.bombScale + "");
+        cbReflectEnemyAndBomb.setSelected(Config.isReflectEAB);
     }
 
     private void onOK() {
@@ -72,6 +74,7 @@ public class AnimationDialog extends JDialog {
         Config.enemySpeedX = Integer.parseInt(tfEnemySpeedX.getText());
         Config.enemySpeedX2 = Integer.parseInt(tfEnemySpeedX2.getText());
         Config.enemyRotate = Integer.parseInt(tfEnemyRotateAngle.getText());
+        Config.isReflectEAB = cbReflectEnemyAndBomb.isSelected();
 
         Config.bombScale = Double.parseDouble(tfBoomScale.getText());
         dispose();

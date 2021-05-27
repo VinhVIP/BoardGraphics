@@ -76,6 +76,13 @@ public class Bomb {
         line2.setPoints(new Point2D[]{new Point2D(initPoint.getX() - (radius + 1), initPoint.getY() - 2), new Point2D(initPoint.getX() - 2 * radius, initPoint.getY() - 2)});
     }
 
+    public Bomb reflectByOx(){
+        Point2D p = initPoint.reflect(new Point2D(0,0), new Point2D(1,0));
+        Bomb bomb = new Bomb(canvas, p);
+
+        return bomb;
+    }
+
     @Override
     public String toString() {
         return String.format("Bomb: (%d, %d) R=%d", bomb.getCenterPoint().getX(), bomb.getCenterPoint().getY(), radius);

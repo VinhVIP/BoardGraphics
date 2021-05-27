@@ -88,9 +88,12 @@ public class Enemy {
         speedY = moveY;
     }
 
-//    public Enemy reflectByOx(){
-//        Enemy enemy = this;
-//    }
+    public Enemy reflectByOx(){
+        Point2D p = initPoint.reflect(new Point2D(0,0), new Point2D(1,0));
+        Enemy enemy = new Enemy(canvas, p);
+
+        return enemy;
+    }
 
     @Override
     public String toString() {

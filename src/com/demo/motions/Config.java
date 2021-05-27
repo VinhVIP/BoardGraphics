@@ -15,5 +15,5 @@ public class Config {
 
     public static double bombScale = 1.0;
 
-
+    public static boolean isReflectEAB = false;
 }

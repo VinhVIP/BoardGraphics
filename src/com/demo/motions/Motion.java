@@ -117,15 +117,25 @@ public class Motion {
 
             int speedRanX = Math.abs(random.nextInt()) % Math.abs(Config.enemySpeedX - Config.enemySpeedX2) + Math.min(Config.enemySpeedX, Config.enemySpeedX2);
             enemy.move(speedRanX, Config.enemySpeedY);
-
             enemies.add(enemy);
-//            listener.notifyShapeInserted(enemy.toString());
+
+            if (Config.isReflectEAB) {
+                Enemy reflectEnemy = enemy.reflectByOx();
+                reflectEnemy.scale(Config.enemyScale);
+                reflectEnemy.move(speedRanX, Config.enemySpeedY);
+                enemies.add(reflectEnemy);
+            }
 
             Bomb bomb = new Bomb(canvas, new Point2D(-100, y));
             // TODO: Thu phóng bomb
             bomb.scale(Config.bombScale);
             bombs.add(bomb);
-//            listener.notifyShapeInserted(bomb.toString());
+
+            if (Config.isReflectEAB) {
+                Bomb reflectBomb = bomb.reflectByOx();
+                reflectBomb.scale(Config.bombScale);
+                bombs.add(reflectBomb);
+            }
 
             explosions.add(new Explosion(canvas, new Point2D(new Point2D(-90, y)), 1,
                     0xffffff, 0xffffff, 10));
