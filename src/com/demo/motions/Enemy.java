@@ -88,6 +88,10 @@ public class Enemy {
         speedY = moveY;
     }
 
+//    public Enemy reflectByOx(){
+//        Enemy enemy = this;
+//    }
+
     @Override
     public String toString() {
         return String.format("Enemy: (%d, %d) R=%d", wheel.getCenterPoint().getX(), wheel.getCenterPoint().getY(), radius);

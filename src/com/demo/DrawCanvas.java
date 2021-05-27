@@ -116,7 +116,7 @@ public class DrawCanvas extends Canvas {
             }
             if (motionThread == null) {
                 clearScreen();
-                motionThread = new MotionManager(this);
+                motionThread = new MotionManager(this, listener);
                 motionThread.start();
             }
         } else {

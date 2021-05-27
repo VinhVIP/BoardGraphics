@@ -89,4 +89,9 @@ public class Sun {
     public List<Point2D> getListDraw() {
         return listDraw;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Sun: (%d, %d) R = %d", sun.getCenterPoint().getX(), sun.getCenterPoint().getY(), sun.getRadius());
+    }
 }

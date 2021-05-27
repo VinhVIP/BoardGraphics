@@ -50,6 +50,9 @@ public class AnimationDialog extends JDialog {
 
         setData();
 
+        setTitle("Animation Setup");
+        setLocation(500, 300);
+
         pack();
         setVisible(true);
 

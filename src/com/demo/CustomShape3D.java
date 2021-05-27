@@ -22,6 +22,7 @@ public class CustomShape3D extends JDialog {
     private JButton btnChooseCylinder;
     private JPanel panel;
     private JPanel panelInput;
+    private JLabel labelC;
 
     private Mode shape3DMode;
     private DialogListener listener;
@@ -62,21 +63,27 @@ public class CustomShape3D extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         shape3DMode = Mode.RECTANGULAR;
-        btnImage.setVisible(false);
+//        btnImage.setVisible(false);
 
         btnChooseRectangular.addActionListener(e -> {
 //            ImageIcon icon = new ImageIcon(getClass().getResource("assets/icons/preview_rectangular.jpg"));
-//            btnImage.setIcon(icon);
+            btnImage.setIcon(btnChooseRectangular.getIcon());
+            labelC.setVisible(true);
+            tfDZ.setVisible(true);
             shape3DMode = Mode.RECTANGULAR;
         });
         btnChooseCylinder.addActionListener(e -> {
 //            ImageIcon icon = new ImageIcon(getClass().getResource("com/demo/icons/preview_cylinder.jpg"));
-//            btnImage.setIcon(icon);
+            btnImage.setIcon(btnChooseCylinder.getIcon());
+            labelC.setVisible(false);
+            tfDZ.setVisible(false);
             shape3DMode = Mode.CYLINDER;
         });
         btnChooseCone.addActionListener(e -> {
 //            ImageIcon icon = new ImageIcon(getClass().getResource("assets/icons/preview_cone.jpg"));
-//            btnImage.setIcon(icon);
+            btnImage.setIcon(btnChooseCone.getIcon());
+            labelC.setVisible(false);
+            tfDZ.setVisible(false);
             shape3DMode = Mode.CONE;
         });
 
@@ -94,12 +101,18 @@ public class CustomShape3D extends JDialog {
 
             int dx = Integer.parseInt(tfDX.getText().trim());
             int dy = Integer.parseInt(tfDY.getText().trim());
-            int dz = Integer.parseInt(tfDZ.getText().trim());
 
             switch (shape3DMode) {
-                case RECTANGULAR -> listener.onDrawRectangular(new Point3D(x, y, z), dx, dy, dz);
-                case CYLINDER -> listener.onDrawCylinder(new Point3D(x, y, z), dx, dy, dz);
-                case CONE -> listener.onDrawCone(new Point3D(x, y, z), dx, dy, dz);
+                case RECTANGULAR -> {
+                    int dz = Integer.parseInt(tfDZ.getText().trim());
+                    listener.onDrawRectangular(new Point3D(x, y, z), dx, dy, dz);
+                }
+                case CYLINDER -> {
+                    listener.onDrawCylinder(new Point3D(x, y, z), dx, dy, dx);
+                }
+                case CONE -> {
+                    listener.onDrawCone(new Point3D(x, y, z), dx, dy, dx);
+                }
             }
 
             dispose();

@@ -85,4 +85,9 @@ public class Moon {
         if (!listRemove.containsKey(p.getY())) return true;
         return (p.getX() - listRemove.get(p.getY()) >= 0);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Moon: (%d, %d)", moon.getCenterPoint().getX(), moon.getCenterPoint().getY());
+    }
 }

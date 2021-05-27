@@ -2,6 +2,7 @@ package com.demo.motions;
 
 import com.demo.DrawCanvas;
 import com.demo.DrawMode;
+import com.demo.listeners.CanvasListener;
 import com.demo.models.Point2D;
 import com.demo.shape.Circle;
 import com.demo.shape.Ellipse;
@@ -31,9 +32,11 @@ public class Motion {
     int[] yCoordinate = new int[]{-10, -25, -40, -55};
 
     private DrawCanvas canvas;
+    private CanvasListener listener;
 
-    public Motion(DrawCanvas canvas) {
+    public Motion(DrawCanvas canvas, CanvasListener listener) {
         this.canvas = canvas;
+        this.listener = listener;
 
         Arrays.fill(colorSkyMove, 0, colorSkyMove.length, 0x003366);
 
@@ -116,11 +119,13 @@ public class Motion {
             enemy.move(speedRanX, Config.enemySpeedY);
 
             enemies.add(enemy);
+//            listener.notifyShapeInserted(enemy.toString());
 
             Bomb bomb = new Bomb(canvas, new Point2D(-100, y));
             // TODO: Thu phóng bomb
             bomb.scale(Config.bombScale);
             bombs.add(bomb);
+//            listener.notifyShapeInserted(bomb.toString());
 
             explosions.add(new Explosion(canvas, new Point2D(new Point2D(-90, y)), 1,
                     0xffffff, 0xffffff, 10));
