@@ -156,7 +156,7 @@ public class Point2D {
         p2 = p2.rotate(angle);
         p = p.rotate(angle);
 
-        System.out.println("p2.y=" + p2.y + " & angle=" + angle);
+//        System.out.println("p2.y=" + p2.y + " & angle=" + angle);
 
         // Lấy đối xứng p qua Ox
         p.set(p.x, -p.y);

@@ -282,7 +282,7 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
         onUndoState(false);
 
 
-        btnPropertiesAnimation.addActionListener(e->{
+        btnPropertiesAnimation.addActionListener(e -> {
             new AnimationDialog();
         });
 
@@ -392,6 +392,11 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (canvas.motionThread != null || canvas.filmThread != null) {
+            radio2D.setSelected(canvas.isIs2DCoordinates());
+            return;
+        }
+
         if (canvas.isIs2DCoordinates() != radio2D.isSelected()) {
             stateButtons();
             canvas.setIs2DCoordinates(radio2D.isSelected());

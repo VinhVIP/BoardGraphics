@@ -105,6 +105,7 @@ public class Motion {
 
         moon.run();
         sun.run();
+        Sun reflectSun = sun.reflectByOy();
 
         List<Point2D> listEnemyDraw = new ArrayList<>();
         List<Point2D> listBombsDraw = new ArrayList<>();
@@ -174,6 +175,7 @@ public class Motion {
         addToBoard(b,
                 sky.getListDraw(),
                 sun.getListDraw(),
+                Config.isReflectSun ? reflectSun.getListDraw() : new ArrayList<>(),
                 moon.getListDraw(),
                 listLandDraw,
                 listEnemyDraw,

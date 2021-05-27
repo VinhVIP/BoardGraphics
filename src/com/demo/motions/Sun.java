@@ -90,6 +90,17 @@ public class Sun {
         return listDraw;
     }
 
+    public Sun reflectByOy() {
+        Sun reflectSun = new Sun(canvas, cycle);
+        reflectSun.listDraw = new ArrayList<>();
+        for (Point2D p : listDraw) {
+            Point2D reflectPoint = new Point2D(p);
+            reflectPoint = reflectPoint.reflect(new Point2D(0, 0), new Point2D(0, 1));
+            reflectSun.listDraw.add(reflectPoint);
+        }
+        return reflectSun;
+    }
+
     @Override
     public String toString() {
         return String.format("Sun: (%d, %d) R = %d", sun.getCenterPoint().getX(), sun.getCenterPoint().getY(), sun.getRadius());
