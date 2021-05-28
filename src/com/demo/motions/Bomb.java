@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bomb {
+
+    public static final String TAG = "Bomb";
+
     Circle bomb;
     Line line1, line2, line1Temp, line2Temp;
     double scale1 = 1, dv1 = 0.5;
@@ -76,8 +79,8 @@ public class Bomb {
         line2.setPoints(new Point2D[]{new Point2D(initPoint.getX() - (radius + 1), initPoint.getY() - 2), new Point2D(initPoint.getX() - 2 * radius, initPoint.getY() - 2)});
     }
 
-    public Bomb reflectByOx(){
-        Point2D p = initPoint.reflect(new Point2D(0,0), new Point2D(1,0));
+    public Bomb reflectByOx() {
+        Point2D p = initPoint.reflect(new Point2D(0, 0), new Point2D(1, 0));
         Bomb bomb = new Bomb(canvas, p);
 
         return bomb;
@@ -86,5 +89,9 @@ public class Bomb {
     @Override
     public String toString() {
         return String.format("Bomb: (%d, %d) R=%d", bomb.getCenterPoint().getX(), bomb.getCenterPoint().getY(), radius);
+    }
+
+    public String getIdentify() {
+        return TAG + hashCode();
     }
 }

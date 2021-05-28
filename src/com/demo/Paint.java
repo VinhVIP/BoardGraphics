@@ -298,8 +298,22 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     }
 
     @Override
-    public void notifyShapeInserted(String shapeTitle) {
+    public int notifyShapeInserted(String shapeTitle) {
         listModel.addElement(shapeTitle);
+        return listModel.size() - 1;
+    }
+
+    @Override
+    public int notifyShapeDeleted(int position) {
+        try {
+            for (int i = position; i < listModel.size() - 1; i++) {
+                notifyShapeChanged(i, (String) listModel.get(i + 1));
+            }
+            listModel.remove(listModel.size() - 1);
+        } catch (Exception e) {
+            System.out.println("oops");
+        }
+        return listModel.size();
     }
 
     @Override
@@ -314,7 +328,12 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
 
     @Override
     public void notifyShapeChanged(int position, String newTitle) {
-        listModel.set(position, newTitle);
+        if (position >= listModel.size()) return;
+        try {
+            listModel.set(position, newTitle);
+        } catch (Exception e) {
+            System.out.println("oops 2");
+        }
     }
 
     @Override
@@ -330,6 +349,12 @@ public class Paint extends JFrame implements CanvasListener, DialogListener, Act
     @Override
     public void clear() {
         listModel.clear();
+    }
+
+    @Override
+    public void clearFrom(int startPosition) {
+        if (listModel.size() <= startPosition) return;
+        listModel.removeRange(startPosition, listModel.size() - 1);
     }
 
     @Override

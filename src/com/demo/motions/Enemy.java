@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Enemy {
+
+    public static final String TAG = "Enemy";
+
     Random random = new Random();
     Circle wheel;
     private Line rim1, rim2;
@@ -88,8 +91,8 @@ public class Enemy {
         speedY = moveY;
     }
 
-    public Enemy reflectByOx(){
-        Point2D p = initPoint.reflect(new Point2D(0,0), new Point2D(1,0));
+    public Enemy reflectByOx() {
+        Point2D p = initPoint.reflect(new Point2D(0, 0), new Point2D(1, 0));
         Enemy enemy = new Enemy(canvas, p);
 
         return enemy;
@@ -97,6 +100,10 @@ public class Enemy {
 
     @Override
     public String toString() {
-        return String.format("Enemy: (%d, %d) R=%d", wheel.getCenterPoint().getX(), wheel.getCenterPoint().getY(), radius);
+        return String.format("Enemy: (%d, %d) R=%d, Speed=%d, Angle=%.2f", wheel.getCenterPoint().getX(), wheel.getCenterPoint().getY(), radius, speedX, Math.PI / Config.enemyRotate);
+    }
+
+    public String getIdentify() {
+        return TAG + hashCode();
     }
 }

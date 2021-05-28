@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Moon {
+
+    public static final String TAG = "Moon";
+
     Circle moon;
     Circle sun;
     Ellipse cycle;
@@ -89,5 +92,9 @@ public class Moon {
     @Override
     public String toString() {
         return String.format("Moon: (%d, %d)", moon.getCenterPoint().getX(), moon.getCenterPoint().getY());
+    }
+
+    public String getIdentify() {
+        return TAG + hashCode();
     }
 }

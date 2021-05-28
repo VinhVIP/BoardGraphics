@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sun {
+
+    public static final String TAG = "Sun";
+
     Circle sun, sunTemp;
     Ellipse cycle;
     private List<Line> sunshines;
@@ -103,6 +106,10 @@ public class Sun {
 
     @Override
     public String toString() {
-        return String.format("Sun: (%d, %d) R = %d", sun.getCenterPoint().getX(), sun.getCenterPoint().getY(), sun.getRadius());
+        return String.format("Sun: (%d, %d) R = %d", sun.getCenterPoint().getX(), sun.getCenterPoint().getY(), (int) (sun.getRadius() * scale));
+    }
+
+    public String getIdentify() {
+        return TAG + hashCode();
     }
 }

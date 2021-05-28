@@ -9,10 +9,7 @@ import com.demo.shape.Ellipse;
 import com.demo.shape.Rectangle;
 import com.demo.shape.Triangle;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Motion {
     Random random = new Random();
@@ -33,6 +30,8 @@ public class Motion {
 
     private DrawCanvas canvas;
     private CanvasListener listener;
+
+    private HashMap<String, Integer> mapObjects = new HashMap<>();
 
     public Motion(DrawCanvas canvas, CanvasListener listener) {
         this.canvas = canvas;
@@ -97,6 +96,13 @@ public class Motion {
         sky.processDraw();
         sky.fillColor();
         setColorSky();
+
+        int sunPos = listener.notifyShapeInserted(sun.toString());
+        mapObjects.put(sun.getIdentify(), sunPos);
+
+        int moonPos = listener.notifyShapeInserted(moon.toString());
+        mapObjects.put(moon.getIdentify(), moonPos);
+
     }
 
 
@@ -106,6 +112,10 @@ public class Motion {
         moon.run();
         sun.run();
         Sun reflectSun = sun.reflectByOy();
+
+        listener.notifyShapeChanged(mapObjects.get(sun.getIdentify()), sun.toString());
+        listener.notifyShapeChanged(mapObjects.get(moon.getIdentify()), moon.toString());
+
 
         List<Point2D> listEnemyDraw = new ArrayList<>();
         List<Point2D> listBombsDraw = new ArrayList<>();
@@ -120,6 +130,9 @@ public class Motion {
             enemy.move(speedRanX, Config.enemySpeedY);
             enemies.add(enemy);
 
+            int enemyPos = listener.notifyShapeInserted(enemy.toString());
+            mapObjects.put(enemy.getIdentify(), enemyPos);
+
             if (Config.isReflectEAB) {
                 Enemy reflectEnemy = enemy.reflectByOx();
                 reflectEnemy.scale(Config.enemyScale);
@@ -131,6 +144,9 @@ public class Motion {
             // TODO: Thu phóng bomb
             bomb.scale(Config.bombScale);
             bombs.add(bomb);
+
+            int bombPos = listener.notifyShapeInserted(bomb.toString());
+            mapObjects.put(bomb.getIdentify(), bombPos);
 
             if (Config.isReflectEAB) {
                 Bomb reflectBomb = bomb.reflectByOx();
@@ -144,16 +160,34 @@ public class Motion {
 
         for (int i = 0; i < enemies.size(); i++) {
             bombs.get(i).run();
+            listener.notifyShapeChanged(mapObjects.get(bombs.get(i).getIdentify()), bombs.get(i).toString());
+
             if (boomboomboom(bombs.get(i), enemies.get(i))) {
                 explosions.add(new Explosion(canvas, new Point2D(enemies.get(i).wheel.getCenterPoint()), 10,
                         0xff8000, 0xff9933, 100));
+
+                listener.notifyShapeDeleted(mapObjects.get(bombs.get(i).getIdentify()));
+                for (String key : mapObjects.keySet()) {
+                    if (mapObjects.get(key) > mapObjects.get(bombs.get(i).getIdentify())) {
+                        mapObjects.put(key, mapObjects.get(key) - 1);
+                    }
+                }
                 bombs.remove(i);
+
+                listener.notifyShapeDeleted(mapObjects.get(enemies.get(i).getIdentify()));
+                for (String key : mapObjects.keySet()) {
+                    if (mapObjects.get(key) > mapObjects.get(enemies.get(i).getIdentify())) {
+                        mapObjects.put(key, mapObjects.get(key) - 1);
+                    }
+                }
                 enemies.remove(i);
 
             } else {
                 enemies.get(i).run();
                 listEnemyDraw.addAll(enemies.get(i).getListDraw());
                 listBombsDraw.addAll(bombs.get(i).getListDraw());
+
+                listener.notifyShapeChanged(mapObjects.get(enemies.get(i).getIdentify()), enemies.get(i).toString());
             }
         }
         for (int i = 0; i < explosions.size(); i++) {
@@ -235,4 +269,5 @@ public class Motion {
         }
         return false;
     }
+
 }

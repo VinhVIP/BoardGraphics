@@ -12,7 +12,9 @@ import java.util.List;
 public interface CanvasListener {
     void mouseCoordinate(int x, int y);
 
-    void notifyShapeInserted(String shapeTitle);
+    int notifyShapeInserted(String shapeTitle);
+
+    int notifyShapeDeleted(int position);
 
     void notifyDataSetChanged(List listShape);
 
@@ -23,6 +25,8 @@ public interface CanvasListener {
     void notifyShapeModeChanged(Mode MODE);
 
     void clear();
+
+    void clearFrom(int startPosition);
 
     void onUndoState(boolean isEnable);
 
