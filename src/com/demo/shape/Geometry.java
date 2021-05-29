@@ -216,7 +216,7 @@ public abstract class Geometry {
 
     public void clearPointsCoordinate() {
         for (Point2D p : points) {
-            canvas.reDrawPoints(p.getComputerX() - 2, p.getComputerY() - 4, p.getComputerX() + 12, p.getComputerY());
+            canvas.reDrawPoints(p.getComputerX() - 2, p.getComputerY() - 4, p.getComputerX() + 15, p.getComputerY());
         }
     }
 

@@ -252,7 +252,7 @@ public class DrawCanvas extends Canvas {
     public void drawPointsCoordinate(Point2D p) {
         Graphics g = getGraphics();
         g.setColor(Color.BLACK);
-        g.drawString(String.format("(%d, %d)", p.getX(), p.getY()), p.getComputerX() * 5 - 5, p.getComputerY() * 5 - 5);
+        g.drawString(String.format("(%d, %d)", p.getX(), p.getY()), p.getComputerX() * 5 + 10, p.getComputerY() * 5 - 5);
         g.dispose();
     }
 
@@ -265,7 +265,7 @@ public class DrawCanvas extends Canvas {
         Point2D p2 = p.to2DPoint();
         Graphics g = getGraphics();
         g.setColor(Color.BLACK);
-        g.drawString(p.toString(), p2.getComputerX() * 5 - 5, p2.getComputerY() * 5 - 5);
+        g.drawString(p.toString(), p2.getComputerX() * 5 +10, p2.getComputerY() * 5 - 5);
         g.dispose();
     }
 
