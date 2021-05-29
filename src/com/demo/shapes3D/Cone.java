@@ -147,7 +147,7 @@ public class Cone extends Geometry {
     @Override
     public String toString() {
         if (point3Ds[1] != null)
-            return String.format("Cone: %s dX=%d ; dY=%d ; dZ=%d", point3Ds[1].toString(), dx, dy, dz);
+            return String.format("Cone: %s R=%d ; H=%d", point3Ds[1].toString(), dx, dy);
         return "Rectangular: preview";
     }
 }

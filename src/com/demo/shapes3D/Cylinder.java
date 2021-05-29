@@ -179,7 +179,7 @@ public class Cylinder extends Geometry {
     @Override
     public String toString() {
         if (point3Ds[4] != null)
-            return String.format("Cylinder: %s dX=%d ; dY=%d ; dZ=%d", point3Ds[4].toString(), dx, dy, dz);
+            return String.format("Cylinder: %s R=%d ; H=%d", point3Ds[4].toString(), dx, dy);
         return "Cylinder: preview";
     }
 }
