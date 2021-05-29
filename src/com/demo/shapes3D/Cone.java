@@ -16,7 +16,7 @@ import com.demo.shape.Line;
 
 public class Cone extends Geometry {
 
-    private Line[] lines = new Line[2];
+    private Line[] lines = new Line[4];
     private Ellipse ellipse;
 
     private int totalPoints = 5;
@@ -41,14 +41,16 @@ public class Cone extends Geometry {
 
         lines[0] = new Line(canvas, DrawMode.DEFAULT, color);
         lines[1] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[2] = new Line(canvas, DrawMode.DASH, color);
+        lines[3] = new Line(canvas, DrawMode.DASH, color);
 
     }
 
     @Override
     public void setColor(int color) {
         super.setColor(color);
-        lines[0].setColor(color);
-        lines[1].setColor(color);
+        for (int i = 0; i < lines.length; i++)
+            lines[i].setColor(color);
     }
 
     @Override
@@ -79,6 +81,9 @@ public class Cone extends Geometry {
         lines[0].setPoints(new Point2D[]{points[0], points[2]});
         lines[1].setPoints(new Point2D[]{points[0], points[4]});
 
+        lines[2].setPoints(new Point2D[]{points[0], points[1]});
+        lines[3].setPoints(new Point2D[]{points[1], points[4]});
+
         if (points[1].getY() < points[0].getY()) {
             ellipse = new EllipseDash(canvas, DrawMode.DEFAULT, color);
         } else {
@@ -87,11 +92,11 @@ public class Cone extends Geometry {
 
         ellipse.setPoints(new Point2D[]{points[1], points[4], points[3]});
 
-        lines[0].processDraw();
-        lines[1].processDraw();
+        for (int i = 0; i < lines.length; i++)
+            lines[i].processDraw();
         ellipse.processDraw();
 
-        addToListDraw(ellipse.getListDraw(), lines[0].getListDraw(), lines[1].getListDraw());
+        addToListDraw(ellipse.getListDraw(), lines[0].getListDraw(), lines[1].getListDraw(), lines[2].getListDraw(), lines[3].getListDraw());
     }
 
     @Override

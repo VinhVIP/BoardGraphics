@@ -18,7 +18,7 @@ public class Cylinder extends Geometry {
 
     private Ellipse ellipseTop;
     private Ellipse ellipseBottom;
-    private Line[] lines = new Line[2];
+    private Line[] lines = new Line[5];
 
     private int totalPoints = 8;
     private Point3D[] point3Ds;
@@ -42,6 +42,9 @@ public class Cylinder extends Geometry {
 
         lines[0] = new Line(canvas, DrawMode.DEFAULT, color);
         lines[1] = new Line(canvas, DrawMode.DEFAULT, color);
+        lines[2] = new Line(canvas, DrawMode.DASH, color);
+        lines[3] = new Line(canvas, DrawMode.DASH, color);
+        lines[4] = new Line(canvas, DrawMode.DEFAULT, color);
 
         ellipseTop = new Ellipse(canvas, DrawMode.DEFAULT, color);
         ellipseBottom = new EllipseDash(canvas, DrawMode.DEFAULT, color);
@@ -50,8 +53,8 @@ public class Cylinder extends Geometry {
     @Override
     public void setColor(int color) {
         super.setColor(color);
-        lines[0].setColor(color);
-        lines[1].setColor(color);
+        for (int i = 0; i < lines.length; i++)
+            lines[i].setColor(color);
         ellipseTop.setColor(color);
         ellipseBottom.setColor(color);
     }
@@ -85,11 +88,17 @@ public class Cylinder extends Geometry {
         lines[0].setPoints(new Point2D[]{points[1], points[5]});
         lines[1].setPoints(new Point2D[]{points[3], points[7]});
 
+        lines[2].setPoints(new Point2D[]{points[0], points[4]});
+        lines[3].setPoints(new Point2D[]{points[4], points[7]});
+
+        lines[4].setPoints(new Point2D[]{points[0], points[3]});
+
         ellipseTop.setPoints(new Point2D[]{points[0], points[3], points[2]});
         ellipseBottom.setPoints(new Point2D[]{points[4], points[7], points[6]});
 
-        lines[0].processDraw();
-        lines[1].processDraw();
+        for (int i = 0; i < lines.length; i++)
+            lines[i].processDraw();
+
         ellipseTop.processDraw();
         ellipseBottom.processDraw();
 
@@ -97,7 +106,10 @@ public class Cylinder extends Geometry {
                 ellipseBottom.getListDraw(),
                 ellipseTop.getListDraw(),
                 lines[0].getListDraw(),
-                lines[1].getListDraw());
+                lines[1].getListDraw(),
+                lines[2].getListDraw(),
+                lines[3].getListDraw(),
+                lines[4].getListDraw());
     }
 
     @Override
