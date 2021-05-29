@@ -139,7 +139,7 @@ public class Rectangular extends Geometry {
         this.dx = dx;
         this.dy = dy;
         this.dz = dz;
-        dz *= Math.sqrt(2) / 2.0;
+//        dz *= Math.sqrt(2) / 2.0;
 
         point3Ds[5] = root;
         point3Ds[6] = new Point3D(point3Ds[5].getX() + dx, point3Ds[5].getY(), point3Ds[5].getZ());
