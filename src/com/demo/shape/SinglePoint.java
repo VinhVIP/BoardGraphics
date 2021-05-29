@@ -4,7 +4,7 @@ import com.demo.DrawCanvas;
 import com.demo.models.Point2D;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 07/04/2021
  */
 

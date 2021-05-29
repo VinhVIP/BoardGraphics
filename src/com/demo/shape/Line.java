@@ -6,7 +6,7 @@ import com.demo.models.Point2D;
 import com.demo.models.Vector2D;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 25/03/2021
  */
 

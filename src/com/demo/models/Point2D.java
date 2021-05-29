@@ -3,7 +3,7 @@ package com.demo.models;
 import com.demo.DrawCanvas;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 27/03/2021
  */
 

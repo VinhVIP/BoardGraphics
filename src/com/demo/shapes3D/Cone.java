@@ -10,7 +10,7 @@ import com.demo.shape.Geometry;
 import com.demo.shape.Line;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 21/05/2021
  */
 

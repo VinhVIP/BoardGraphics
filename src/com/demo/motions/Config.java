@@ -1,7 +1,7 @@
 package com.demo.motions;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 27/05/2021
  */
 

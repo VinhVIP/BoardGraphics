@@ -10,7 +10,7 @@ import com.demo.shape.Rectangle;
 import java.util.List;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 15/05/2021
  */
 

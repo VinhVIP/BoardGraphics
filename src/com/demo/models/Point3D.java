@@ -1,7 +1,7 @@
 package com.demo.models;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 17/05/2021
  */
 

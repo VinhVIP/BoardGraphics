@@ -1,7 +1,7 @@
 package com.demo;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 30/03/2021
  */
 

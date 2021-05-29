@@ -12,7 +12,7 @@ import java.io.IOException;
 import static com.demo.DrawCanvas.*;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 24/05/2021
  */
 

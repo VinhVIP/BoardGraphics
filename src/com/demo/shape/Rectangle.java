@@ -5,7 +5,7 @@ import com.demo.DrawMode;
 import com.demo.models.Point2D;
 
 /**
- * Create by VinhIT
+ * Create by Warriors Team
  * On 28/03/2021
  */
 
