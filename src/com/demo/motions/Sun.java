@@ -94,11 +94,13 @@ public class Sun {
     }
 
     public Sun reflectByOy() {
+        Point2D p1 = new Point2D(0, 0);
+        Point2D p2 = new Point2D(0, 1);
         Sun reflectSun = new Sun(canvas, cycle);
         reflectSun.listDraw = new ArrayList<>();
         for (Point2D p : listDraw) {
             Point2D reflectPoint = new Point2D(p);
-            reflectPoint = reflectPoint.reflect(new Point2D(0, 0), new Point2D(0, 1));
+            reflectPoint = reflectPoint.reflect(p1, p2);
             reflectSun.listDraw.add(reflectPoint);
         }
         return reflectSun;

@@ -92,8 +92,17 @@ public class Enemy {
     }
 
     public Enemy reflectByOx() {
-        Point2D p = initPoint.reflect(new Point2D(0, 0), new Point2D(1, 0));
+        Point2D p1 = new Point2D(0, 0);
+        Point2D p2 = new Point2D(1, 0);
+        Point2D p = initPoint.reflect(p1, p2);
         Enemy enemy = new Enemy(canvas, p);
+//        enemy.wheel.reflect(p1, p2);
+//        enemy.wheel.processDraw();
+//        enemy.rim1.processDraw();
+//        enemy.rim2.processDraw();
+//        enemy.listDraw.addAll(wheel.getListDraw());
+//        enemy.listDraw.addAll(rim1.getListDraw());
+//        enemy.listDraw.addAll(rim2.getListDraw());
 
         return enemy;
     }

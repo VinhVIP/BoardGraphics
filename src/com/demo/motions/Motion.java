@@ -118,6 +118,7 @@ public class Motion {
 
 
         List<Point2D> listEnemyDraw = new ArrayList<>();
+        List<Point2D> listEnemyDraw2 = new ArrayList<>();
         List<Point2D> listBombsDraw = new ArrayList<>();
         List<Point2D> listExplosionDraw = new ArrayList<>();
         int y = yCoordinate[random.nextInt(yCoordinate.length)];
@@ -135,9 +136,12 @@ public class Motion {
 
             if (Config.isReflectEAB) {
                 Enemy reflectEnemy = enemy.reflectByOx();
+//                listEnemyDraw2.addAll(reflectEnemy.getListDraw());
                 reflectEnemy.scale(Config.enemyScale);
                 reflectEnemy.move(speedRanX, Config.enemySpeedY);
                 enemies.add(reflectEnemy);
+                int pos = listener.notifyShapeInserted(reflectEnemy.toString());
+                mapObjects.put(reflectEnemy.getIdentify(), pos);
             }
 
             Bomb bomb = new Bomb(canvas, new Point2D(-100, y));
@@ -152,6 +156,8 @@ public class Motion {
                 Bomb reflectBomb = bomb.reflectByOx();
                 reflectBomb.scale(Config.bombScale);
                 bombs.add(reflectBomb);
+                int pos = listener.notifyShapeInserted(reflectBomb.toString());
+                mapObjects.put(reflectBomb.getIdentify(), pos);
             }
 
             explosions.add(new Explosion(canvas, new Point2D(new Point2D(-90, y)), 1,
@@ -200,7 +206,6 @@ public class Motion {
 
         }
 
-
         if (cycleIndex < cycle.getListDraw().size() - 1 && cycle.getListDraw().get(cycleIndex).getX() != cycle.getListDraw().get(cycleIndex + 1).getX()) {
             skyMove();
         }
@@ -213,6 +218,7 @@ public class Motion {
                 moon.getListDraw(),
                 listLandDraw,
                 listEnemyDraw,
+                listEnemyDraw2,
                 listBombsDraw,
                 listCannonsDraw,
                 listExplosionDraw
