@@ -123,7 +123,7 @@ public class Motion {
         List<Point2D> listExplosionDraw = new ArrayList<>();
         int y = yCoordinate[random.nextInt(yCoordinate.length)];
         if (cycleIndex % 50 == 0) {
-            Enemy enemy = new Enemy(canvas, new Point2D(100, y));
+            Enemy enemy = new Enemy(canvas, new Point2D(DrawCanvas.rowSize / 2, y));
             // TODO: Thu phóng enemy
             enemy.scale(Config.enemyScale);
 

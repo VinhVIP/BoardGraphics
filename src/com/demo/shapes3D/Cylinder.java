@@ -114,8 +114,9 @@ public class Cylinder extends Geometry {
 
     @Override
     public void showPointsCoordinate() {
-        for (Point3D p : point3Ds) {
-            canvas.drawPointsCoordinate(p);
+        for (int i = 0; i < point3Ds.length; i++) {
+            if (i == 2 || i == 6) continue;
+            canvas.drawPointsCoordinate(point3Ds[i]);
         }
     }
 
